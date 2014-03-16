@@ -1,0 +1,99 @@
+% Code for implementing the EP610 for use in interfacing between the IPD and %
+% the 68230 IO integrated circuit %
+
+% An EP610 is used for this purpose %
+OPTIONS: TURBO = ON
+PART: EP610
+
+% The input lines for the interfacing are a synchrounous DTAC, slot, AS, R/W %
+% and CLK (clock signal) %
+
+INPUTS: CLK@1, SLOT@2, AS@3, DTAK@4, RST@5
+
+% The output lines for the interfacing are CS, CINH and TACK %
+% SB1, SB2 and SB3 are state bits %
+
+OUTPUTS: CS@22, CINH@21, TACK@20, OUTEN@19, SB2, SB1, SB0
+
+NETWORK:
+
+CS = CONF(CSINT,)
+CINH = CONF(CINHINT,)
+OUTEN = CONF(OUTENINT, )
+TACK = CONF(TACKINT, )
+
+EQUATIONS:
+
+CSINT = /CSHIGH;
+CINHINT = /CINHHIGH;
+OUTENINT = /OUTENHIGH;
+TACKINT = /TACKHIGH;
+
+MACHINE: INTERFACE
+
+CLOCK: CLK
+
+STATES: [SB2 SB1  SB0]
+STATE1  [0    0    1]
+STATE2  [0    1    0]
+STATE3  [0    1    1]
+STATE4  [1    0    0]
+STATE5  [1    0    1]
+STATE6  [1    1    0]
+
+STATE1:
+
+IF(/RST) THEN STATE1
+IF(/AS*/SLOT) THEN STATE2
+STATE1
+
+OUTPUTS:
+
+STATE2:
+
+IF(/RST) THEN STATE1
+STATE3
+
+OUTPUTS:
+
+STATE3:
+
+IF(/RST) THEN STATE1
+IF /DTAK THEN STATE4
+STATE3
+
+OUTPUTS:
+
+CSHIGH
+
+STATE4:
+
+IF(/RST) THEN STATE1
+STATE5
+
+OUTPUTS:
+
+CINHHIGH
+TACKHIGH
+OUTENHIGH
+CSHIGH
+
+STATE5:
+IF(/RST) THEN STATE1
+STATE6
+
+OUTPUTS:
+
+OUTENHIGH
+CSHIGH
+
+STATE6:
+
+IF(/RST) THEN STATE1
+STATE1
+
+OUTPUTS:
+
+END$
+
+

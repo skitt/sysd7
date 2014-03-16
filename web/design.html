@@ -1,0 +1,266 @@
+<HTML>
+<HEAD>
+   <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+   <META NAME="GENERATOR" CONTENT="Mozilla/4.04 [en] (X11; U; Linux 2.0.32 i586) [Netscape]">
+   <TITLE> Documentation </TITLE>
+</HEAD>
+<BODY BGCOLOR="#FFFFFF">
+
+<H2>
+Project Requirement Specification</H2>
+
+<H3>
+1 Statement of Intent</H3>
+Ding Dong Doorentry Systems Ltd have commissioned our group to develop
+an idea for a new product. The product will be a door entry system that
+will allow a person within a building to use their own PC to view and communicate
+to the person at the door. Our task is to provide a prototype unit and
+the accompanying software for this project. The Market Potential for this
+device can be broken down down as:
+<BR>&nbsp;
+<H4>
+1.1 Residential</H4>
+Information from AmeriTech (a CCTV security firm) showed that you are 5
+times less likely to be burgled if you have some form of surveillance scheme.
+The scheme we aim to provide would have to meet the competeing needs of
+specific user groups. They can be broken down:
+<BR>&nbsp;
+<H4>
+1.1.1 Blocks of Flats</H4>
+The increase of PC's in the home may allow this product to become an alternative
+to the standard door-entry system. According to a representative of Castle
+Security(a local security company) it would be likely to be unwanted by
+technophobes and those on a limited income for the forseeable future as
+at the moment the majority of people are quite happy with the system they
+have; they can already identify anyone who comes to their door. A secondary
+issue would be some people in a block wanting the technology while others
+may not. Would the system work in tandem with present technology.
+<BR>&nbsp;
+<H4>
+1.1.2 Accommodation with a servitor</H4>
+The servitors office would contain the PC and during the day people could
+be let in by sight only. During the night a form of security could be set
+on the main enterances. The potential here is for accommodation like halls
+of residence, the security could be contained on a Dallas Ring which would
+hold enough information to also act as a matriculation card.
+<BR>&nbsp;
+<H4>
+1.1.3 Stand Alone Housing</H4>
+Unlikely to be a market in smaller property, people will usually answer
+their door or look out through a window to see who it is. There may be
+a market in countries like the USA where there is a significant gun culture,
+and residents already have a fear of intruders. The main market at present
+would be properties standing in a large area ie. estate houses. They can
+have entrances that are set a significant distance away from the property
+and could use the improved security of a cisual communication. They are
+also likely to have the need and the money to invest in this form of security
+<BR>&nbsp;
+<H4>
+1.2 Commercial</H4>
+This will be our proposed target market, in light of the Cullen Inquiry
+into the Dunblane report And the 1995 NHS Executive reccommendation the
+need for low cost security has significantly increased. Lord Cullen stated
+:
+
+<P>"It is recognised that there should be arrangements for security to
+prevent unauthorised access to the school. "
+
+<P>The Health and Safety at Work Regulations(1974) and as amended (1992)
+requires
+
+<P>"That every employer shall make a suitable and sufficient assesment
+of ... the risks to the health and safety of persons not in his employment
+arising out of or in connection with the conduct by him or his undertaking.
+"
+
+<P>Employers have a legal obligation to ensure the security of their staff.
+<BR>&nbsp;
+<H4>
+1.2.1 Education</H4>
+By encouraging schools to place this system at the entry points to their
+site visitor movement can be controlled. During specific times the doors
+would be required to be left open, eg 8.15 - 9.15, to allow pupil and teacher
+access but outside of these times access to the site will be controlled
+inside the school. Allowing the system to be configurable will allow this
+policy to be changed ie. the children could each have their own dallas
+rings. Outside of school times the site will be closed to all but those
+with security access, which should have the added effect of cutting down
+vandalism. In situations were people are using part of the school out of
+hours then they will have to possess a security pass.
+
+<P>1.3 NHS
+<BR>The system could be integrated to the front doors of wards that demand
+security for example maternity wards. Visitors will only be able to enter
+these areas if they have a specific reason to be there. The Problem with
+existing NHS security include:
+<UL>
+<LI>
+&nbsp;security being lax because no-one monitors the vide camers.</LI>
+
+<LI>
+&nbsp;security is bypasses by people who pretend to be some one else</LI>
+</UL>
+The system we aim to supply must be quick and easy to use, since there
+may be emergency situations where the time is criticall, particuly a cardiac
+arrest alarm. The demands on the system will involve Doctors needing instant
+access to wards whilst still keeping a level of security that will satisfy
+parents.
+
+<P>2 Minimum System
+
+<P>2.1 System Description
+<BR>Any visitor to the site will be able to request access by ringing a
+door bell. If the user is at their PC they can run the software to use
+the camera. The software will display one still image pictue that will
+be regularly updated, this picture will be save to file. The user will
+be able to communicate with the visitor from the PC. If the user is satisfied
+that this person should access to the site then they will be able to send
+a signal to open the door.
+<BR>&nbsp;&nbsp;&nbsp; When there is no reply from the user the visitor
+will be enable access to the site if they know the correct pin number.
+
+<P>2.2 Software description
+<BR>The Client-side features:
+<UL>
+<LI>
+Will display a picture which will regularly be updated</LI>
+
+<LI>
+The picture will be saved to a file</LI>
+
+<LI>
+Will handle duplex audio</LI>
+
+<LI>
+The database information will be stored in a text format</LI>
+
+<LI>
+Will supply a way to open the door</LI>
+
+<LI>
+There will be an operational mode control (deactivate automatic system,
+indicate a person is leaving the PC)</LI>
+</UL>
+The general software wil include
+<UL>
+<LI>
+Keep alive indicators</LI>
+</UL>
+2.3 Hardware features
+
+<P>The unit will
+<UL>
+<LI>
+Have a keypad for inputing pin numbers</LI>
+
+<LI>
+Handle duplex audio with no compression</LI>
+
+<LI>
+There will be a lock relay</LI>
+</UL>
+3 Intended System
+
+<P>3.1 System Description
+<BR>Any visitor to the site will be able to request access by ringing a
+door bell. The program will pop up, giving the user instant communication
+with the visitor. The software will display one still image picture that
+will be regularly updated, this picture will be saved to a file. The user
+will be able to communicate with the visitor from the PC. If the user is
+satisfied that this person should access to the site then they will be
+able to send a signal to open the door. The user will also be able to acccess
+diagnostic information at any time so that they can find out the current
+state of the system.
+<BR>&nbsp;&nbsp;&nbsp; When there is no reply from the user the visitor
+will be enable access if they are able to place the correct Dallas ring
+in the unit and know the correct correct pin number to go with it. The
+pins could be optional.
+
+<P>3.2 Software description
+<BR>The Client-side features
+<UL>
+<LI>
+Will include database management software</LI>
+
+<LI>
+The program will pop up when the doorbell rings.</LI>
+
+<LI>
+There will be a stored masterkey sequence contained in the non-volatile
+part of memory.</LI>
+</UL>
+The general software wil include
+<UL>
+<LI>
+A report on the diagnostics of the system.</LI>
+</UL>
+3.3 Hardware features
+<BR>The unit will comprise of a:
+<UL>
+<LI>
+Dallas ring reader</LI>
+
+<LI>
+A door sensor</LI>
+</UL>
+4 Ideal System
+
+<P>4.1 System Description
+
+<P>The PC will display a continuous stream of video. The user will be able
+to stop the frame at any point, this will allow the user to only see the
+most regognisable image the camera provides. The database information will
+contain a picture of the person whose pin number has been typed allowing
+the user to see if the picture on record is the same as the person attempting
+to use the pin.If the picture is the same the visitor must have authorised
+access if its different appropriate steps can be taken. The user will then
+be able to communicate with the visitor and enable access to the site.
+<BR>&nbsp;&nbsp;&nbsp; When there is no user at the PC, requesting entry
+will enable the PC to reply with a recorded message of the users choosing.
+The camera will allso store some frames to keep a record of who has accessed
+the site. Access can then be gained by a Dallas ring placed in a reader
+and typing in the correct access code. The PC will contain a database of
+information (pin numbers) with everything running through netscape. The
+system will contain a modem to allow a remote site to control the doors.
+Therefore a large site can be controlled by a LAN linking all of cameras
+and centrally controlled and viewed through the internet at one specific
+site.
+
+<P>4.2 Software description
+
+<P>The Client-side features:
+<UL>
+<LI>
+Will show an official picture based on the users ID</LI>
+
+<LI>
+We will implement an http server</LI>
+</UL>
+The general software wil include
+<UL>
+<LI>
+The PC will determine whether the user is absent</LI>
+</UL>
+4.3 Hardware features
+<BR>The unit will have some form of audio hardware compression.
+
+<P>5 Hazards &amp; Threats
+
+<P>Fault: Failure of power system
+<BR>Reported by:
+<BR>Likelihood: High in a remote area, unlikely in urban areas.
+<BR>Consequences: Undesirable, the system will shut down and will need
+to be booted up manually
+<BR>Response to failure: The doors can be opened from the inside by the
+mechanical lock. From the outside by a key.
+
+<P>Fault: Failure of electonic entry system
+<BR>Reported by:
+<BR>Likelihood: low
+<BR>Consequences: Entry will only take place manually.
+<BR>Response to failure: The door will open with a manual key and an alarm
+will go off. If the person entering is genuine they will know how to overide
+the alarm. If it is a break-in then the alarm will act as a signalling
+for help.
+</BODY>
+</HTML>

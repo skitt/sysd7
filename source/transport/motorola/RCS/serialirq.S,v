@@ -1,0 +1,46 @@
+head	1.1;
+access;
+symbols;
+locks
+	skk:1.1; strict;
+comment	@# @;
+
+
+1.1
+date	98.05.07.13.15.54;	author skk;	state Exp;
+branches;
+next	;
+
+
+desc
+@Serial IRQ handling code.
+@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@#define	regoff 4
+#define pit 0x00C00003
+#define pitsr (13 * regoff)
+
+.text
+	.even
+.globl _serialirq
+/* Serial IRQ handler */
+_serialirq:
+	move.l	a0, -(sp)
+	move.l	d0, -(sp)
+
+	lea.l	pit, a0
+	bset.b	#2, pitsr(a0)
+
+	jbsr	_serialevent
+
+	move.l	(sp)+, d0
+	move.l	(sp)+, a0
+
+	rte
+@

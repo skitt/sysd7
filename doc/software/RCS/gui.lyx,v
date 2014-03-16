@@ -1,0 +1,303 @@
+head	1.2;
+access;
+symbols;
+locks
+	iic:1.2; strict;
+comment	@# @;
+
+
+1.2
+date	98.05.01.13.52.21;	author iic;	state Exp;
+branches;
+next	1.1;
+
+1.1
+date	98.05.01.12.49.41;	author iic;	state Exp;
+branches;
+next	;
+
+
+desc
+@Graphical User Interface specification
+@
+
+
+1.2
+log
+@Rewrote much of the text.
+@
+text
+@#This file was created by <iic> Fri May  1 14:50:22 1998
+#LyX 0.12 (C) 1995-1998 Matthias Ettrich and the LyX Team
+\lyxformat 2.15
+\textclass article
+\language default
+\inputencoding default
+\fontscheme default
+\graphics default
+\paperfontsize default
+\spacing single 
+\papersize Default
+\paperpackage a4
+\use_geometry 0
+\use_amsmath 0
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\defskip medskip
+\quotes_language english
+\quotes_times 2
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+
+\layout Section
+
+The user interface
+\layout Subsection
+
+Design
+\layout Standard
+
+The user interface runs on a Linux PC running the X Windows user interface,
+ and had been predominently constructed using the GTK+ toolkit in the C
+ programming language.
+ It is contained in a binary file together with all other non-continuous
+ modules such as video and audio.
+ The UI is launched by the deamon on receiveing a message from the Motorola
+ board.
+\layout Standard
+
+\begin_float fig 
+\layout Standard
+\align center 
+
+\begin_inset Figure size 226 198
+file gui_grab.ps
+width 1 8
+height 1 7
+flags 9
+
+\end_inset 
+
+
+\layout Caption
+
+
+\begin_inset LatexCommand \label{screenshot1}
+
+\end_inset 
+
+Screenshot of prototype GUI
+\end_float 
+\layout Standard
+
+The main window is shown in fig 
+\begin_inset LatexCommand \ref{screenshot1}
+
+\end_inset 
+
+, page 
+\begin_inset LatexCommand \pageref{screenshot1}
+
+\end_inset 
+
+.
+ If this window is minimised it will be activated whenever someone comes
+ to the door.
+ Normally the video frames will be updated approximately once every second
+ and there will be no audio.
+ When someone presses the buzzer two way sound transmission will begin and
+ continue until a timeout expires, or the person is accepted or rejected.
+ The functions of the various buttons are as follows:
+\layout Subsubsection
+
+Recapture
+\layout Standard
+
+Pressing this button transmits a request to the Motorola board to recapture
+ a frame of video, this will then be displayed.
+\layout Subsubsection
+
+Unlock
+\layout Standard
+
+Pressing this button causes the door to unlock.
+\layout Subsubsection
+
+Refuse
+\layout Standard
+
+Pressing this button denies a person entry and begins monitoring video once
+ more.
+\layout Subsubsection
+
+Audio
+\layout Standard
+
+Pressing this button permits configuration of the audio.
+\layout Subsubsection
+
+Close
+\layout Standard
+
+Pressing this button closes the interface window.
+\layout Subsection
+
+Interface
+\layout Standard
+
+Although video, audio and GUI modules are contained in one binary, the GUI
+ runs as a separate process, using 
+\family typewriter 
+fork
+\family default 
+.
+ It communicates with the video decompresion module using OS signals.
+ This allows a message to be sent when a frame has been decompressed.
+ The actual data to be passed to the GUI is stored in memory shared between
+ the two processes.
+ The only other external interface is to the serial transport, in order
+ to send messages to the board (ie.
+ unlock door).
+\the_end
+@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@d1 1
+a1 1
+#This file was created by <ejk> Fri May  1 11:59:43 1998
+d34 4
+a37 7
+The user interface will be run using X on a Linux PC.
+ It will be built mainly using the 
+\shape italic 
+gtk+
+\shape default 
+ tool kit for ease of programming.
+ It will be contained in a binary, together with all other non-continuous
+d39 1
+a39 1
+ The GUI is launched by the daemon, on receiving a message from the Motorola
+a40 1
+ 
+d58 5
+d67 2
+a68 4
+The current design prototype for the main window is show below.
+ The 
+\begin_inset Quotes eld
+\end_inset 
+a69 9
+recapture" button will request another frame from the video module on the
+ Motorola board.
+ This is done so the 68040 processor is dedicated to continuous audio for
+ most of the time.
+ The audio button will launch an audio control panel.
+ Although not strictly necessary, this would give the user immediate control
+ over the speaker and microphone volume levels.
+ 
+\begin_inset Quotes eld
+d72 2
+a73 3
+Config
+\begin_inset Quotes erd
+\end_inset 
+a74 7
+ will open a window allowing configuration of various options across the
+ system (including the board).
+ This will be a separate binary which writes to a file, which is then read
+ on initialisation of both the board and the Linux software.
+ As configuration options can just be edited as a text file, the configuration
+ window is a 
+\begin_inset Quotes eld
+d77 9
+a85 3
+luxury
+\begin_inset Quotes erd
+\end_inset 
+d87 1
+a87 1
+ feature.
+d90 3
+a92 7
+The 
+\begin_inset Quotes eld
+\end_inset 
+
+unlock
+\begin_inset Quotes erd
+\end_inset 
+d94 1
+a94 4
+ button will send a message to the Motorola board to unlock the door.
+ It will also log the date/time of entry to a file, together with the last
+ captured frame of video.
+ 
+d97 2
+a98 3
+The 
+\begin_inset Quotes eld
+\end_inset 
+d100 2
+a101 3
+refuse
+\begin_inset Quotes erd
+\end_inset 
+d103 3
+a105 7
+ button will probably play a user-configurable sample on the board, refusing
+ the visitor entry.
+ Neither of these buttons will close the window - the user may not want
+ the window to disappear as soon as they unlock the door.
+ Audio will stop when either 
+\begin_inset Quotes eld
+\end_inset 
+d107 2
+a108 3
+unlock
+\begin_inset Quotes erd
+\end_inset 
+d110 2
+a111 3
+ or 
+\begin_inset Quotes eld
+\end_inset 
+d113 2
+a114 11
+refuse
+\begin_inset Quotes erd
+\end_inset 
+
+ is clicked, and a video feed will start.
+ This will allow the user to see whether the visitor enters or not, whether
+ anyone else enters with them, and in the case of refusal, whether the visitor
+ goes away.
+ The video feed stops when the user clicks 
+\begin_inset Quotes eld
+\end_inset 
+d116 1
+a116 5
+close
+\begin_inset Quotes erd
+\end_inset 
+
+.
+d123 1
+a123 1
+ will run as a separate process, using 
+d128 1
+a128 1
+ It will communicate with the video decompresion module using OS signals.
+d130 3
+a132 3
+ The actual data to be passed to the GUI will be stored in memory shared
+ between the two processes.
+ The only other external interface will be to the serial transport, in order
+@

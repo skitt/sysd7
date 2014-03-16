@@ -1,0 +1,33 @@
+CC = gcc68
+CFLAGS = -O2 -Wall -I/home/sysd7/source/include -L/home/sysd7/source/lib -DSDPMotorola
+
+.SUFFIXES: .c .o .a
+
+# What we're going to build (OBJS is optional, make can figure that
+# out from the LIBS and EXES targets
+OBJS = obj1.o obj2.o obj3.o
+LIBS = libblah.a
+EXES = maketest
+
+# Standard object file target
+
+.c.o:
+	$(CC) $(CFLAGS) -c -o $*.o $*.c
+
+# Top targets
+all: $(OBJS) $(LIBS) $(EXES)
+
+# Library target (change to suit)
+LIBBLAHOBJS = obj1.o obj2.o
+libblah.a: $(LIBBLAHOBJS)
+	ar r $*.a $(LIBBLAHOBJS)
+	ranlib $*.a
+
+# Executable target
+MAKETESTOBJS = obj3.o
+maketest:
+	$(CC) $(CFLAGS) -o $* $(MAKETESTOBJS)
+
+# Install target (to copy the libraries)
+install:
+	cp $(LIBS) /home/sysd7/source/lib

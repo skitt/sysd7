@@ -1,0 +1,48 @@
+MINUTES: April 23
+TIME: 11am - 11.40am
+LOCATION: cs4 work lab
+PRESENT: Ian Clarke, Stephen Cook, Duncan Irvine, Stephen Kitt, 
+         Edward Knowelden, James Northrop, Iain Todd, Stuart Cox
+	 Gordon Brebner
+APOLOGIES: No-one
+ABSENT: No-one
+
+REPORTS
+MARKET - Our market research has led us to the conclusion that schools should
+be our target. They need a certain level of security in light of the
+cullen inquiry, whilst still having a  welcoming environment.
+
+We will need a system that will be tailored towards their needs, and that will
+be configurable. Different schools will have competing needs.
+
+A similar system is the nursery cam that allows parents to view what their 
+children are up to from the Internet.
+
+Our clients could also include the NHS, maternity wards also require a certain
+level of security. The advantage of the Dallas ring over swipe cards is that 
+they will not be wiped in a highly magnetized environment.
+
+SOFTWARE - Is considering the software requirement. The  software will be
+split into modules and consideration will have to be given about how the two
+main areas will connect. The software team have split up to investigate
+separate issues but they hope to have something by Tuesday.
+
+They have also considered the features they wish to include(see Design Spec 
+of April 23rd)
+
+HARDWARE - Have looked at the capabilities of the chips and have started
+timing diagrams. Generally there opinion is that once they have the design 
+they should have no problem with the construction.
+
+They should aim to have the hardware up and running by the start of the third 
+week and should consider ordering some of the chips immediately.
+
+DOCUMENTATION- To have the design spec ready for 4.30 on April 23. Also to
+have the document checked by Stuart Anderson as soon as possible. 
+
+DECISIONS
+Need to have a deadline for the hardware group. Therefore they should 
+investigate buying the design.
+
+PLAN
+See Time Diagram for an approximate plan for the next four weeks.

@@ -1,0 +1,20 @@
+scaAudio Coding
+
+It was recognised early on in the project that the serial line that we have been given to use is woefully slow.  If we are to achieve duplex audio transmission over it we are going to need some compression.
+
+
+
+There are several standards for audio compression that will achieve the required bandwidth of < 32.8kbps.  These are :
+	ADPCM   -  Adaptive Differential Pulse-Code Modulation 16kbps - 32 kbps
+	LP      -  Linear Predictive - 2.4kbps
+	CELP    -  Code Excited Linear Predictive - 4.8kbps
+	LD-CELP -  Low-Delay Code Excited Linear Predictive. 16kbps
+
+
+These all use a similar method to encode the sound but use different data and probability tables to achieive their aims.
+
+The basic principle is that a large table of stochastic data is held at either end of the transmission.  When an incoming sample is recieved, the encoder attempts to predict where the sample is about to go.  The encoder then quantises the difference between the predicted and the actual sample and transmits this instead.
+	
+	ADPCM, simply predicts where the sound is going, the resultant sound is an accurate - if somewhat lossy - representation of the input.
+
+	LP on the other hand attempts to achieve further compression by matching the sound against a table of sounds and then transmitting the best fit sound code for a whole chunk of sound.  LP is optimised for speech, but the sound quality is rather synthesised

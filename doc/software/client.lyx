@@ -1,0 +1,87 @@
+#This file was created by <skk> Fri May  1 10:19:37 1998
+#LyX 0.12 (C) 1995-1998 Matthias Ettrich and the LyX Team
+\lyxformat 2.15
+\textclass article
+\language default
+\inputencoding default
+\fontscheme default
+\graphics default
+\paperfontsize default
+\spacing single 
+\papersize Default
+\paperpackage a4
+\use_geometry 0
+\use_amsmath 0
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\defskip medskip
+\quotes_language english
+\quotes_times 2
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+
+\layout Section
+
+Client-side software
+\layout Subsection
+
+Daemon
+\layout Standard
+
+This (obviously) runs all the time.
+ It provides the basic functionality required to operate the Motorola board,
+ and the interface between the board and the GUI.
+\layout Standard
+
+Specific functions:
+\layout Itemize
+
+allow board to download program;
+\layout Itemize
+
+allow board to download database;
+\layout Itemize
+
+listen for video and audio from the board --- keep last frame of video,
+ but discard audio if GUI inactive;
+\layout Itemize
+
+provide audio for voice prompts;
+\layout Itemize
+
+allow GUI to control board --- receive video, receive and send audio, receive
+ and send control info
+\layout Subsection
+
+GUI
+\layout Itemize
+
+display frame
+\layout Itemize
+
+buttons to capture new frame, allow/deny access, close window
+\layout Itemize
+
+default operation is audio during 
+\begin_inset Quotes eld
+\end_inset 
+
+transation
+\begin_inset Quotes erd
+\end_inset 
+
+, specific request for video; otherwise video
+\layout Itemize
+
+configuration
+\layout Subsection
+
+Comms
+\layout Standard
+
+Communication is done using System V IPC shared memory (note that this requires
+ support in the kernel); other possibilities exist on Unix and other platforms.
+\the_end

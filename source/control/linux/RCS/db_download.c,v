@@ -1,0 +1,118 @@
+head	1.1;
+access;
+symbols;
+locks
+	ejk:1.1; strict;
+comment	@ * @;
+
+
+1.1
+date	98.05.04.11.14.09;	author ejk;	state Exp;
+branches;
+next	;
+
+
+desc
+@Functions for sending database to motorola.
+@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@/* Functions for database download (Linux) via serial line.
+ * Edward Knowelden 
+ */
+
+#include <stdlib.h>
+#include <stdio.h>
+#include "../dbm_defs.h"
+
+extern int itos(int,char *,int);
+
+/* Control message structure:
+   [XXX][\0][DDDDD.....D]
+   where: XXX is message identifier (see below), \0 is null char
+          DDD is unspecified data */
+
+/* database buffer */
+db_item db_store[MAX_USERS];
+
+int db_download()
+{
+  packet dload;
+  int load_result, success;
+
+  load_result = load_database();
+  if(load_result == 0) {
+    printf("Download problem");
+    exit(1);
+  }
+  
+  dload.datatype = (data_t)DATABASE;
+  dload.length = load_result*sizeof(db_item);
+  dload.data = (char *)db_store;
+
+  printf("Packet size : %i\n",dload.length);
+  success = lnx_senddata(dload);
+  printf("\nSenddata return code : %i\n",success);
+
+}
+
+/* returns number of items read. Need to load into single buffer,
+ready for transmission. ie. all user x's details next to each
+other. structure? */
+
+int load_database()
+{
+  FILE *file;
+  char get_uid[UID_SIZE+1];
+  char get_pin[PIN_SIZE+1];
+  char get_name[NAME_SIZE];
+  char comment;
+  int i,count = 0;
+
+  printf("Database:\n");
+
+  /* try to open 'users' file */
+  file = fopen(DB_FILENAME,"r");
+  if(file == NULL) {
+    printf("File problem!\n");
+    return FALSE;
+  }
+
+  while( fscanf(file,"%s %s %s\n",&get_uid,&get_pin,&get_name) != EOF ){
+    strcpy(db_store[count].uid,get_uid);
+    strcpy(db_store[count].pin,get_pin);
+    printf("Loading %s\n",get_name);
+    count++;
+  }
+
+  /* add a special EOF uid starting with 'X' */
+  db_store[count].uid[0] = 'X';
+
+  printf("Database loaded - %i users\n",count);
+  fclose(file);
+  return count;
+}
+
+
+/* Handle CONTROL packets received by SERIAL_TRANSPORT */
+int handle_control_data(packet p)
+{
+  int message_type;
+  /* find type of message */
+  message_type = atoi(p.data);
+  
+  /* handle specific messages */
+  switch(message_type){
+  case REQUEST_DBDL:
+    db_download();
+    break;
+  }
+} 
+
+
+@

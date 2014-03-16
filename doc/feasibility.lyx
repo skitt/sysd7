@@ -1,0 +1,2055 @@
+#This file was created by <skk> Thu May 14 18:54:45 1998
+#LyX 0.12 (C) 1995-1998 Matthias Ettrich and the LyX Team
+\lyxformat 2.15
+\textclass article
+\language default
+\inputencoding default
+\fontscheme palatino
+\graphics default
+\paperfontsize default
+\spacing single 
+\papersize Default
+\paperpackage widemarginsa4
+\use_geometry 0
+\use_amsmath 0
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation skip
+\defskip medskip
+\quotes_language english
+\quotes_times 2
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+
+\layout Title
+
+Feasibility Study
+\layout Author
+
+System Design Group Seven 
+\layout Standard
+\added_space_top 0.3cm \added_space_bottom 0.3cm \align center 
+
+\begin_inset Figure size 128 125
+file ../web/images/EUcrest-official-noborder.ps
+flags 11
+
+\end_inset 
+
+
+\layout Standard
+\pagebreak_top 
+
+\begin_inset LatexCommand \tableofcontents
+
+\end_inset 
+
+
+\layout Section
+\pagebreak_top 
+Introduction
+\layout Standard
+
+Ding Dong Doorentry Systems Ltd.
+ (DDDS) has commissioned our group to develop an idea for a new product.
+ Their existing product market is centred on low-technology but robust door
+ entry systems for stair doors.
+ They would like to move into production of high specification door entry
+ systems and, in particular, see a potential market that takes advantage
+ of the fact that most small companies and many households now own a personal
+ computer.
+ The concept that DDDS has proposed is to use the screen and sound facilities
+ already present on PC's, in combination with a remote door control unit.
+ The intention is to sell a door entry system that allows a person within
+ the premises to use a PC to view and communicate with the person at the
+ door.
+ In addition, the fact that all PC's are supplied with serial ports allows
+ the PC to provide these functions whilst being situated away from the door
+ itself.
+ The remote door control unit would be sold together with the necessary
+ PC software.
+ 
+\layout Standard
+
+As a further development of the concept, DDDS have proposed having automated
+ entry control, such that entry can be gained without an operator being
+ present at the PC.
+ They have suggested that this could be done by operating the door with
+ a combination of some kind of personal card or key, and a PIN number.
+\layout Standard
+
+We have been commissioned to produce a demonstration prototype of this product.
+ In doing this, we have refined the initial specification for the product,
+ and decided on the best way to provide the facilities that DDDS wants to
+ see.
+ This report outlines the findings of our market research, the design decisions
+ which we have taken, and identifies the additional features that could
+ increase the product's marketability.
+ 
+\layout Section
+\pagebreak_top 
+General Market Research
+\layout Standard
+
+The given design specification identified two categories for the product,
+ namely the commercial and the residential markets.
+ We carried out a survey to gauge the degree of practicality and interest
+ in producing a product for these markets.
+ Both surveys involved asking three questions:
+\layout Standard
+
+1.
+ Do you have a PC in your household/business?
+\layout Standard
+
+2.
+ If you do, do you have some sort of door entry system?
+\layout Standard
+
+3.
+ If so, would you be interested in a combined system? 
+\layout Subsection
+
+Residential Properties
+\layout Standard
+
+We carried out an informal survey of one hundred and twenty seven residents
+ in and around Marchmont.
+ The accommodation in this area mostly comprises of flats with communal
+ stairwells; this market is already served by DDDS's existing products and
+ those of its competitors.
+\layout Standard
+\added_space_top 0.3cm \added_space_bottom 0.3cm \align center \LyXTable
+multicol4
+4 3 0 0 -1 -1 -1 -1
+1 1 0 0
+1 0 0 0
+1 0 0 0
+1 1 0 0
+8 1 0 
+8 1 0 
+8 1 1 
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+
+Residential Survey Results
+\newline 
+YES
+\newline 
+NO
+\newline 
+Do you have a PC in your Household?
+\newline 
+42
+\newline 
+85
+\newline 
+Do you have some form of door entry system?
+\newline 
+35
+\newline 
+7
+\newline 
+Would you be interested in combining the PC with a door entry system?
+\newline 
+6
+\newline 
+29
+\layout Standard
+
+Our survey indicates that only 17% of the people who had a PC and a door
+ entry system would be interested in a product that combined the two.
+ Although the market demand currently is low, it is possible that the demand
+ in future might be greater.
+ We identified the main residential markets to assess their likely future
+ demands.
+\layout Subsubsection
+
+Blocks of Flats 
+\layout Standard
+\added_space_top 0.3cm \added_space_bottom 0.3cm \align center 
+
+\begin_inset Figure size 200 137
+file ../web/images/pw3375.ps
+flags 11
+
+\end_inset 
+
+
+\layout Standard
+
+The increase of PCs in the home may allow this product to become an alternative
+ to the standard door entry system.
+ According to a representative of Castle Security (a local security company)
+ the system would face the problem of convincing sections of the population
+ of its value.
+ There will always be a percentage who will be resistant to new technology.
+ Another major weak point of a system in this market is that the fundamental
+ design requires the PC to be switched on during all of the day.
+ With current technology, this would be expensive and impractical.
+ In addition, it is questionable whether the PC would be situated in a convenien
+t location for this task; if not, the system would require extra cables
+ to be run to the PC which would increase the cost of the system and the
+ inconvenience for the householder.
+\layout Subsubsection
+
+Accommodation with a servitor
+\layout Standard
+\added_space_top 0.3cm \added_space_bottom 0.3cm \align center 
+
+\begin_inset Figure size 170 95
+file ../web/images/masson.ps
+width 1 6
+flags 11
+
+\end_inset 
+
+
+\layout Standard
+
+This form of accommodation differs from the above in that there is usually
+ some form of supervision at the point of entry, i.e.
+ a servitor.
+ The servitor's office would contain the PC and during the day people could
+ be let in by visual identification only.
+ During the night a form of security could be set for the main entrances.
+ The potential market here is accommodation similar to halls of residence.
+ 
+\layout Standard
+
+A spokesman for Pollock Halls of Residence was enthusiastic about the proposed
+ system; the individual halls all have offices next to the main entrance,
+ and all the offices also contain PCs that are unused overnight.
+ The system could be useful in restricting access to residents only after
+ a preset time.
+ The spokesman also suggested a possible application of the product for
+ the main gate of the halls; this would involve some form of access control
+ for vehicles.
+ This system could allow multiple sites to be administered from a central
+ security office, thus reducing the costs of security provision.
+\layout Subsubsection
+
+Semi / Detached Property
+\layout Standard
+\added_space_top 0.3cm \added_space_bottom 0.3cm \align center 
+
+\begin_inset Figure size 226 170
+file ../web/images/b2ivy163.ps
+width 1 8
+height 1 6
+flags 11
+
+\end_inset 
+
+
+\layout Standard
+
+Typically these properties do not have a remote door entry system such as
+ an intercom.
+ A major reason for this is that existing security measures, such as mechanical
+ locks and door peep-holes, are far cheaper and more reliable.
+ Systems such as intercoms tend to be used where the distance from the door
+ to the operator is significant, but in this sort of residential property,
+ a visitor can expect to be met at the front door.
+ Therefore, the market in this sector is extremely limited.
+ 
+\layout Standard
+
+A more likely market in this area would be properties sited within large
+ grounds, which can have entrances that are set a significant distance away
+ from the property.
+ These properties could use the improved security of visual communication,
+ and the added convenience of being able to identify visitors from inside
+ the property.
+ However, there is once again a number of drawbacks of the proposed system.
+ Primarily, the use of a PC as the control device conflicts with typical
+ patterns of PC use in a domestic environment, namely that it would need
+ to be powered up for most of the time.
+ It would also need to be in an easily accessed location, such as a hallway,
+ and would therefore need to be as small and discrete as possible.
+ Existing intercom and videophone solutions have recognised this, and have
+ produced products no bigger than a conventional telephone.
+ 
+\layout Subsection
+
+Conclusion
+\layout Standard
+
+In the residential market sector, it is clear that the proposed system has
+ a number of significant drawbacks.
+ Existing products provide both audio and video functionality, and at a
+ moderate cost.
+ The lack of uniformity of PC ownership means that such a system is an immediate
+ non-starter in shared stair environments.
+ Furthermore, the cost of providing a PC as part of the package would negate
+ any potential cost saving inherent in the system concept.
+ What the domestic residential market really wants is reliable, low cost
+ technology that is easy to use, convenient and discrete.
+ On these grounds, the proposed system would be unable to compete with products
+ already on the market.
+ Our research findings backs this up; the majority of people are quite happy
+ with their present system.
+\layout Subsection
+
+Commercial
+\layout Subsubsection
+
+Small/Large Business
+\layout Standard
+
+We carried out an informal survey of fifteen small to medium size commercial
+ properties; these ranged in function from an architect's office to a dental
+ surgery.
+\layout Standard
+\added_space_top 0.3cm \added_space_bottom 0.3cm \align center \LyXTable
+multicol4
+4 3 0 0 -1 -1 -1 -1
+1 1 0 0
+1 0 0 0
+1 0 0 0
+1 1 0 0
+8 1 0 
+8 1 0 
+8 1 1 
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+
+Commercial
+\newline 
+YES
+\newline 
+NO
+\newline 
+Does your office contain a PC?
+\newline 
+15
+\newline 
+0
+\newline 
+Do you have some form of door entry system?
+\newline 
+14
+\newline 
+1
+\newline 
+Would you be interested in combining the PC with a door entry system?
+\newline 
+8
+\newline 
+6
+\layout Standard
+
+Our survey indicates that 57% of the companies who had a PC and a door entry
+ system would be interested in a product that combined the two.
+ Specific commercial targets were then identified so that we could determine
+ a business strategy.
+ Given that the product is intended to be a low cost security solution,
+ designed for use both by visitors to premises and authorised occupants,
+ we identified two large markets which fit this category.
+ 
+\layout Subsubsection
+
+Education
+\layout Standard
+
+We carried out an informal survey of seven local schools; three of these
+ were primary schools and four were secondary.
+\layout Standard
+\added_space_top 0.3cm \added_space_bottom 0.3cm \align center \LyXTable
+multicol4
+4 3 0 0 -1 -1 -1 -1
+1 1 0 0
+1 0 0 0
+1 0 0 0
+1 1 0 0
+8 1 0 
+8 1 0 
+8 1 1 
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+
+Education
+\newline 
+YES
+\newline 
+NO
+\newline 
+Does your school office contain a PC?
+\newline 
+7
+\newline 
+0
+\newline 
+Does your school have some form of door entry system (e.g.
+ intercom)?
+\newline 
+0
+\newline 
+7
+\newline 
+Would you be interested a combined PC and door entry system?
+\newline 
+3
+\newline 
+4
+\layout Standard
+
+If schools were to place this system at entrance points it would allow them
+ to control access to the premises.
+ Allowing children and teachers to have their own unique access device would
+ make automated access control a viable proposition.
+ Visitors would be required to identify themselves using the audio/visual
+ communication part of the system.
+ Outside of school times the site would be closed to all but those with
+ an access device.
+ Additionally, the system would be configurable, so that schools could match
+ the level of security provision with their own needs.
+ For example, a rural school could have a policy of open access during the
+ day and automated access control outwith these periods.
+ A city school might need a higher level of security, so that open access
+ was only available at arrival and leaving times; this would be set by the
+ operator of the system.
+\layout Subsubsection
+
+NHS 
+\layout Standard
+
+The needs of hospital security, like school security, vary with the location
+ and the circumstances.
+ While most wards are open-access, there remains a need for security in
+ many areas of hospital buildings.
+ For example, recent media attention has highlighted the inadequacies of
+ the security measures in some maternity wards; our system has the potential
+ to rectify these deficiencies.
+ Other areas, such as medicine cupboards and supply stores, and areas which
+ are staff-only also require some form of restriction on access.
+ Again, our system is tailored to these demands.
+ 
+\layout Standard
+
+Government inquiries into hospital security, prompted by a spate of `baby-snatch
+ing' incidents in the early 1990s, identified some existing NHS security
+ measures as being insufficient.
+ Among the most salient points made in these reports were:
+\layout Itemize
+
+video security cameras are often left unmonitored
+\layout Itemize
+
+automated security being bypassed by people who pretend to be someone else
+\layout Standard
+
+The proposed system would have to be highly reliable and easy to use; the
+ nature of the hospital environment is such that some existing technologies,
+ such as magnetic swipe cards, are liable to failure (in this case from
+ magnetic fields generated by scanning equipment).
+ As there may be emergency situations where time is critical, and where
+ access to a particular area is suddenly more important than security, a
+ hospital system would need to have some form of manual override which could
+ be operated from either side of the door.
+ This could operate in tandem with an alarm system, to prevent abuse of
+ the override facility.
+\layout Subsection
+
+Conclusion
+\layout Standard
+
+Examining the commercial user group, their needs and their response to our
+ proposed design, it is clear that there is a significant level of enthusiasm
+ for the proposed product.
+ Given the highly specific needs of these markets in relation to the general
+ commercial security market, the proposed design should be tailored to meet
+ these needs.
+ Therefore, the proposed design's key features should reflect the needs
+ of these markets, namely low cost, reliability and durability.
+\layout Section
+\pagebreak_top 
+Market Sector Analysis
+\layout Standard
+
+In the market sectors which we have focused on, demand for the proposed
+ product has been created or increased by Government legislation, media
+ attention, and the influence of Government committees and working parties.
+ In addition, the concerns of the general public relating to security in
+ public access buildings, and lobbying by the teaching and health unions
+ have raised awareness of security issues in their respective areas.
+\layout Subsection
+
+School Security
+\layout Standard
+
+School security is an issue that has received significant attention in recent
+ years.
+ The government has investigated the issue in great detail recently, following
+ events such as the Dunblane shooting and the consequent repercussions.
+ In his inquiry into the Dunblane shooting, Lord Cullen stated
+\layout Quote
+
+
+\begin_inset Quotes eld
+\end_inset 
+
+It is recognised that there should be arrangements for security to prevent
+ unauthorised access to the school.
+\begin_inset Quotes erd
+\end_inset 
+
+
+\layout Standard
+
+On the same subject, the National Union of Teachers commented that 
+\layout Quote
+
+
+\begin_inset Quotes eld
+\end_inset 
+
+Every school in Britain should be redesigned so that they have only one
+ entrance.
+\begin_inset Quotes erd
+\end_inset 
+
+ 
+\layout Standard
+
+A government inquiry in 1989 into school security, chaired by Lord Elton,
+ came to the same conclusion.
+ The Manchester branch of the NUT called for 
+\layout Quote
+
+
+\begin_inset Quotes eld
+\end_inset 
+
+Legislation which will ensure that each school invests in adequate and appropria
+te safety and surveillance systems to protect staff and deter intruders.
+\begin_inset Quotes erd
+\end_inset 
+
+
+\layout Standard
+
+In addition to official comment, the media has made much of the need for
+ school security.
+ This in turn has created greater public pressure for greater measures to
+ be taken.
+\layout Quote
+
+
+\begin_inset Quotes eld
+\end_inset 
+
+Several schools have suffered devastating arson attacks.
+ Millions have had to be spent on refurbishment or rebuilding, simply because
+ arsonists could walk on to school premises at will...it is quite common for
+ thieves to wander into school in search of easy pickings during the working
+ day.
+ The tragic deaths of Philip Lawrence, the head teacher who died protecting
+ a pupil, and of Nicky Conroy, the schoolgirl shot dead while at work in
+ a school classroom, should have focused attention on the problem [of school
+ security].
+\begin_inset Quotes erd
+\end_inset 
+
+
+\layout Quote
+
+The Times (Friday, 24 May 1996)
+\layout Standard
+
+The result of the combined interest of the media, the general public and
+ the government is that school security is now a political issue, and clearly
+ there is demand for products which fill this market.
+\layout Subsubsection
+
+Interview with Mr N McLeod (Assistant Head Teacher of Stornoway Primary
+ School)
+\layout Standard
+
+Stornoway Primary has a roll of approximately 420 pupils.
+ All the classes are held in one complex, and the site is self contained.
+ There are seven entrances.
+ One for each year of the school, and two main entrances for visitors and
+ teachers etc.
+\layout Standard
+
+Are there any problems with security at the school?
+\layout Quote
+
+
+\begin_inset Quotes eld
+\end_inset 
+
+The main problem we have is the rise of vandalism at the weekends, school
+ windows being broken and dustbins being set alight.
+ Vandalism costs the school approximately £10,000 per year
+\begin_inset Quotes erd
+\end_inset 
+
+
+\layout Standard
+
+What measures have the school taken to tackle security issues?
+\layout Quote
+
+
+\begin_inset Quotes eld
+\end_inset 
+
+During the day the school is open to anyone; at night the entrances are
+ all locked and the police make regular patrols to discourage the vandals.
+ By the autumn the school will be connected up to Stornoway's CCTV system.
+\begin_inset Quotes erd
+\end_inset 
+
+
+\layout Standard
+
+Does the school have a budget for security?
+\layout Quote
+
+
+\begin_inset Quotes eld
+\end_inset 
+
+No, we just use our budget to pay for any security measures.
+ In the past this has meant buying better security for the windows on the
+ ground floor.
+\begin_inset Quotes erd
+\end_inset 
+
+
+\layout Standard
+
+Is there more pressure on schools in light of the Dunblane report?
+\layout Quote
+
+
+\begin_inset Quotes eld
+\end_inset 
+
+In the immediate aftermath, there was a degree of anxiety from parents,
+ I think it has made them more aware that schools can find it hard to properly
+ look after every individual pupil.
+\begin_inset Quotes erd
+\end_inset 
+
+
+\layout Subsubsection
+
+Interview with Angus Morrison of the SSERC
+\layout Standard
+
+The SSERC (Scottish Schools Equipment Research Centre) are a service set
+ up in 1965 by the Scottish Education Authorities as a common agency to
+ provide advice, information, consultancy and training on science and technology
+ education equipment and facilities.
+ 
+\layout Standard
+
+Until the 1996 reorganisation of Scottish Local Government the members of
+ the company were the twelve regional and islands councils.
+ Currently, members are being recruited from the thirty two new unitary
+ councils.
+ Members pay an annual subscription plus fees in return for specific services.
+ Members and third parties may also access other aspects of the service
+ such as training and consultancy at additional charge.
+ Membership of the company carries the right to nominate a director to the
+ Board of the company.
+ It is this Board which has overall control of SSERC science, technology
+ and safety support services.
+ 
+\layout Standard
+
+The service employs staff and engages part-time consultants with relevant
+ specialist scientific and technological qualifications and expertise.
+ Most of the team are also qualified teachers or support staff and between
+ them have many years of practical, educational experience.
+ 
+\layout Standard
+
+What is your role in the SSERC?
+\layout Quote
+
+
+\begin_inset Quotes eld
+\end_inset 
+
+I teach Chemistry at Rutherglen Academy, and I carry out consultation work
+ in project management for the SSERC.
+\begin_inset Quotes erd
+\end_inset 
+
+
+\layout Standard
+
+Can you see a need for increased school security?
+\layout Quote
+
+
+\begin_inset Quotes eld
+\end_inset 
+
+I think there is a need for your system in some areas of the country; but
+ there needs to be a balance struck between bringing up children in a safe
+ environment and bringing them up over protected.
+\begin_inset Quotes erd
+\end_inset 
+
+
+\layout Standard
+
+What do you consider to be the good points about our system?
+\layout Quote
+
+
+\begin_inset Quotes eld
+\end_inset 
+
+If it is cheap and reliable then that will be a strong selling point.
+ In school situations it is also advantageous if it can be user-friendly
+ and safe.
+\begin_inset Quotes erd
+\end_inset 
+
+
+\layout Standard
+
+What would you be looking for in a security system?
+\layout Quote
+
+
+\begin_inset Quotes eld
+\end_inset 
+
+How does the system react if there is a fire alarm? How do you know when
+ the system has stopped working? Does each door in the site have the system,
+ and if they do, do they all come with video cameras and are they all connected
+ to the one PC? Most importantly, will this system still work for you in
+ ten years; in twenty years?
+\begin_inset Quotes erd
+\end_inset 
+
+
+\layout Subsubsection
+
+Conclusions on School Security Issues
+\layout Standard
+
+While the need for school security is clearly present, any proposed system
+ has to meet a number of demands.
+ Security levels need to be tailored to the individual school, so the system
+ has to be highly flexible and configurable.
+ The limitations of school funding mean that, despite recent public attention,
+ school security is an issue which receives a relatively small proportion
+ of overall funding.
+ Therefore, the system has to be low-cost; this is the intention behind
+ the use of a PC at the remote end.
+ The system also has to be extendable to cover more than one entrance, ideally
+ with the same method of entry.
+ Again, by using a remote computer linked to multiple doors, this is a possibili
+ty.
+ Reliability and durability are also paramount, and the system has to be
+ able to withstand abuse over a period of many years.
+ Ideally, this means that all external parts should be as tough and damage-resis
+tant as possible, while having a minimum number of components that could
+ fail.
+\layout Subsection
+
+Hospital Wards
+\layout Standard
+
+As with schools, hospitals have varied and highly specific needs in terms
+ of security provision.
+ Again, the problem is a potentially very large institution with the conflicting
+ requirements of public access and site security.
+ Again, there has been government, public and media attention directed at
+ the issues surrounding hospital security, particularly following a spate
+ of incidents in maternity wards during the early 1990s.
+\layout Subsubsection
+
+Case Studies
+\layout Standard
+
+Over recent years there have been numerous, highly publicised security breaches
+ in maternity wards of hospitals:
+\layout Quote
+
+
+\begin_inset Quotes eld
+\end_inset 
+
+A baby girl was snatched from her cot in a hospital maternity unit yesterday
+ three hours after being born, in front of her mother who lay in an adjacent
+ bed ...
+\layout Quote
+
+Kali Hawthorne was grabbed by a blonde-haired woman who walked into the
+ ward as the baby's father was telephoning relatives from a nearby corridor
+ to tell them of the birth ...
+ The abduction again raised major questions about security in hospital maternity
+ wards which was supposed to have been increased following the abduction
+ of four-hour-old Abbie Humphreys from the Queen's Medical Center, Nottingham,
+ in July 1994.
+\begin_inset Quotes erd
+\end_inset 
+
+ 
+\layout Quote
+
+The Daily Telegraph (6th Decembers 1997)
+\layout Standard
+
+In situations such as these, the trust of the hospital staff has been abused
+ for the crime to be committed.
+ Patients and relatives do not want these wards to become fortess-like,
+ but concurrent with this is the clear need for security provision.
+ This serves not only to protect the patients but also to deter intruders
+ and provide reassurance to patients and staff.
+\layout Quote
+
+
+\begin_inset Quotes eld
+\end_inset 
+
+A bogus doctor who apparently staged a re-enactment of a plot from the medical
+ television series Dangerfield was being sought by police last night.
+ 
+\layout Quote
+
+The incident, on Tuesday in Bysing Wood, near Faversham, Kent, mirrors the
+ plot of the Oct 25 episode of the BBC series.
+ The women walked into a geriatric ward, posing as a doctor from a local
+ health center and injected her "patient" in both arms.
+ It is not known what the syringe contained but police said that the woman,
+ in her 40s, was not harmed.
+\begin_inset Quotes erd
+\end_inset 
+
+
+\layout Quote
+
+The Daily Telegraph (14th November 1996)
+\layout Standard
+
+In this case, the breach of security was a result of a policy decision by
+ the hospital that most wards should be open access.
+ It is not intended that the product be used as a means of restricting access
+ to such wards, and indeed it is unlikely that there would be much demand
+ for the product to be used in this way.
+ The main market would be for non-patient areas, such as storage facilities,
+ offices, but also wards where enhanced security is required.
+\layout Standard
+
+A problem that is particular to hospitals is that conventional electronic
+ door entry technology, which is based on magnetic media, is highly susceptible
+ to interference from strong magnetic fields, commonly present in hospital
+ equipment such as MRI scanners.
+ The proposed system has to be able to overcome this problem if it is to
+ be viable in this market.
+\layout Subsubsection
+
+An interview with Brian Liddle (Chairman of the Western Isles Health Board)
+\layout Standard
+
+Ospadal Nan Eileen is the only major hospital in the Western Isles.
+ The facility serves a population of 15,000.
+ It includes the only maternity, surgery and emergency facilities on the
+ Island.
+\layout Standard
+
+What security measures do you have in place?
+\layout Quote
+
+
+\begin_inset Quotes eld
+\end_inset 
+
+At present the hospital has closed circuit television cameras at twelve
+ major points in the hospital.
+ These are mainly at the significant entrances and exits.
+ The pictures from the cameras are stored on to a twelve hour video, which
+ is changed at the end of each receptionist's shift.
+ The tape is kept for one week and then re-used.
+\begin_inset Quotes erd
+\end_inset 
+
+
+\layout Standard
+
+How do you control access throughout the hospital?
+\layout Quote
+
+
+\begin_inset Quotes eld
+\end_inset 
+
+The only locked wards we have are psychiatric and maternity.
+ Maternity has a locked entrance, in which visitors request access by ringing
+ a door bell.
+ Any sensitive areas of the hospital are accessed by a pin number.
+\begin_inset Quotes erd
+\end_inset 
+
+
+\layout Standard
+
+Are you governed by legislation in this area?
+\layout Quote
+
+
+\begin_inset Quotes eld
+\end_inset 
+
+We have policies covering the safety of doctors, nurses and patients.
+\begin_inset Quotes erd
+\end_inset 
+
+
+\layout Standard
+
+Would being able to control access be useful in a hospital environment?
+\layout Quote
+
+
+\begin_inset Quotes eld
+\end_inset 
+
+I think in the near-future there will be some control of the movement of
+ personnel and visitors but I don't think at this moment in time there is
+ a 100% reliable system for achieving this.
+\begin_inset Quotes erd
+\end_inset 
+
+
+\layout Subsubsection
+
+An interview with John Fitzpatrick (consultant anaesthetist at the Southern
+ General.)
+\layout Standard
+
+Are you governed by any specific security measures?
+\layout Quote
+
+
+\begin_inset Quotes eld
+\end_inset 
+
+I have a security pass to identify myself, I have a password to access computer
+ systems, a key for my office and PIN and key number to access some chemical
+ cupboards.
+\begin_inset Quotes erd
+\end_inset 
+
+
+\layout Standard
+
+Would you benefit from having one device that could replace all of these?
+\layout Quote
+
+
+\begin_inset Quotes eld
+\end_inset 
+
+I think anything that made life easier would be a good thing but it would
+ need to be as secure as present technology.
+\begin_inset Quotes erd
+\end_inset 
+
+
+\layout Subsubsection
+
+Hospital Market Research
+\layout Standard
+
+There are approximately forty-four hospitals in the Edinburgh area; we contacted
+ four of them to gauge their reaction to the system.
+ In each case we talked to someone in charge of their works department.
+ Three of the four declared an interest in the product and their comments
+ included:
+\layout Quote
+
+
+\begin_inset Quotes eld
+\end_inset 
+
+Although the system would be successful in wards, it does seem as if it
+ could be of more use in its automated format.
+ We have specific areas of the hospital that only certain people can enter,
+ this includes the morgue, pharmacy and computer departments.
+ At present we use PIN numbers and keys to gain access but this sounds like
+ a more effective way of implementing our security strategy.
+\begin_inset Quotes erd
+\end_inset 
+
+
+\layout Standard
+
+(Royal Victoria Hospital)
+\layout Quote
+
+
+\begin_inset Quotes eld
+\end_inset 
+
+Any form of access contol to wards would have to be rigorously monitored
+ to ensure patient safety is not infringed.
+\begin_inset Quotes erd
+\end_inset 
+
+
+\layout Standard
+
+(Tippethill Hospital)
+\layout Quote
+
+
+\begin_inset Quotes eld
+\end_inset 
+
+If the system is reasonably cost effective then I can see it being of interest
+ to a lot of hospitals.
+\begin_inset Quotes erd
+\end_inset 
+
+
+\layout Standard
+
+(Queen Margaret Hospital)
+\layout Subsubsection
+
+Conclusions on Hospital Security Issues
+\layout Standard
+
+The needs of hospital security differs substantially from that of schools.
+ In hospitals, the usual policy is to have wards as open-access, i.e.
+ visitors can enter and leave at any time.
+ As a result, it is unlikely that there will be a market for this product
+ to secure general wards.
+ However, there are certain exceptions to this rule.
+ In particular, maternity wards have been highlighted as an area where security
+ should be given higher priority.
+ 
+\layout Standard
+
+The second point to make is that hospitals, while being generally public-access,
+ do have a significant number of staff-only areas; if a security system
+ is to be produced to secure these areas, it has to be able to cope with
+ conditions in the hospital environment, and has to be scalable to cover
+ a potentially huge site.
+\layout Subsection
+
+General Security Issues
+\layout Standard
+
+Building planners, architects, and managers must consider security in the
+ early stages of design; foresight can mean significant rewards.
+ Making a building secure does more than protect occupants and the contents
+ of buildings.
+\layout Standard
+
+The Health and Safety at Work Regulations (1974) and as amended (1992) requires
+ 
+\layout Quote
+
+
+\begin_inset Quotes eld
+\end_inset 
+
+That every employer shall make a suitable and sufficient assessment of the
+ risks to the health and safety of persons in his employment arising out
+ of or in connection with the conduct by him or his undertaking.
+ 
+\begin_inset Quotes eld
+\end_inset 
+
+
+\layout Standard
+
+In other words, employers have a legal obligation to protect the health
+ and well-being of their employees; this definition incorporates the protection
+ of their security.
+\layout Standard
+
+Overall, regardless of the purpose or size of a building, a security system
+ can:
+\layout Itemize
+
+restrict access to controlled areas 
+\layout Itemize
+
+prevent incidents 
+\layout Itemize
+
+monitor/record security breaches to facilitate intervention and investigation
+\layout Itemize
+
+cut personnel costs
+\layout Itemize
+
+raise morale and productivity 
+\layout Standard
+
+Equally, an effective security system can reduce an owner's liability for
+ damage.
+ Courts have held building owners or managers liable for assaults and other
+ criminal acts committed on their properties.
+ Evidence of a security system designed to prevent such acts can mitigate
+ the damages awarded by proving that reasonable care was taken to prevent
+ such occurrences.
+\layout Standard
+
+By considering the needs of building occupants and visitors for easy access,
+ the desire to display or not display security aspects, and by applying
+ building codes and regulations, planners can design a security system which
+ meets but need not exceed standards.
+ A graduated scale of protection ensures that security can be cost effective.
+ 
+\layout Standard
+
+Additionally, existing legislation and guidelines relating to building safety
+ have to be considered during the design of any door entry system.
+ This has significant implications on the design of the door system; it
+ must default to the `open' position in the event of power failure or the
+ fire alarm sounding, so the system has to be linked into existing building
+ monitoring functions such as the fire system.
+\layout Subsection
+
+Conclusion
+\layout Standard
+
+For the specific markets that have been selected, the security system has
+ to offer the following features:
+\layout Itemize
+
+High level of reliability
+\layout Itemize
+
+Configurable levels of security
+\layout Itemize
+
+Immune to magnetic field interference
+\layout Itemize
+
+Low cost
+\layout Itemize
+
+Simple user interface at both ends
+\layout Itemize
+
+Key device must be easy to carry around and use
+\layout Itemize
+
+Intercom communication to identify visitors
+\layout Itemize
+
+Video capture for additional security and logging
+\layout Standard
+\pagebreak_bottom 
+Therefore, the proposed system has been designed to meet these requirements.
+\layout Section
+
+Analysis of Potential Markets
+\layout Subsection
+
+Survey of local schools
+\layout Standard
+
+There are approximately six hundred schools in the Edinburgh area.
+ We contacted seven of them to get information about whether they would
+ be interested in the system and to listen to any comments they had.
+ Some of the comments included:
+\layout Quote
+
+
+\begin_inset Quotes eld
+\end_inset 
+
+We would prefer the system to only have video on the main entrance to the
+ school, and would be worried that the school could become intimidating
+ to pupils.
+\begin_inset Quotes erd
+\end_inset 
+
+ 
+\layout Quote
+
+Our Lady of Lourdes RC Primary School
+\layout Quote
+
+
+\begin_inset Quotes eld
+\end_inset 
+
+Unless the government makes it a priority, then they would not be taking
+ any particular school precautions.
+ The Cullen report's success in banning handguns has allayed a lot of parents'
+ fears.
+\begin_inset Quotes erd
+\end_inset 
+
+
+\layout Quote
+
+North Queensferry Primary School
+\layout Quote
+
+
+\begin_inset Quotes eld
+\end_inset 
+
+There would need to be strict tests on the system to make sure it did not
+ infringe pupil safety, although we do consider the project a worthwhile
+ exercise.
+\begin_inset Quotes erd
+\end_inset 
+
+ Galashiels Academy
+\layout Standard
+
+Overall three of the schools contacted said that they would be interested
+ in a system for security, whilst four declared no interest for the time
+ being.
+ If this survey is accurate then the market potential for the Edinburgh
+ area would be around 240 schools.
+\layout Section
+\pagebreak_top 
+Feasibility of Final Product
+\layout Subsection
+
+The Proposed Hardware 
+\layout Standard
+
+The door entry system is designed to meet the needs of the product markets,
+ as identified earlier.
+ This has been achieved by the use of various technologies.
+ The failsafe mechanisms are provided by the use of a mechanical and electro-mec
+hanical combination of lock mechanisms.
+ In normal operation, the electro-mechanical door mechanism operates to
+ unlock the door, while a Yale-type latched doorlock allows manual operation
+ with a conventional key.
+ This means in the event of system failure due to power supply interruption,
+ access can still be gained to the property by use of a key.
+ Normally this key would be held by only one or two people, such as the
+ security staff, and should not be distributed for widespread use; as this
+ would defeat the security features inherent in the electronic mechanism.
+ 
+\layout Standard
+
+The main electro-mechanical mechanism is driven by lock control unit, which
+ in turn is connected by a serial link of variable length to the remote
+ PC.
+ The lock control unit has the capability to automatically control entry
+ without needing to communicate with the remote PC, and is therefore protected
+ from failure in the event of a break in the serial link.
+ 
+\layout Standard
+
+A simple user interface has been designed, which offers a high degree of
+ reliability and security.
+ Although magnetic swipe cards are a widely-used and low-cost technology
+ in door-lock systems, this design does not use them.
+ There is another system which offers greater reliability and convenience,
+ while still being relatively low-cost.
+ This technology is called iButton and it is manufactured by Dallas Semiconducto
+r; it consists of a small button-shaped tag which can be mounted on a laminated
+ identity card or a plastic keyring holder.
+ This means it is more convenient to carry around than a conventional magnetic
+ swipe card.
+ 
+\layout Standard
+
+Additionally, it does not require moving contact for it to be read, and
+ cannot be wiped by magnetic fields; this technology was therefore chosen
+ to meet the needs of our chosen market.
+ Each iButton is manufactured with a unique identification number, which
+ our system reads from the device and uses to identify the user.
+ The user is then required to enter a Personal Identification Number (PIN)
+ which then allows them to enter the building.
+ The PIN is entered using a conventional numeric keypad, which is part of
+ the lock control system.
+ 
+\layout Standard
+
+The second mode of operation requires the use of video and audio systems.
+ The design requirement of using a serial link means that this data has
+ to be digitised and sent over the link.
+ These functions are also carried out by the lock control unit.
+ It is proposed that the final product would have the entry buzzer button
+ located just below the camera, so that the picture from the camera would
+ be of the visitor's face.
+ The location of the microphone and speaker of the audio system are less
+ important, but these would be part of the same external unit, and would
+ be separate from the lock control unit itself.
+\layout Standard
+
+Finally, the design is such that external tampering does not make access
+ possible.
+ The input devices (camera, keypad, iButton reader, microphone) and output
+ devices (speaker, status indicators) are wired so that they cannot cause
+ the electro-mechanical door latch mechanism to activate.
+ As a backup to this, the door position sensor will detect if the door has
+ been opened without the electronic authorisation being issued.
+ If this happens, an alarm will sound in the lock control unit and at the
+ PC; this can be overridden from the PC side.
+\layout Subsubsection
+
+Conclusions from Hardware Prototype
+\layout Standard
+
+Having constructed a prototype of the hardware required to implement the
+ design, various design issues have been raised.
+ The use of an RS232 serial link to transport the video, audio and control
+ data was found to be insufficient for a the feature set which was specified;
+ a finalised design would perform much faster if a faster communications
+ link was used.
+ The camera used is also inherently slow, although this is partly a software
+ issue.
+ A further point worth making is that there is little benefit in transmitting
+ audio and video as digital signals; using separate analogue cables alongside
+ the digital control cable would improve the audio and video performance
+ significantly.
+ The natural conclusion to this idea is to make the remote entry controller
+ a completely separate unit, with no PC involved in the system.
+ Although this takes the design far away from the initial concept, it would
+ make the system more robust and less reliant on existing hardware's performance
+ levels.
+\layout Standard
+
+The prototype door control unit consists of a Motorola development board
+ with an interface attached to the bus.
+ Clearly, the final hardware unit would not be based on this development
+ system, but instead would be a subset or redesign of it.
+ To retain the same functionality, with enhanced performance, would require
+ a slightly more powerful system with significantly greater bandwidth.
+ One possible configuration to achieve this would be an embedded i486 controller
+, with at least 8MB of RAM, with 10Mbps Ethernet for data transfer.
+ An operating system would be recommended, adapted to the hardware e.g.
+ Linux or FreeBSD.
+\layout Standard
+
+Alternatively, with audio and video remaining as analogue systems, the hardware
+ requirements would be significantly lowered.
+ Possible solutions would include a low-cost processor such as the Zilog
+ Z80, or an embedded ASIC which would provide a complete system on a single
+ chip.
+\layout Standard
+
+A marketable system would require the external components (keypad, iButton
+ reader, doorbell button, camera, and intercom facilities) to be specified
+ in a durable form, suitable for outdoor use and able to withstand tampering
+ and vandalism.
+ Existing products in this market have shown that this is possible for all
+ components except the iButton reader.
+ However, there is no technical reason why this cannot be manufactured in
+ toughened form; it consists of nothing more complicated than a pair of
+ electrical contacts.
+ One possibility is to integrate the iButton reader into an existing device,
+ such as a door handle.
+\layout Standard
+
+
+\begin_inset Figure size 198 141
+file ../web/images/door3.ps
+width 1 7
+height 1 5
+flags 11
+
+\end_inset 
+
+
+\layout Standard
+
+To produce a high specification hardware system, for the intended market,
+ would involve relatively low volume manufacturing.
+ Our estimates of likely demand, based on a market of 20,000 schools and
+ 5,000 hospitals, range from 2,000 units to 10,000 units.
+ Our cost breakdowns are based on information from a company manufacturing
+ products of a similar level of technology and supplying similar volumes
+\begin_float footnote 
+\layout Standard
+
+Zonal Retail Data Systems, Edinburgh
+\end_float 
+.
+ Given this, the cost breakdown is as follows:
+\layout Itemize
+
+i486 embedded system and support components --- £100 
+\layout Itemize
+
+toughened keypad and iButton input devices --- £30
+\layout Itemize
+
+toughened black and white camera and intercom devices --- £60 
+\layout Itemize
+
+(optional) sound card and network card for PC --- £50
+\layout Itemize
+
+(variable) 100 iButton keys --- £100
+\layout Itemize
+
+enclosures, cables, miscellaneous items --- £50
+\layout Itemize
+
+Printed circuit board --- £20
+\layout Itemize
+
+packaging, distribution --- £ 40
+\layout Standard
+
+Therefore, the estimated cost per unit is £360, although this is only an
+ approximate costing.
+ This does not include the cost of the 100 iButtons, as this depends on
+ the number required by the buyer.
+ Obviously, the retail price would be above this, and would be determined
+ by the level of competition in the market.
+ We estimate that the hardware would require around 6 months development
+ to bring it to a marketable state, given that the design is relatively
+ simple and the technologies fairly mature.
+ 
+\layout Standard
+
+Labour costs involved in this would be broken down into costs of hardware
+ development, labour for manufacture and costs of an installation engineer.
+ Given a 6 month development period, and an electronic engineer paid at
+ £20,000 p.a., we would cost the product development at a minimum of £10,000.
+ This does not include the costs of equipment, which would cover PCs, logic
+ analysers, oscilloscopes, prototyping equipment, and premises.
+ Again, this would be a substantial investment, although DDDS may already
+ have many of these facilities.
+ Manufacturing costs are costed assuming a wage rate of £10/hour, but the
+ actual cost depends on the complexity of the final design and therefore
+ the cost can only be a very rough estimate.
+ 
+\layout Subsection
+
+The proposed software
+\layout Standard
+
+The software should be user-friendly, and simple to use.
+ It must not confront the user with a bewildering array of options just
+ to open a door.
+ It was decided that, to make the system a bit more robust, that there should
+ be relatively little indispensable communication between the Motorola board
+ and the PC during normal operation, and that the only information that
+ is actually required is that video data be sent so that a user-interface
+ running on the PC would be able to display a recent image of the doorway.
+ The automatic operation portion of the system runs exclusively on the board
+ and doesn't require any intervention from the PC.
+ The only reason that the PC needs to be used for the automatic entry system
+ is for maintenance of the user database, which is downloaded onto the board
+ whenever the latter is initialised or the main database on the PC is updated.
+ 
+\layout Standard
+
+The software is the primary focus for introducing the `value-added' components
+ that would make a system such as this worthwhile and more marketable.
+ For example, the Motorola board could keep a log of the iButtons which
+ are used; this could then be downloaded onto the PC and stored for security
+ purposes.
+ If the PC is on, the main database could be used to store an image of the
+ iButton's holder, so that when the board is used to open the door, an operator
+ at the PC could see a picture of the person who should be at the door.
+ If the person using the iButton does not match the stored picture, the
+ operator could intervene.
+\layout Standard
+
+Another idea would be to allow visitors to leave voicemail messages on the
+ system, if they came to the door but there was no one there to let them
+ in.
+ This could be extended to include a still image or a short video sequence
+ of the person at the door.
+\layout Standard
+
+For added security, the PC could be left on and set to save the video sequence
+ to disc.
+ This would give a CCTV-like functionality to the package.
+\layout Standard
+
+The main reason for developing a system such as this would be to make full
+ use of the flexibility of the PC software; once the basic functionality
+ of door control and audio/video data transmission has been created, much
+ greater functionality can be added at little extra cost.
+ The source code could even be sold as part of the system, so that the more
+ adventurous owner of the package could extend it themselves; although the
+ target market may not lend itself to this approach.
+ This purpose may better be served by adding an external programming port
+ into the software, so that the main system maintains integrity, but the
+ end-user can extend its functionality.
+ For example, hooks in our database system could allow the user to create
+ a database of their own that was more tailored to their own requirements;
+ the system provides the basic mechanism for identifying people but then
+ the owner can add extra services such as voicemail retrieval.
+ This would also allow for further development and sales by DDDS as they
+ could then sell extension packages for the system designed to increase
+ functionality.
+\layout Standard
+
+Another useful feature would be remote administration.
+ This could be achieved for instance by replacing the client software with
+ a custom-built web server
+\layout Subsubsection
+
+Conclusions from Software Prototype
+\layout Standard
+
+Ideally, we would probably want to use a more powerful processor board than
+ the IDP and use a `proper' operating system rather than our state machine
+ architecture.
+ Having said that, the state machine gave us a simple yet robust mechanism
+ of gluing the separate functionalities of the system together.
+ This was proven by the remarkable simplicity with which the system went
+ together in the end.
+ Apart from a few inevitable bugs with the coordination with the PC, where
+ incorrect assumptions had been made with respect to the conditions on entry
+ to the states, the integration process was relatively painless.
+\layout Standard
+
+It would be feasible that a videophone-style system could be created given
+ more time and a faster processor and communication link, since the audio
+ software is nearly working --- we have shown it to be possible in one direction
+ --- and the video speed is essentially limited by the speed of the camera
+ and the inefficiency of its associated drivers.
+\layout Standard
+
+The final system would probably have to be written for the MS Windows operating
+ system, given that it is the most prevalent system for PCs currently on
+ the market.
+ Whilst Linux is certainly popular in certain IT departments, the average
+ office PC for which the system is destined is likely to be running under
+ Windows 3.
+\emph on 
+x
+\emph default 
+/95/NT.
+\layout Standard
+
+Using C as our programming language was motivated essentially by the tools
+ available on the Motorola board and our familiarity with it.
+ C++ may be better in terms of structured development; Java could also be
+ used.
+\layout Subsubsection
+
+Development
+\layout Standard
+
+The system would need approximately 4 months development time, including
+ testing; this is broken down as follows :
+\layout Itemize
+
+adaptation of the operating system: 800 man-hours
+\layout Itemize
+
+development of driver software: 300 man-hours.
+\layout Itemize
+
+creation of efficient, reliable audio/video codecs: 450 man-hours.
+\layout Itemize
+
+development of reliable, user-friendly front-end system: 550 man-hours.
+\layout Standard
+
+This would give a total development time of 2100 man hours.
+ Given that the approximate rate of pay for contract workers at present
+ is £800 per week, this would give a total cost of software development
+ of £42,000.
+\layout Subsection
+
+The proposed system in a wider context
+\layout Standard
+
+The benefits of using a unique, highly portable key device to operate the
+ door system can be translated to other areas with security needs.
+ Potentially, the iButton system can control access to any electronic device,
+ or control access via some electronic control system.
+ For example, access to a photocopier can easily and cheaply controlled
+ using the same iButton that allows access to a building.
+ It can be used to control access to computers, and the data held within
+ them, which of particular importance in a hospital environment.
+ 
+\layout Standard
+
+A further benefit of such a widespread use of iButton tags is that, using
+ a central database of request actions, personnel can be tracked through
+ buildings and located relatively easily.
+ In a hospital environment, this is particularly useful, and would complement
+ the existing use of pagers.
+ In schools, iButton technology can be extended to incorporate a payment
+ system for school meals, and could also form the basis of an electronic
+ attendance register.
+ The real benefit of an electronic key such as this is that it minimises
+ the number of PIN numbers, keys and magnetic cards that have to be carried
+ around; one key covers a multitude of uses.
+\layout Standard
+
+In the interviews with representatives from schools, a common theme was
+ reliability; in particular, potential buyers were keen to know the expected
+ lifespan of the product.
+ For iButton devices, manufacturer's data indicates the expected lifespan
+ at 10 years.
+ This is well in excess of the typical lifespan of magnetic card devices,
+ which is usually around 2 years.
+ For the remainder of the lock control hardware, the lifespan depends on
+ the environment in which it is installed.
+ The external hardware, consisting of the iButton reader, the doorbell button
+ and the keypad, is mechanically and electronically simple, and provided
+ ruggedised versions are used, they should outlast the iButton devices.
+\layout Section
+\pagebreak_top 
+Operation of Final Product
+\layout Subsection
+
+The System
+\layout Standard
+
+Each entry point to the building would either have the full unit, or a unit
+ with no camera.
+ The main entrance would be covered by the full unit.
+ All iButton owners would be able to enter through any control point.
+ All visitors would only be allowed to enter through the main entrance.
+ Visitors have to ring the buzzer to request entry.
+ Communication can then take place to determine the visitor's identity.
+ iButtons should be given to all the users of the building and anyone else
+ who is authorised to enter unsupervised.
+ In a school environment, this could include local groups, so that parts
+ of the school could be used by community groups (e.g.
+ Scouts, sports clubs).
+ The holders of the mechanical key can be determined by the security policy
+ for the building, but ideally should only be held by senior staff or the
+ building security unit.
+ 
+\layout Subsection
+
+The Users
+\layout Standard
+
+Each user will have different demands on the times they will need to use
+ the system:
+\layout Itemize
+
+Staff will need access at any time
+\layout Itemize
+
+In hospitals, staff need instant access in emergencies
+\layout Itemize
+
+Cleaners may not start until the end of the day
+\layout Itemize
+
+In schools, pupils should not be able to gain access outside school time
+\layout Itemize
+
+Visitors should only be able to enter through designated control points
+\layout Standard
+
+The system will be configurable, so that each user group can be given different
+ access rights.
+ 
+\layout Subsection
+
+The System Manager 
+\layout Standard
+
+The system manager will have be able to make changes to the database to
+ control access times and security levels.
+ One example of this is the configurability required for schools; pupils
+ generally need open access in the beginning and end of the day, with the
+ intercom facility outwith this.
+ Staff need controlled, automatic access at any time.
+ Cleaners need access outwith normal hours.
+ All of this is configurable using the database control.
+\layout Standard
+
+The system manager should be the only one able to access the main computer;
+ this can be accomplished by using iButton technology for controlling access
+ to the PC.
+ Information can be transferred between the iButton and a PC with a momentary
+ contact using a `Blue Dot' receptor.
+ The `Blue Dot' sticks to any convenient spot on the front of a PC and is
+ cabled to the serial or parallel port in the back.
+ The information downloaded would be a unique password to access the database.
+ If the system manager is the only one with the iButton, he will be the
+ only one who can access the database.
+\layout Subsection
+
+Operation under Specific Conditions
+\layout Subsubsection
+
+System operation during a fire alarm
+\layout Standard
+
+In the event of a fire the system will not affect normal fire procedures.
+ Each door can be manually opened from the inside to aid escape.
+ By connecting the door system into the fire alarm system, it is possible
+ to automatically unlock the door.
+\layout Subsubsection
+
+Power failure
+\layout Standard
+
+When then the system stops working the premises will be unaffected as the
+ backup mechanical operation of the lock will allow it to have the same
+ security level as at present.
+ Additionally, exit is still possible, again by using the mechanical exit
+ mechanism.
+ The electromagnetic latch mechanism can be specified as defaulting to the
+ open state, so that total power failure does not lock people in or out.
+\layout Subsubsection
+
+Partial system failure
+\layout Standard
+
+With the failure of part of the system, the redundancy in the design should
+ allow the rest of the system to remain operational.
+ If the remote PC is not operating, the door control unit has enough local
+ processing power to keep the automatic mode of operation running.
+ Conversely, failure of part of the automatic system, for example the keypad
+ or iButton, does not affect the operation of the manual (intercom and video)
+ mode.
+\layout Subsubsection
+
+Environmental hazards to iButtons
+\layout Standard
+
+Manufacturer's data suggests that each iButton has a lifetime in excess
+ of 10 years.
+ They are electrically and mechanically very simple and highly durable,
+ being manufactured from stainless steel.
+ The only requirement to read them is momentary electrical contact between
+ two separate metal surfaces.
+\layout Section
+\pagebreak_top 
+Competitors
+\layout Standard
+
+There are a great number of companies working in the field of security systems.
+ Most of these sell products that are modular; if you want access control
+ you buy one part, if you need video as well then you add on an another
+ component.
+ A minority of companies have designed specialised systems for residential
+ or small businesses, and only one or two have decided to target a specific
+ market.
+\layout Subsection
+
+School Security and Related Products
+\layout Subsubsection
+
+ECr Concepts
+\layout Standard
+
+ECr Concepts in Merthyr Tydfil plan to introduce a new credit-card style
+ pass system to primary and secondary schools.
+ By logging data on a computer, it will monitor everything from attendance
+ to what children eat for lunch.
+ Parents can pay for school meals in advance and this will be recorded on
+ a computer.
+ When a child goes for a meal, the card is swiped and their picture appears
+ on the computer for identification.
+ The order is also recorded.
+\layout Standard
+
+Parents can ask for a weekly read-out of meals eaten and obtain a breakdown
+ of their fat, carbohydrate and protein content to ensure a healthy, balanced
+ diet.
+ The card will incorporate an entry function.
+ It can be used to enter the school and selected controlled areas.
+ As well as keeping out intruders, staff will be able to monitor attendance
+ and record daily movements in the school.
+\layout Standard
+
+A local councillor stated: 
+\layout Quote
+
+
+\begin_inset Quotes eld
+\end_inset 
+
+It sounds a great idea for security, and paying for services in schools.
+ The card will not only ensure that unauthorised access is not allowed at
+ school but can cover everyday things like ensuring children have their
+ school meals.
+
+\emph on 
+ 
+\emph default 
+I can envisage a day in the not too distant future when every schoolchild
+ in Britain will have one of these cards to use in their schools."
+\layout Subsection
+
+Specialised Security Systems
+\layout Subsubsection
+
+CEM Security Systems
+\layout Standard
+
+CEM Security Systems designs and manufactures products for a highly specialised
+ market, namely airport security.
+ They have seen a specific gap in the market and designed their product
+ accordingly.
+ 
+\layout Standard
+
+Since installing their first system at Belfast International Airport in
+ 1987, CEM has supplied their Airport 2000 system to many of the major UK
+ airports including Heathrow, Gatwick, Stansted, Glasgow, Manchester, East
+ Midlands, Luton and Edinburgh.
+ CEM have also installed similar systems in airports around the world.
+ 
+\layout Standard
+
+Each airport in the United Kingdom has differing security needs.
+ However, all use the Airport 2000 Visual Imaging Pass Production System
+ (VIPPS) in one manner or another.
+ VIPPS captures, compresses, stores and retrieves graphical and textual
+ data such as images, logos and signatures.
+ 
+\layout Standard
+
+Their chairman states:
+\layout Quote
+
+"VIPPS allows the airport to add graphical and textual information to the
+ database, capture images from live or still cameras and photographs, retrieve
+ and update previously entered data, write data to various card technologies
+ and define badge layouts."
+\layout Subsection
+
+Security using iButton technology
+\layout Subsubsection
+
+Seadan Security & Electronics
+\layout Standard
+
+Seadan Security & Electronics offers the EL1200 Access System for physical
+ access control of medium-size offices and buildings, or areas within buildings.
+ The EL1200 system can store information for up to 1,500 individuals permitted
+ to access a building.
+ 
+\layout Standard
+
+To gain entrance to a building secured with the EL1200 Access System, an
+ employee touches his or her iButton-based key ring or token to an iButton
+ reader mounted by the door, then enters their Personal Identification Number
+ (PIN).
+ The system compares the data read from the iButton and PIN number to the
+ system's database, then unlocks the door if the data is verified as correct.
+ An entry log is maintained by the EL1200 showing all persons who entered
+ by a specific door, and what date and time they entered.
+ 
+\layout Standard
+
+The system allows for 10 access time zones or categories, allowing the system
+ to compensate for a company's holiday schedule.
+ The iButton reader unit has 12 keys and 4 display characters for simple
+ operation and programming.
+ Output point can be configured as a door open alarm output, timer-driven
+ output, or sensor alarm output Standard software packages are available.
+ 
+\layout Standard
+
+The EL1200 is equipped with a standard interface for network operation,
+ which ultimately connecting the units to a PC for centralised monitoring
+ and control.
+ 
+\layout Subsubsection
+
+Cansec Systems Ltd.
+ 
+\layout Standard
+
+Cansec offers two iButton access readers for use with Cansec- and OEM-manufactur
+ed access control systems, and the associated TAS100 Data Management Software
+ package supports up to 1,000 users and four reader groups for either the
+ TAS100 or the RT100.
+ 
+\layout Standard
+
+TAS100 Touch Access Stand-Alone System is a self-contained, programmable
+ access control system.
+ It is simple to install and operate, requiring no communications wires
+ for use.
+ The system includes easy-to-use programming software, and access keys are
+ programmed with a read/write iButton key.
+ The reader features rugged metal construction and bi-colour LED status.
+ An alarm alerts users to someone attempting or achieving access to a building
+ or room.
+ Lights and an alert provide users with both visual and audible signals
+ of access being granted or denied.
+ The face plate and stainless steel read head are vandal-resistant and suitable
+ for both indoor and outdoor use.
+ While in use, the last 64 access granted messages can be retrieved from
+ the reader with an audit key.
+\layout Subsection
+
+General Security Companies
+\layout Subsubsection
+
+Gyr security 
+\layout Standard
+
+Gyr market an advanced security management system specifically designed
+ to assist professional facilities and security managers by providing a
+ single screen solution.
+ The manufacturers claim it to be the ideal tool for building access, parking
+ access and CCTV control at single or multiple locations.
+\layout Subsubsection
+
+PAC access control
+\layout Standard
+
+PAC for Windows Residential is a PC based housing security system running
+ under Microsoft Windows.
+ The system has been designed for single and multi-block estates with up
+ to 30,640 doors and any number of users.
+\layout Standard
+
+PAC for Windows Residential offers a wide range of building management functions
+ which include: monitoring and controlling security cameras; linking to
+ paging systems for mobile personnel and monitoring fire doors and lift
+ doors to check whether they have been left open.
+\layout Standard
+
+Tenants are issued with PAC proximity keys, three per flat, colour coded
+ for easy recognition.
+ Local authority staff carry PAC proximity ID cards which include a photograph
+ for identification purposes.
+\layout Standard
+
+At the Housing Office, PAC readers are fitted to external doors, to restrict
+ access to the building, and system administration is carried out at a central
+ PC.
+ Additional PCs are located with the concierge of each of the residential
+ blocks for monitoring alarms and system events, and to allow guards manual
+ control of doors and car park barriers.
+\layout Standard
+
+Ancillary equipment, including panic buttons, fire exits, ventilation and
+ heating equipment in the main building are monitored using PAC Alarm Event
+ Managers.
+ Concierge and maintenance staff are alerted to problems via pagers.
+ Car park lighting is time-controlled via the PAC Alarm Event Manager.
+\layout Standard
+
+Elevator control is used in each of the residential blocks to restrict access
+ by tenants to different floors of the main building.
+\layout Subsection
+
+Conclusion
+\layout Standard
+
+There are only a couple of companies working in the field of iButton building
+ access control, none of which have identified a niche market or offer audio
+ visual communication.
+ 
+\layout Standard
+
+Our product is unique in that it is supplying a state of the art system
+ that will meet the needs of our market.
+ Like Cemsys we have identified a specific need and therefore we should
+ be able to reap the dividend.
+\layout Section
+\pagebreak_top 
+Bibliography and acknowledgements
+\layout Subsection
+
+Bibliography
+\layout Standard
+
+
+\emph on 
+Building Security: Are You Overlooking Something?
+\emph default 
+ by Robert Hager, IDenticard Systems, Inc.
+ 
+\layout Standard
+
+Electronic Telegraph, www.telegraph.co.uk
+\layout Standard
+
+CEM Systems NA, Inc, www.cemsys-na.com
+\layout Standard
+
+PAC International Ltd, www.pac.co.uk 
+\layout Standard
+
+Seadan Security & Electronics, www.ibutton.com/Connections/Catalogs/seadan.html
+\layout Subsection
+
+Acknowledgements
+\layout Standard
+
+Thanks to:
+\layout Itemize
+
+The Royal Victoria Hospital
+\layout Itemize
+
+The Victoria Hospital
+\layout Itemize
+
+The Queen Margaret Hospital
+\layout Itemize
+
+Tippethill Hospital
+\layout Itemize
+
+Our Lady of Lourdes RC Primary
+\layout Itemize
+
+North Queensferry Primary
+\layout Itemize
+
+Swinton Primary
+\layout Itemize
+
+Firhill High
+\layout Itemize
+
+Galashiels Academy
+\layout Itemize
+
+Inverkeithing High
+\layout Itemize
+
+Mr N MacLeod
+\layout Itemize
+
+Mr B Liddle
+\layout Itemize
+
+Mr A Morrison
+\the_end

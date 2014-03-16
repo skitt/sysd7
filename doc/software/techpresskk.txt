@@ -1,0 +1,96 @@
+			Technical presentation
+
+			     Stephen Kitt
+
+
+* Present system as two computers, capable of operating independently
+  but able to communicate
+
+* Motorola description:
+
+  - Initialisation
+    Would in theory download database
+    Currently only initialises hardware
+
+  - Default operation
+    Sends frames from the camera to the PC
+    In parallel, checks for someone inserting an iButton or pressing
+    the doorbell
+
+  - Automatic operation: if an iButton is detected
+    Reads iButton ID
+    Waits for PIN
+    Checks user in database and allows or denies entry
+    Times out after 15 seconds
+
+  - Manual operation: if the doorbell is pressed
+      -> Watch: sends up to five frames to the PC; returns to default
+                operation on timeout
+      -> Talk: sends audio from the PC to the Motorola
+      -> Listen: sends audio from the Motorola to the PC
+    All states listen for instructions from the PC to move to another
+    of the three states or to unlock the door or refuse entry
+
+  - Access: two possibilities, unlock or refuse
+      -> Unlock: open latch and activate green LED; close latch again
+                 after 15 seconds or when the door is opened
+      -> Refuse entry: flash red LED five times
+    Then the states return to default operation
+
+* GUI description:
+
+  - Three concurrent operations:
+      -> GUI
+      -> Serial, and hence video
+      -> Audio
+
+  - GUI uses "standard" model for such programs, event-based - the
+    toolkit controls operation and calls certain functions when user
+    events occur, eg pressing a button
+
+  - GUI also forces Motorola to restart default mode on startup, so
+    the two can synchronise
+
+* Link between Motorola and GUI
+
+  - Motorola can operate without GUI
+
+  - Motorola tells GUI about move to "Watch" state
+
+  - GUI can move Motorola between Watch, Talk and Listen states, and
+    also to Unlock door and Refuse entry states; can also restart
+    Motorola's default mode, to get a complete video frame
+
+* Communications
+
+  - Only necessary when transmitting video, audio or state-change
+    information
+
+  - For video and state-change, uses packets from Motorola to PC;
+    these interrupt operations using events when they arrive on the PC 
+    - this allows the video to interrupt the GUI
+
+  - For audio, samples are compressed and transmitted two at a time
+
+  - State changes from PC to Motorola are transmitted using a special
+    pinging protocol: the PC pings the Motorola which responds with a
+    special packet when it's ready and waits for the new state
+
+* Video
+
+  - Captured using special drivers, supplied
+
+  - Compressed without loss of information to just over half the
+    original size; transmission then takes one second only
+
+* Audio
+
+  - On PC, operates using the standard drivers
+
+  - On Motorola, uses audio chips to record and play back
+
+  - Compressed using a logarithmic scale to half the original size;
+    can transmit 8000 samples a second, ie 8kHz (good for voice)
+
+  - Runs in a separate process on the PC; the GUI controls it using
+    signals

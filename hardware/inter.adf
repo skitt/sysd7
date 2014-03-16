@@ -1,0 +1,88 @@
+% Code for implementing the EP610 for use in interfacing between the IPD and %
+% the 68230 IO integrated circuit %
+
+% An EP610 is used for this purpose %
+@(#) SMV Version 1.4  12/2/88 19:52:13 47.1
+OPTIONS: TURBO = ON
+PART: EP610
+
+INPUTS:
+CLK@1, SLOT@2, AS@3, DTAK@4, RST@5
+
+OUTPUTS:
+CS@22, CINH@21, TACK@20, OUTEN@19, SB2, SB1, SB0
+
+NETWORK:
+CLK = INP(CLK)
+SLOT = INP(SLOT)
+AS = INP(AS)
+DTAK = INP(DTAK)
+RST = INP(RST)
+
+
+CS = CONF(CSINT,)
+CINH = CONF(CINHINT,)
+OUTEN = CONF(OUTENINT, )
+TACK = CONF(TACKINT, )
+
+%
+I/O's for State Machine "INTERFACE"
+%
+SB2, SB2 = RORF(SB2.d, CLK, GND, GND, VCC)
+SB1, SB1 = RORF(SB1.d, CLK, GND, GND, VCC)
+SB0, SB0 = RORF(SB0.d, CLK, GND, GND, VCC)
+
+EQUATIONS:
+
+
+CSINT = /CSHIGH;
+CINHINT = /CINHHIGH;
+OUTENINT = /OUTENHIGH;
+TACKINT = /TACKHIGH;
+
+%
+Boolean Equations for State Machine "INTERFACE"
+%
+%
+Current State Equations for "INTERFACE"
+%
+STATE1 = SB2'*SB1'*SB0;
+STATE2 = SB2'*SB1*SB0';
+STATE3 = SB2'*SB1*SB0;
+STATE4 = SB2*SB1'*SB0';
+STATE5 = SB2*SB1'*SB0;
+STATE6 = SB2*SB1*SB0';
+%
+SV Defining Equations for State Machine "INTERFACE"
+%
+SB2.d = STATE4.n
+      + STATE5.n
+      + STATE6.n;
+SB1.d = STATE2.n
+      + STATE3.n
+      + STATE6.n;
+SB0.d' = STATE2.n
+       + STATE4.n
+       + STATE6.n;
+%
+Next State Equations for State Machine "INTERFACE"
+%
+STATE2.n = (STATE1 * ((AS' * SLOT'))) * (((RST')))';
+STATE3.n = (STATE3) * ((DTAK'))' * (((RST')))'
+         + (STATE2) * (((RST')))';
+STATE4.n = (STATE3 * (DTAK')) * (((RST')))';
+STATE5.n = (STATE4) * (((RST')))';
+STATE6.n = (STATE6) * (((AS * SLOT)))' * (((RST')))'
+         + (STATE5) * (((RST')))';
+%
+Output Equations for State Machine "INTERFACE"
+%
+CSHIGH = (STATE5)
+       + (STATE4)
+       + (STATE3);
+CINHHIGH = (STATE4);
+TACKHIGH = (STATE4);
+OUTENHIGH = (STATE5)
+          + (STATE4);
+
+END$

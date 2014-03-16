@@ -1,0 +1,34 @@
+deugh % gcc > errors -Wall gui.c -o gui `gtk-config --cflags` `gtk-config --libs` 
+gui.c: In function `double_xpm':
+gui.c:72: warning: passing arg 1 of `get_xpm_info' makes pointer from integer without a cast
+gui.c:80: warning: passing arg 1 of `make_xpm_info' makes pointer from integer without a cast
+gui.c:84: warning: passing arg 1 of `strcpy' makes pointer from integer without a cast
+gui.c:84: warning: passing arg 2 of `strcpy' makes pointer from integer without a cast
+gui.c:91: subscripted value is neither array nor pointer
+gui.c:91: subscripted value is neither array nor pointer
+gui.c:92: subscripted value is neither array nor pointer
+gui.c:92: subscripted value is neither array nor pointer
+gui.c:93: warning: format argument is not a pointer (arg 2)
+gui.c:97: warning: passing arg 1 of `strcpy' makes pointer from integer without a cast
+gui.c:97: warning: passing arg 2 of `strcpy' makes pointer from integer without a cast
+gui.c:98: warning: passing arg 1 of `strcpy' makes pointer from integer without a cast
+gui.c:98: warning: passing arg 2 of `strcpy' makes pointer from integer without a cast
+gui.c: In function `make_xpm_info':
+gui.c:109: warning: implicit declaration of function `itos'
+gui.c:114: warning: implicit declaration of function `strcat'
+gui.c: At top level:
+gui.c:124: parse error before `*'
+gui.c: In function `get_xpm_info':
+gui.c:125: number of arguments doesn't match prototype
+gui.c:10: prototype declaration
+gui.c:130: `info_line' undeclared (first use this function)
+gui.c:130: (Each undeclared identifier is reported only once
+gui.c:130: for each function it appears in.)
+gui.c:135: `w' undeclared (first use this function)
+gui.c:144: `h' undeclared (first use this function)
+gui.c:153: `c' undeclared (first use this function)
+gui.c: In function `get_new_image':
+gui.c:170: warning: passing arg 1 of `double_xpm' from incompatible pointer type
+gui.c:189: warning: passing arg 1 of `gtk_pixmap_set' from incompatible pointer type
+gui.c: In function `main':
+gui.c:221: warning: passing arg 4 of `gdk_pixmap_create_from_xpm_d' from incompatible pointer type

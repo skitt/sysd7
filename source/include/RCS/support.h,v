@@ -1,0 +1,96 @@
+head	1.3;
+access;
+symbols;
+locks
+	skk:1.3; strict;
+comment	@ * @;
+
+
+1.3
+date	98.04.28.10.26.10;	author skk;	state Exp;
+branches;
+next	1.2;
+
+1.2
+date	98.04.28.10.05.00;	author skk;	state Exp;
+branches;
+next	1.1;
+
+1.1
+date	98.04.27.14.48.51;	author iic;	state Exp;
+branches;
+next	;
+
+
+desc
+@Support Routines
+@
+
+
+1.3
+log
+@Added putn.
+@
+text
+@#ifndef __SUPPORT_H__
+#define __SUPPORT_H__
+
+/* General support routines, supplied by libsupport
+   $Id: support.h,v 1.2 1998/04/28 10:05:00 skk Exp skk $
+*/
+
+#ifdef SDPMotorola
+/* Motorola section */
+
+/* puts outputs the string given as argument on the console (either
+   Minicom on channel A (ttyS0) or stdout)
+*/
+void puts (char *);
+
+#else
+/* Linux section */
+
+#include <stdio.h>
+
+#endif /* SDPMotorola */
+
+/* Common section */
+
+/* putn outputs the number given as argument in the specified base
+   with the specified number of digits on the console
+*/
+void putn (unsigned long, int, int);
+
+#endif /* __SUPPORT_H__ */
+@
+
+
+1.2
+log
+@Added Linux support.
+@
+text
+@d5 1
+a5 1
+   $Id$
+d11 3
+d22 7
+@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@d4 7
+d13 4
+a16 1
+/* Print an error (should autodetect whether on Linux or Motorola */
+d18 1
+a18 1
+void perror (char *);
+d20 1
+a20 1
+#endif
+@

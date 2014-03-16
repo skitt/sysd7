@@ -1,0 +1,1344 @@
+head	1.1;
+access;
+symbols;
+locks
+	dwi:1.1; strict;
+comment	@# @;
+
+
+1.1
+date	98.05.14.01.59.54;	author dwi;	state Exp;
+branches;
+next	;
+
+
+desc
+@This was the software manual created by Steve, I have made some ammendments to the information in the motorola state 4 section, describing how it works (or
+rather, doesn't!).  I wasn't sure what the state of the old o created this one.
+@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@#This file was created by <dwi> Thu May 14 02:58:29 1998
+#LyX 0.12 (C) 1995-1998 Matthias Ettrich and the LyX Team
+\lyxformat 2.15
+\textclass article
+\language default
+\inputencoding default
+\fontscheme palatino
+\graphics default
+\paperfontsize default
+\spacing single 
+\papersize Default
+\paperpackage widemarginsa4
+\use_geometry 0
+\use_amsmath 0
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation skip
+\defskip medskip
+\quotes_language english
+\quotes_times 2
+\papercolumns 1
+\papersides 1
+\paperpagestyle headings
+
+\layout Title
+
+System Design Project
+\newline 
+Software Manual
+\layout Author
+
+System Design Group 7
+\newline 
+
+\layout Standard
+\added_space_top 0.3cm \added_space_bottom 0.3cm \align center 
+
+\begin_inset Figure size 128 125
+file ../../web/images/EUcrest-official-noborder.ps
+flags 11
+
+\end_inset 
+
+
+\layout Standard
+\pagebreak_top \pagebreak_bottom 
+
+\begin_inset LatexCommand \tableofcontents
+
+\end_inset 
+
+
+\layout Section
+
+Introduction
+\layout Standard
+
+This document describes the software in our door-entry system.
+\layout Standard
+
+The biggest issue in the software design, apart from building a working
+ product, was modularity, so that different people could work on different
+ sections of code reasonably independently.
+ Therefore the software was split up thus:
+\layout Itemize
+
+low-level --- interaction with the hardware;
+\layout Itemize
+
+serial driver --- communications between the PC and Motorola board;
+\layout Itemize
+
+video --- compression and decompression of the video;
+\layout Itemize
+
+audio --- compression and decompression of the audio, using the Linux Open
+ Sound System and the low-level code;
+\layout Itemize
+
+control --- storing and retrieving the user and configuration information;
+\layout Itemize
+
+GUI --- the user interface on the PC.
+\layout Standard
+
+The Motorola side of the software is integrated using a state-machine paradigm;
+ the PC side uses a more traditional event-based GUI.
+\layout Section
+
+The modules
+\layout Standard
+
+All the modules apart from the low-level module supply functionality used
+ across both systems.
+ They form the basis for the two pieces of software running on the PC and
+ the Motorola.
+\layout Subsection
+
+Low-level
+\layout Standard
+
+This module is only required on the Motorola side, since the PC low-level
+ functionality is controlled by its operating system (Linux on the prototype).
+\layout Subsubsection
+
+Evolution
+\layout Standard
+
+The low-level code was developed as the hardware progressed; this allowed
+ us to test the hardware very soon after its implementation and thus catch
+ bugs sooner rather than later.
+\layout Subsubsection
+
+Programmer interface
+\layout Standard
+
+The function definitions are contained in 
+\family typewriter 
+board.c
+\family default 
+; the corresponding header file is 
+\family typewriter 
+board.h
+\family default 
+.
+\layout Paragraph
+
+Initialisation
+\layout Standard
+
+
+\family typewriter 
+int boardinit (void)
+\family default 
+ initialises the secondary board; it disables the MC\SpecialChar \-
+68230's timer and sets
+ its ports to inputs and outputs as required.
+\layout Paragraph
+
+Timer functions
+\layout Standard
+
+The timer functions use the secondary MC68230's built-in timer; this can
+ be loaded with a given value, up to 16,777,215; this value then decrements
+ every 3.2
+\begin_inset Formula \( \mu  \)
+\end_inset 
+
+s (
+\emph on 
+i.e.
+
+\emph default 
+ every 32 cycles, at 10MHz), and loops back to the preloaded value when
+ it reaches 0.
+ Note that this timer also drives the secondary board's ADC, so care should
+ be taken when using the two simultaneously (see the audio code).
+\layout Standard
+
+
+\family typewriter 
+void starttimer (int)
+\family default 
+ disables the timer, loads the secondary MC68230's timer preload and re-activate
+s the timer (to ensure it starts from the preloaded value).
+\layout Standard
+
+
+\family typewriter 
+int stoptimer (void)
+\family default 
+ disables the timer and returns its current value.
+\layout Standard
+
+
+\family typewriter 
+int gettimer (void)
+\family default 
+ returns the current timer value.
+\layout Paragraph
+
+Keypad and doorbell functions
+\layout Standard
+
+These are combined since the doorbell is wired to the keypad encoder in
+ hardware.
+\layout Standard
+
+
+\family typewriter 
+int checkkeypad (void)
+\family default 
+ returns 1 if a key is currently pressed down, 0 otherwise.
+\layout Standard
+
+
+\family typewriter 
+int getkeypad (void)
+\family default 
+ waits for a key to be pressed then released and returns its code, which
+ can be an integer from 0 to 9, corresponding to the respective keys, or
+ 
+\family typewriter 
+KP_HASH
+\family default 
+, 
+\family typewriter 
+KP_STAR
+\family default 
+, 
+\family typewriter 
+KP_DOORBELL
+\family default 
+ and 
+\family typewriter 
+KP_UNDEF
+\family default 
+ for, respectively, the `#' and `*' keys, the doorbell, and an undefined
+ key (which should never happen unless something else is wired into the
+ encoder).
+\layout Paragraph
+
+Dallas Semiconductor iButton functions
+\layout Standard
+
+
+\family typewriter 
+int checkring (void)
+\family default 
+ returns 1 if an iButton is present in the holder, and 0 otherwise; it also
+ has the side-effect of resetting the iButton and should be called before
+ 
+\family typewriter 
+getringinfo
+\family default 
+.
+\layout Standard
+
+
+\family typewriter 
+ringinfo getringinfo (void)
+\family default 
+ returns a structure containing the iButton's information.
+ The structure is defined as follows:
+\layout LyX-Code
+
+typedef struct
+\layout LyX-Code
+
+{
+\layout LyX-Code
+
+
+\protected_separator 
+ unsigned char product;
+\layout LyX-Code
+
+
+\protected_separator 
+ unsigned char id [6];
+\layout LyX-Code
+
+
+\protected_separator 
+ unsigned char crc;
+\layout LyX-Code
+
+} ringinfo;
+\layout Standard
+
+The function verifies the CRC itself and only returns when a valid key has
+ been read.
+\layout Paragraph
+
+Door, buzzer and LED functions
+\layout Standard
+
+These are linked in hardware; the red LED and buzzer can operate independently,
+ albeit not simultaneously, but the green LED opens the door.
+\layout Standard
+
+
+\family typewriter 
+int getdoorstatus (void)
+\family default 
+ returns 1 if the door is currently closed, 0 if it's open.
+\layout Standard
+
+
+\family typewriter 
+int opendoor (void)
+\family default 
+ opens the door.
+\layout Standard
+
+
+\family typewriter 
+int closedoor (void)
+\family default 
+ closes the door.
+\layout Standard
+
+
+\family typewriter 
+int buzzerled (int)
+\family default 
+ performs the given function on the buzzer, door and LEDs: 
+\family typewriter 
+ALLOFF 
+\family default 
+switches everything off, 
+\family typewriter 
+BUZZER
+\family default 
+ switches the buzzer on, 
+\family typewriter 
+LEDGREEN
+\family default 
+ switches the green LED on and opens the door, and 
+\family typewriter 
+LEDRED
+\family default 
+ switches the red LED on.
+ Note again that only one of the three can be active at any one time; activating
+ another element switches the others off.
+\layout Standard
+
+
+\family typewriter 
+void leddisplay (unsigned char)
+\family default 
+ displays the given ASCII character (`0'--`9', space, or `a'--`z') on the
+ seven-segment display on the IDP.
+\layout Paragraph
+
+Miscellaneous functions
+\layout Standard
+
+
+\family typewriter 
+nop ()
+\family default 
+ is a C pre-processor macro which instructs the compiler to insert a no-operatio
+n instruction.
+\layout Subsubsection
+
+Internals
+\layout Standard
+
+Hardware access is done entirely through memory-mapped registers.
+ The secondary board's MC68230 is mapped to 
+\family typewriter 
+05000000
+\family default 
+ hex; the seven-segment LED display is mapped to 
+\family typewriter 
+00D00000
+\family default 
+ hex.
+\layout Standard
+
+The 230 uses registers, as described in its manual.
+ On the secondary board, the 230's ports are mapped as follows:
+\layout Itemize
+
+channel A, bits 7--6: DAC control;
+\layout Itemize
+
+channel A, bit 5: iButton reader (input and output);
+\layout Itemize
+
+channel A, bit 4: keypad control (input);
+\layout Itemize
+
+channel A, bits 3--0: keypad data (input);
+\layout Itemize
+
+channel B: DAC and ADC data (input for ADC, output for DAC);
+\layout Itemize
+
+channel C, bit 6: door sensor (input);
+\layout Itemize
+
+channel C, bits 4--3: 230 timer input;
+\layout Itemize
+
+channel C, bits 1--0: buzzer and LEDs (output).
+\layout Standard
+
+The iButton reader uses a single wire, which is set high or low (1 or 0)
+ on output for certain lengths of time then read to get the required information.
+ Thus, to check for and reset an iButton, the wire is set to output, pulled
+ low for 480 
+\begin_inset Formula \( \mu  \)
+\end_inset 
+
+s, set to input and read for up to 960 
+\begin_inset Formula \( \mu  \)
+\end_inset 
+
+s; if it returns high, then low, then high again, an iButton is present
+ and has been reset; otherwise the wire returns high and stays there.
+ Retrieving the iButton's information (product family code, user ID, and
+ CRC) is done in a similar fashion; see Dallas' manual for more details.
+\layout Standard
+
+The keypad control is high if and only if a key is currently being pressed.
+ To read the key, the code waits for the keypad control to go high (the
+ key is pressed) then low again (the key is released); then the encoder's
+ output can be read as the keypad data.
+ The encoder is a 
+\begin_inset Formula \( 4\times 4 \)
+\end_inset 
+
+ matrix, connected as follows (NC: not connected):
+\layout Standard
+\added_space_top 0.3cm \added_space_bottom 0.3cm \align center \LyXTable
+multicol4
+4 4 0 0 -1 -1 -1 -1
+1 0 0 0
+1 0 0 0
+1 0 0 0
+1 1 0 0
+8 1 0 
+8 1 0 
+8 1 0 
+8 1 1 
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+
+1
+\newline 
+2
+\newline 
+3
+\newline 
+doorbell
+\newline 
+4
+\newline 
+5
+\newline 
+6
+\newline 
+NC
+\newline 
+7
+\newline 
+8
+\newline 
+9
+\newline 
+NC
+\newline 
+*
+\newline 
+0
+\newline 
+#
+\newline 
+NC
+\layout Standard
+
+The door sensor is high if the door is closed, low if it's open.
+\layout Standard
+
+The 230 timer input is used by the hardware to drive the ADC sampling rate;
+ the actual sampling speed is controlled in software, using the 230's standard
+ timer functions.
+\layout Standard
+
+The buzzer and LED controls are multiplexed, since they never need to be
+ on simultaneously; thus 
+\family typewriter 
+11
+\family default 
+ (both lines high) switched everything off, 
+\family typewriter 
+00
+\family default 
+ switched the green LED on (and opens the door), 
+\family typewriter 
+01
+\family default 
+ switches the buzzer on, and 
+\family typewriter 
+10
+\family default 
+ switched the red LED on.
+\layout Subsubsection
+
+Future direction
+\layout Standard
+
+A number of the functions defined in 
+\family typewriter 
+board.h
+\family default 
+ haven't been implemented, because they weren't used in the final design.
+ The non-volatile memory (NVRAM) functions in particular would be useful
+ to store a master PIN or other semi-permanent information.
+\layout Subsection
+
+Serial
+\layout Subsubsection
+
+Evolution
+\layout Standard
+
+The original design of the serial sub-system was event-driven both on the
+ Motorola and the PC; thus, the serial code was only active when the UART
+ was ready for data, and the rest of the program could continue functioning
+ while data transfers or receives were in progress.
+\layout Standard
+
+In the end though it was more effective to use polled serial for the Motorola
+ side.
+ The three portions of the system which exert the serial code most are the
+ database download, the video transfers and the audio transfers.
+ The database download can't proceed until the data has been fully received,
+ so events are useless here.
+ In theory, events would be very useful; for example, video transfers could
+ then occur while the next frame is being grabbed from the camera.
+ Unfortunately the design of the supplied Quickcam drivers would seem to
+ prevent us from doing so, which makes it necessary to shut down an event-driver
+ serial driver before using the camera; this results in a great loss of
+ speed, since reinitialising the camera every time a frame is grabbed is
+ very time consuming.
+\layout Standard
+
+The PC uses a mixture of polled and event-driven serial; writes from the
+ PC to the Motorola are polled (
+\emph on 
+i.e.
+
+\emph default 
+ the PC waits until each byte has been sent, or at least buffered by the
+ operating system), and reads are event-driven (
+\emph on 
+i.e.
+
+\emph default 
+ the operating system informs the program whenever data is available).
+\layout Subsubsection
+
+Programmer interface
+\layout Standard
+
+Unless specified, all functions return an 
+\family typewriter 
+int
+\family default 
+ which will be 0 for success and 
+\begin_inset Formula \( -1 \)
+\end_inset 
+
+ for failure.
+\layout Paragraph
+
+Initialisation
+\layout Standard
+
+The 
+\family typewriter 
+int serialinit (void)
+\family default 
+ function is provided to initialise the serial subsystem.
+ On the Motorola, it sets up the IDP's DUART (MC68681) for no parity, eight
+ bits per character, one stop bit, 38400bps communications.
+ On the PC, it initialises the input buffer, registers a 
+\family typewriter 
+SIGIO
+\family default 
+ handler, opens and sets up the second serial line (
+\family typewriter 
+/dev/ttyS1
+\family default 
+) with the same settings as used on the Motorola, and clears the packet
+ handlers.
+\layout Paragraph
+
+Shutdown
+\layout Standard
+
+The 
+\family typewriter 
+int serialclose (void)
+\family default 
+ function shuts the serial subsystem down.
+ On the Motorola, it doesn't do anything; on the PC, it waits for reception
+ to cease, and closes the serial line.
+\layout Paragraph
+
+Transmission
+\layout Standard
+
+Two functions allow programs to transmit data.
+\layout Standard
+
+The simplest is 
+\family typewriter 
+int serialtransmit (unsigned char)
+\family default 
+; this transmits the character passed as argument, and waits for it to go.
+ It will return 0 on success, 
+\begin_inset Formula \( -1 \)
+\end_inset 
+
+ on failure, and a state number if a state-change request occurred during
+ the transmission.
+\layout Standard
+
+The other is 
+\family typewriter 
+int senddata (packet *)
+\family default 
+.
+ This transmits a full packet, defined as follows:
+\layout LyX-Code
+
+typedef struct
+\layout LyX-Code
+
+{
+\layout LyX-Code
+
+
+\protected_separator 
+ unsigned char datatype;
+\layout LyX-Code
+
+
+\protected_separator 
+ unsigned int length;
+\layout LyX-Code
+
+
+\protected_separator 
+ unsigned char * data;
+\layout LyX-Code
+
+} packet;
+\layout Standard
+
+The full packet is transmitted (or at least, buffered by the operating system)
+ before 
+\family typewriter 
+senddata
+\family default 
+ returns.
+ Again, senddata will return 0 on success, 
+\begin_inset Formula \( -1 \)
+\end_inset 
+
+ on failure, and a state number if a state-change request occurred during
+ the transmission.
+\layout Standard
+
+Note that packet datatypes 0, 1 and 2 are reserved for internal use.
+\layout Paragraph
+
+Reception
+\layout Standard
+
+Again, there are two distinct ways of receiving data.
+\layout Standard
+
+
+\family typewriter 
+int serialreceive (void)
+\family default 
+ waits for a character to arrive and returns it, or 
+\begin_inset Formula \( -1 \)
+\end_inset 
+
+ if it timed out.
+\layout Standard
+
+On the Motorola, 
+\family typewriter 
+packet * receivepacket (void)
+\family default 
+ waits for a complete packet to arrive and returns a pointer to it; a copy
+ of this should be made before the next call to 
+\family typewriter 
+receivepacket
+\family default 
+.
+\layout Standard
+
+On the PC, 
+\family typewriter 
+int registerhandler (unsigned char, packethandler)
+\family default 
+ and 
+\family typewriter 
+int unregisterhandler (unsigned char)
+\family default 
+ respectively register and unregister a handler function for packets of
+ the given datatype.
+ A 
+\family typewriter 
+packethandler
+\family default 
+ is defined as a pointer to a function taking a pointer to a 
+\family typewriter 
+packet
+\family default 
+ and returning 
+\family typewriter 
+void
+\family default 
+.
+ The event-driven serial reception code on the PC then ensures the relevant
+ packet handler is called, if any, whenever packets are enabled.
+\layout Paragraph
+
+Packet control
+\layout Standard
+
+Packets are enabled and disabled using the 
+\family typewriter 
+void enablepackets (void)
+\family default 
+ and 
+\family typewriter 
+void disablepackets (void)
+\family default 
+ functions respectively.
+\layout Paragraph
+
+State changes
+\layout Standard
+
+The serial module also handles the transmission of state change information
+ from PC to the Motorola.
+\layout Standard
+
+
+\family typewriter 
+void changestate (unsigned char)
+\family default 
+ causes the Motorola to switch to the given state.
+\layout Subsubsection
+
+Internals
+\layout Standard
+
+On the Motorola, the MC68681 UART is memory-mapped; programming is done
+ entirely through its registers, and data transmission and reception wait
+ for the UART's status register to indicate that it's ready.
+\layout Standard
+
+On the Linux, the standard 
+\family typewriter 
+tty
+\family default 
+ device is used; in this case, /dev/ttyS1.
+ Transmission uses the write function.
+ Reception is event-driven, using a SIGIO handler and a circular buffer;
+ whenever data is received, the handler is called, and the data is read
+ into the buffer.
+ When enough data is available for a complete packet to be formed, the packet's
+ data handler is called, then the data is discarded from the circular buffer.
+\layout Standard
+
+State changes are a fairly complex operation.
+ The 
+\family typewriter 
+changestate
+\family default 
+ function pings the Motorola; the Motorola's 
+\family typewriter 
+serialtransmit
+\family default 
+ and 
+\family typewriter 
+senddata
+\family default 
+ functions will spot this, and store the fact that a ping acknowledgement
+ is needed.
+ Then as soon as it's safe to transmit a packet (
+\emph on 
+i.e.
+
+\emph default 
+ when the current packet is fully transmitted), the Motorola sends an acknowledg
+ement packet to the PC and waits for the state number to come through.
+ On reception, the PC's data handler (provided by the serial code) transmits
+ the state number, and 
+\family typewriter 
+serialtransmit
+\family default 
+ or 
+\family typewriter 
+senddata
+\family default 
+ return it on the 
+\emph on 
+Motorola
+\emph default 
+...
+ Some state changes are in fact performed manually by the code --- specifically,
+ the initial synchronising operation (in the GUI's 
+\family typewriter 
+main
+\family default 
+ function) and the audio state changes.
+\layout Subsection
+
+Video
+\layout Standard
+
+The video software is responsible for capturing a frame from the video camera
+ on the Motorola board, compressing it, transmitting it to the Linux machine
+ via the serial module, decompressing it on the Linux box, and passing it
+ on to the Graphical User Interface.
+\layout Subsubsection
+
+Evolution
+\layout Standard
+
+It was immediately recognized at the outset of this project that as each
+ frame of video would be 19.2k in raw format, this would require over 4 seconds
+ to transmit across the serial link to the Linux machine in addition to
+ the time required to capture the frame.
+ We decided that this would not be satisfactory and an image compression
+ algorithm should be employed.
+\layout Standard
+
+We decided that a run-length encoding
+\begin_float footnote 
+\layout Standard
+
+Run-length encoding is an algorithm for compressing data which consists
+ of strings of the same character repeated several times.
+ For example, rather than transmitting the string 
+\begin_inset Quotes eld
+\end_inset 
+
+aaaaaaabbbbbbb
+\begin_inset Quotes erd
+\end_inset 
+
+ which would require 14 bytes, an instruction to repeat `a' 7 times followed
+ by `b' 7 times would only require about 4 bytes.
+\end_float 
+ algorithm would be most appropriate.
+ We also decided to employ frame difference to further reduce the size of
+ the compressed images.
+ We would also be able to make use of the fact that pixel values were restricted
+ to being between 0 and 15 inclusive.
+\layout Standard
+
+Our initial run length encoding algorithm operated at the byte level.
+ The 4 most significant bits of each byte would specify how many times the
+ pixel represented by 4 least significant bits of that byte was to be repeated.
+ This proved unsatisfactory as individual pixels which were surrounded by
+ pixels of different lengths required one byte to encode.
+ We therefore decided upon the 5 bit block encoding method described below.
+\layout Subsubsection
+
+Interfaces
+\layout Paragraph
+
+Video camera on Motorola platform
+\layout Standard
+
+Functions provided on the Motorola board for accessing the camera:
+\layout LyX-Code
+
+int QC_init (void);
+\layout Standard
+
+This function initialises the camera and must be called before 
+\family typewriter 
+QC_grabframe
+\family default 
+; it returns 
+\family typewriter 
+QC_SUCCESS
+\family default 
+ if successful, 
+\family typewriter 
+QC_TIMEOUT
+\family default 
+ if the camera fails to respond, or 
+\family typewriter 
+QC_BAD_RESPONSE
+\family default 
+ if the camera does not respond correctly.
+\layout LyX-Code
+
+int QC_grabdata (char * buffer, int amount);
+\layout Standard
+
+This function grabs 
+\family typewriter 
+amount
+\family default 
+ bytes from the camera into the buffer pointed to by 
+\family typewriter 
+buffer
+\family default 
+.
+ A complete frame is 19200 bytes (
+\begin_inset Formula \( 160\times 120 \)
+\end_inset 
+
+) in length.
+ Each pixel is encoded as an 
+\family typewriter 
+unsigned char
+\family default 
+ of value 0 to 15 inclusive representing the colour of the pixel where 0
+ represents black, and 1--15 represent white to near-black
+\begin_float footnote 
+\layout Standard
+
+Note that we later change this mapping of number to colours so that the
+ numbers 0 to 15 represent the colours black through to grey, to white.
+\end_float 
+.
+\layout Paragraph
+
+Graphical User Interface on Linux platform
+\layout Standard
+
+The following function is provided on the Linux platform for the video code:
+\layout LyX-Code
+
+void display_image (unsigned char * image);
+\layout Standard
+
+This function displays the image pointed to by 
+\family typewriter 
+image
+\family default 
+ which should be an array of size 19200 representing the image to be displayed.
+ The image should be in the same format as received from the camera on the
+ Motorola board but after the colours have been re-mapped so that 0 represents
+ black, 15 represents white, and values in between 0 and 15 represent various
+ grays increasing in brightness.
+\layout Subsubsection
+
+Image compression algorithm
+\layout Standard
+
+As previously described, the image compression obtains the difference between
+ the current frame and the previous frame and then uses run length encoding
+ to compress the resulting image.
+\layout Paragraph
+
+Frame difference
+\layout Standard
+
+To obtain the difference between a frame and the previous frame, the bitwise
+ exclusive-or function is used.
+ This has the advantage that the Motorola MC68040 CPU can rapidly perform
+ this operation.
+ If the frame being compressed is the first frame then it is exclusive-or'd
+ with a frame consisting of 0's, which will result in it being unchanged.
+ There is the additional advantage that the MC68040 can perform this operation
+ on 4 bytes at a time.
+\layout Standard
+
+To obtain the original frame given the difference between it and the previous
+ frame, the exclusive-or function is used to combine the difference with
+ the previous image.
+\layout Paragraph
+
+Run-length encoding
+\layout Standard
+
+The run-length encoding algorithm treats the encoded data as a stream of
+ 5 bit segments.
+ The first bit of the next segment indicates whether it encodes an individual
+ pixel, or whether it encodes several pixels.
+ If the value of the first bit is 0 then the subsequent 4 bits represent
+ the value of an individual pixel
+\begin_float footnote 
+\layout Standard
+
+4 bits is sufficient to store a value between 0 and 15 inclusive, and thus
+ sufficient to store the colour of a pixel.
+\end_float 
+.
+ If the value of the first bit is 1 then the subsequent 4 bits represent
+ the value of a pixel, and the subsequent 5 bit block represents the number
+ of adjacent pixels with that value.
+ The decoding algorithm will terminate when an expected number of bytes
+ have been decoded (this has the advantage that if the compressed data is
+ corrupted the decompression will never overrun the output buffer).
+\layout Subsubsection
+
+Transmission format
+\layout Standard
+
+The compressed image is transmitted as a single byte with value 0 or 1,
+ followed by the compressed data.
+ If the value of the first byte is 1 then the receiving software will assume
+ that this is a new frame in a sequence and will treat it as such (rather
+ than combining it with the previous frame).
+\layout Section
+
+The Motorola state machine
+\layout Standard
+
+The state diagram is given in figure 
+\begin_inset LatexCommand \ref{Motorola state diagram}
+
+\end_inset 
+
+, page 
+\begin_inset LatexCommand \pageref{Motorola state diagram}
+
+\end_inset 
+
+.
+\layout Standard
+
+\begin_float fig 
+\layout Standard
+\align center 
+
+\begin_inset Figure size 446 499
+file board_flowchart.eps
+width 3 75
+flags 11
+
+\end_inset 
+
+
+\layout Caption
+
+
+\begin_inset LatexCommand \label{Motorola state diagram}
+
+\end_inset 
+
+Motorola state diagram
+\end_float 
+\layout Standard
+
+The Motorola program may be in any one of these states at any given time,
+ but the transitions are tightly defined.
+ Note that due to late changes, states 6 and 9 are non-existent.
+\layout Subsection
+
+State 1 --- Initialisation
+\layout Standard
+
+This state initialises the various modules using their initialisation functions.
+ In theory it should also retrieve configuration information and the user
+ database from the PC.
+\layout Paragraph
+
+Transitions
+\layout Standard
+
+State 2 is entered on completion of the above.
+\layout Paragraph
+
+Communications to and from the PC
+\layout Standard
+
+Configuration information and the database are requested from the client's
+ control module using 
+\family typewriter 
+CONTROL
+\family default 
+ packets.
+\layout Paragraph
+
+Modules
+\layout Standard
+
+This state makes use of all the support modules --- it needs to initialise
+ everything.
+\layout Subsection
+
+State 2 --- Normal operation
+\layout Standard
+
+This state polls the iButton reader and the buzzer, captures an image and
+ sends it to the PC.
+\layout Paragraph
+
+Transitions
+\layout Standard
+
+This state can move to state 1, given the appropriate signal from the PC,
+ state 3, if the doorbell is pressed, state 5, if an iButton is detected,
+ or state 2 by looping.
+\layout Paragraph
+
+Communications to the PC
+\layout Standard
+
+Video is communicated using 
+\family typewriter 
+VIDEO
+\family default 
+ packets.
+\layout Paragraph
+
+Communications from the PC
+\layout Standard
+
+A state-change may be requested using a 
+\family typewriter 
+PING
+\family default 
+ packet and the special protocol.
+\layout Paragraph
+
+Modules
+\layout Standard
+
+This state uses the serial, low-level and video modules.
+\layout Subsection
+
+State 3 --- Wait for the PC user to respond
+\layout Standard
+
+This state informs the client that the buzzer has been pressed.
+ It then continues to transmit video until it times out or the client acknowledg
+es the buzzer, using a state change.
+\layout Paragraph
+
+Transitions
+\layout Standard
+
+This state can move to state 2, if the timeout expires (
+\emph on 
+i.e.
+
+\emph default 
+ the client fails to respond), state 4, if the client responds to the doorbell
+ signal, or state 3, by looping.
+\layout Paragraph
+
+Communications to the PC
+\layout Standard
+
+
+\family typewriter 
+CONTROL
+\family default 
+ messages informs the PC that the buzzer has been pressed.
+\layout Paragraph
+
+Modules
+\layout Standard
+
+This state uses the serial and video modules.
+\layout Subsection
+
+State 4 --- Talk
+\layout Standard
+
+This state allows the PC user to talk to the visitor.
+ It samples audio on the PC, compresses it, and transmits it to the Motorola
+ which decompresses it and plays it back.
+\layout Comment
+
+Please note, this state is not actually functional as of 14/05/98.
+ There is a problem with the PC->LDP audio system which has proved difficult
+ to track down.
+ At present, it is believed that the bug lies in the PC-side compression,
+ although as to why this should be the case is, as yet, uncertain.
+ The following is a discussion of how the state should actually work, in
+ reality, it is a dummy state which simply waits to receive a state transition.
+ It should be further noted that this state transition is compliant with
+ the actual design so that it is not too far divorced from the finished
+ product.
+ Having said that, the Motorola side is absolutely normal, and should work
+ if you send it data.
+ 
+\layout Paragraph
+
+Transitions
+\layout Standard
+
+State change requests will cause this state to move to state 2, if the timeout
+ triggers, state 7, if the PC refuses entry, state 8, if the PC allows entry,
+ or state 10, if the PC wants to listen.
+ Otherwise state 4 will loop.
+\layout Paragraph
+
+Communications to the PC
+\layout Standard
+
+This state uses its own audio protocol to transmit state change requests.
+ Essentially, the motorola code sends an initial synchronisation byte.
+\layout Paragraph
+
+Communications from the PC
+\layout Standard
+
+Again, this state uses its own protocol to transmit audio.
+\layout Paragraph
+
+Modules
+\layout Standard
+
+This state uses the serial and audio modules.
+\layout Subsection
+
+State 5 --- Authenticate
+\layout Standard
+
+This state reads the iButton information and a PIN, and verifies the user's
+ authenticity.
+\layout Paragraph
+
+Transitions
+\layout Standard
+
+This state will move to state 2 on error, state 8 to open the door, or state
+ 7 to deny entry.
+\layout Paragraph
+
+Modules
+\layout Standard
+
+This state uses the low-level and control modules.
+\layout Subsection
+
+State 7 --- Refuse entry
+\layout Standard
+
+This state flashes the red LED to indicate authentication failure.
+\layout Paragraph
+
+Transitions
+\layout Standard
+
+State 2 is entered on completion.
+\layout Paragraph
+
+Modules
+\layout Standard
+
+This state uses the low-level module.
+\layout Subsection
+
+State 8 --- Allow entry
+\layout Standard
+
+This state activates the green LED, hence opening the door, and waits for
+ a timeout or the door to shut before switching the LED back off.
+\layout Paragraph
+
+Transitions
+\layout Standard
+
+State 2 is entered on completion.
+\layout Paragraph
+
+Modules
+\layout Standard
+
+This state uses the low-level module.
+\layout Subsection
+
+State 10 --- Listen
+\layout Standard
+
+This state allows the PC use to listen to the visitor.
+ It samples audio on the Motorola, compresses it, and transmits it to the
+ PC which decompresses it and plays it back.
+\layout Paragraph
+
+Transitions
+\layout Standard
+
+State 4 is entered if the PC wants to talk; states 7 or 8 are entered if
+ access is respectively denied or granted; state 2 is entered on timeout.
+ Otherwise state 10 loops.
+\layout Paragraph
+
+Communications to the PC
+\layout Standard
+
+
+\family typewriter 
+AUDIO
+\family default 
+ packets carry the audio.
+\layout Paragraph
+
+Communications from the PC
+\layout Standard
+
+The standard state-change mechanism is used.
+\layout Paragraph
+
+Modules
+\layout Standard
+
+This state uses the audio and serial modules.
+\the_end
+@

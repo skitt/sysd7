@@ -1,0 +1,94 @@
+head	1.1;
+access;
+symbols;
+locks
+	ejk:1.1; strict;
+comment	@ * @;
+
+
+1.1
+date	98.05.13.22.58.15;	author skk;	state Exp;
+branches;
+next	;
+
+
+desc
+@State 5 - authenticate
+@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@/* State 5 
+ * Authenticate 
+ * Compile with: 
+ * ~/source/control/motorola/validate.c
+ * ~/source/control/motorola/m_support.c
+ * ~/source/control/support.c
+ * ~/source/low.level/board.c
+ */
+
+#include <database.h>
+#include <board.h>
+
+/* globals */
+
+int pin_pos = 0;
+char uid_no[13];
+int got_uid=FALSE;
+char pin[PIN_SIZE+1];
+
+int state5()
+{
+  ringinfo dring;
+  unsigned char digit,c;
+  int i;
+
+  /* read the Dallas ring */
+  while(!checkring());
+  dring = getringinfo();
+  
+  /* bleep twice */
+  starttimer (10000000);
+  buzzerled (BUZZER);
+  while (gettimer () > 10000000 - 30000);
+  buzzerled (ALLOFF);
+  while (gettimer () > 10000000 - 40000);
+  buzzerled (BUZZER);
+  while (gettimer () > 10000000 - 70000);
+  buzzerled (ALLOFF);
+  stoptimer ();
+
+  /* convert serial no. to 12-digit hex */
+  for(i=0;i<6;i++) conv_hchar((unsigned long)dring.id[i],&(uid_no[(i*2)]));
+  uid_no[12] = '\0';
+
+  /* set some states */
+  got_uid = TRUE;
+  pin_pos = 0;
+
+  /* get 4 keypad digits and bleep after each one */
+  for(i=0;i<PIN_SIZE;i++){
+    while(!checkkeypad());
+    digit = getkeypad();
+    starttimer (10000000);
+    buzzerled (BUZZER);
+    while (gettimer () > 10000000 - 30000);
+    buzzerled (ALLOFF);
+    /* register digit */
+    if(send_keypad_digit(digit)) break;
+    /* wait util user releases button */
+    while(checkkeypad());
+  }
+  /* validate user and move to a different state on outcome */
+  if(validate_user(uid_no,pin)) return 8;
+  else return 7;
+}
+
+
+  
+  
+@

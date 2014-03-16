@@ -1,0 +1,39 @@
+System Design Group 7
+Software Design Specification (Motorola board)
+(for inclusion in Design document)
+
+-- State --
+
+State Number/Title:
+	#4 - Audio system on Motorola.
+
+Username:
+	dwi
+
+Functional description of State:
+	State 4 is the state which handles the audio when there is someone at the door.  It needs to sample from the microphone at the door, compress that and send it to the PC.  It must also take compressed samples from the PC and play them via the speaker at the door.  Additionally, the system must check for input from the PC user, so that they can choose to grab some more video, open the door, or refuse entry
+
+Inputs :
+	8-bit linear sample from ADC over hardware bus.
+ 	compressed stream of data over serial link from PC
+
+Outputs :
+	8-bit linear sample to DAC
+	compressed data to PC
+
+-- Transitions --
+
+Move to state: 2
+Conditions on transition: If user on PC refuses entry, or a timeout occurs
+
+Move to state: 3
+Conditions on transition: If user requests further video
+
+Move to state: 8
+Conditions on transition: If user decides to allow entry.
+
+-- Communications to Client -- 
+
+Message destination:  
+Message tag:  ?
+Description:  ?

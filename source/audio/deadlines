@@ -1,0 +1,47 @@
+Audio Software
+--------------
+
+Final deadlines for software completion
+---------------------------------------
+
+
+(Start time: Sunday morning, 10/5/98)
+
+PC->Motorola audio:
+  * PC sampling - software written and tested
+  * PC compression - software written and tested
+  * Serial tx/rx - software written, not tested with compressed audio
+  * Motorola decompression - software written, not tested
+  * Motorola DAC output - software written, not tested with above modules
+
+Estimated time to complete the above tasks: 5 hours
+Agreed completion date: end of Sunday 10/5/98
+
+Tasks to cover:
+  * test serial tx/rx with PC compression and sampling
+  * test motorola decompression with above
+  * test motorola DAC output with above
+
+
+
+***************************************************************************
+
+Motorola->PC audio:
+  * Motorola sampling - software written, not tested
+  * Motorola compression - software written, not tested
+  * Serial tx/rx - software written, not tested with compressed audio
+  * PC decompression - software written, not tested with data from motorola
+  * PC DAC output - software not nested
+
+Estimated time to complete the above tasks: 6 hours
+Agreed start date and time: Monday 11/5/98
+Agreed completion date: end of Monday 11/5/98
+
+Tasks to cover:
+  1. test motorola sampling software
+  2. test motorola compression software with above
+  3. test serial tx/rx with motorola compression audio (tasks 1, 2)
+  4. test PC decompression with data from motorola (tasks 1,2,3)
+  5. test PC DAC output with data from PC decompression (tasks 1,2,3,4)
+  
+  

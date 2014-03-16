@@ -1,0 +1,1 @@
+gcc68s -DDEBUG -o dl_test db_recieve.c test.c validate.c m_support.c ~/source/transport/motorola/polling.c ~/source/low.level/motorola/board.c ../support.c -lqcam

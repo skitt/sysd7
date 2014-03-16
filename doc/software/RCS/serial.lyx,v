@@ -1,0 +1,263 @@
+head	1.2;
+access;
+symbols;
+locks
+	skk:1.2; strict;
+comment	@# @;
+
+
+1.2
+date	98.04.30.10.57.32;	author skk;	state Exp;
+branches;
+next	1.1;
+
+1.1
+date	98.04.30.09.49.49;	author skk;	state Exp;
+branches;
+next	;
+
+
+desc
+@Initial revision of the serial documentation.
+@
+
+
+1.2
+log
+@Added platform-specific section.
+@
+text
+@#This file was created by <skk> Thu Apr 30 11:57:18 1998
+#LyX 0.12 (C) 1995-1998 Matthias Ettrich and the LyX Team
+\lyxformat 2.15
+\textclass article
+\language default
+\inputencoding default
+\fontscheme default
+\graphics default
+\paperfontsize default
+\spacing single 
+\papersize Default
+\paperpackage widemarginsa4
+\use_geometry 0
+\use_amsmath 0
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\defskip medskip
+\quotes_language english
+\quotes_times 2
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+
+\layout Section
+
+Serial architecture
+\layout Subsection
+
+External interface
+\layout Standard
+
+The serial interface is designed to be the same on both the Linux and Motorola
+ sides of the system.
+ The subsystem transmits packets of data between the two platforms; these
+ can be of any length.
+\layout Standard
+
+A data packet, as supplied to and by the serial functions, has the following
+ structure:
+\layout LyX-Code
+
+typedef struct
+\layout LyX-Code
+
+{
+\layout LyX-Code
+
+
+\protected_separator 
+ unsigned char datatype;
+\layout LyX-Code
+
+
+\protected_separator 
+ unsigned int length;
+\layout LyX-Code
+
+
+\protected_separator 
+ unsigned char * data;
+\layout LyX-Code
+
+} packet;
+\layout Standard
+
+The datatype is used by handler functions at the receiving end; the serial
+ subsystem maintains a programmer-controlled list of handlers, and upon
+ receiving a complete packet, calls the relevant handler.
+ Two datatypes are predefined by the serial subsystem though: 0 corresponds
+ to the default handler, used when no handler is defined for the datatype
+ of a packet, and 1 is the PING packet, used to check whether the system
+ is alive.
+ The first of these can be redefined by the programmer.
+\layout Standard
+
+The data pointed to is copied immediately, so that the supplying function
+ needn't keep a copy.
+ Likewise, receiving functions should copy the data immediately...
+\layout Standard
+
+The functions defined are as follows:
+\layout Itemize
+
+
+\family typewriter 
+int serialinit (void)
+\family default 
+ --- initialises the serial subsystem;
+\layout Itemize
+
+
+\family typewriter 
+int serialclose (void)
+\family default 
+ --- closes the serial subsystem;
+\layout Itemize
+
+
+\family typewriter 
+int senddata (packet *)
+\family default 
+ --- queues a packet (pointed to by the argument);
+\layout Itemize
+
+
+\family typewriter 
+int registerhandler (unsigned char, packethandler)
+\family default 
+ --- registers a function which will be called with any incoming packet
+ containing data of the type given in the first argument;
+\layout Itemize
+
+
+\family typewriter 
+int unregisterhandler (unsigned char)
+\family default 
+ --- removes any handler previously defined for the given data type; if
+ the default data handler is removed, the system reverts to the supplied
+ default handler which discards any incoming packets apart from the PING
+ packet;
+\layout Itemize
+
+
+\family typewriter 
+int ping (void)
+\family default 
+ --- checks to see whether the opposite member of the link is still responding.
+\layout Subsection
+
+Implementation
+\layout Standard
+
+The implementation of the serial subsystem on both platforms is event-based.
+ Queues of incoming and outgoing data are maintained, and whenever the UARTs
+ are ready to send or receive data is fed to (if there is any outgoing data)
+ or read from them.
+\layout Subsubsection
+
+Common sections
+\layout Standard
+
+The event-handling function is 
+\family typewriter 
+void serialevent (void)
+\family default 
+, which is called whenever the UART signals it's ready to transmit or receive;
+ it then determines which direction data is needed for, and transfers it
+ to and from the queues.
+\layout Standard
+
+A 32768-byte buffer stores the incoming data until a complete packet is
+ received, as determined by the length descriptor.
+ Whenever a complete packet is formed, the corresponding handler is called,
+ and the buffer can then be re-used.
+\layout Standard
+
+Output data is stored in a circular, 65536-byte buffer as a stream of raw
+ bytes which need sent out.
+ When a packet is received, its contents are simply added to the buffer.
+\layout Subsubsection
+
+Linux specifics
+\layout Standard
+
+The Linux code communicates with the serial port by using the 
+\family typewriter 
+ttyS0
+\family default 
+ terminal device.
+ Events are provided using the 
+\family typewriter 
+IO
+\family default 
+ signal; non-blocking input/output is then used to determine whether the
+ UART is ready to transmit or receive.
+ 
+\family typewriter 
+serialevent
+\family default 
+ is called by 
+\family typewriter 
+void iosighandler (int)
+\family default 
+, which is registered as the 
+\family typewriter 
+SIGIO
+\family default 
+ handler.
+ 
+\family typewriter 
+termios
+\family default 
+ functions are used to set the communications port up.
+\layout Subsubsection
+
+Motorola specifics
+\layout Standard
+
+On the Motorola, access to the UART is done directly since the MC68681 is
+ memory-mapped and there is no operating system.
+ The PIT (MC68230) is also used since the UART's IRQ line goes through it.
+ The assembler function 
+\family typewriter 
+serialirq
+\family default 
+ is set up to handle the UART IRQ exception; it simply calls 
+\family typewriter 
+serialevent
+\family default 
+.
+\the_end
+@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@d1 1
+a1 1
+#This file was created by <sysd7> Thu Apr 30 10:49:38 1998
+d12 1
+a12 1
+\paperpackage a4
+d37 1
+a37 3
+ can be of any length, and are split up internally into 512-byte packets
+ before transmission, and concatenated on reception before being passed
+ on.
+d130 83
+@

@@ -1,0 +1,50 @@
+head	1.1;
+access;
+symbols;
+locks; strict;
+comment	@# @;
+
+
+1.1
+date	98.04.30.09.49.08;	author skk;	state Exp;
+branches;
+next	;
+
+
+desc
+@State description for state 6.
+@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@System Design Group 7
+Software Design Specification (Motorola board)
+(for inclusion in Design document)
+
+-- State --
+
+State Number/Title: 6 - Poll keypad
+
+Username: skk
+
+Functional description of State:
+
+This state attempts to read a PIN from the keypad, by repeatedly
+polling it until either a full PIN is read, or the timeout expires.
+
+-- Transitions --
+
+Move to state: 7
+Conditions on transition: a PIN was successfully read.
+
+Move to state: 2
+Conditions on transition: the timeout expired.
+
+-- Communications to Client -- 
+
+None.
+@

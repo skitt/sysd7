@@ -1,0 +1,82 @@
+head	1.3;
+access;
+symbols;
+locks; strict;
+comment	@ * @;
+
+
+1.3
+date	98.05.07.18.26.35;	author skk;	state Exp;
+branches;
+next	1.2;
+
+1.2
+date	98.05.06.15.40.20;	author skk;	state Exp;
+branches;
+next	1.1;
+
+1.1
+date	98.04.28.10.27.51;	author skk;	state Exp;
+branches;
+next	;
+
+
+desc
+@Motorola putn function.
+@
+
+
+1.3
+log
+@Corrected digit bug.
+@
+text
+@#include <support.h>
+
+void putn (unsigned long number, int base, int digits)
+{
+  unsigned long magnitude;
+  unsigned char digit;
+  
+  magnitude = 1;
+  while (digits > 1)
+    {
+      magnitude *= base;
+      digits--;
+    };
+  while (magnitude > 0)
+    {
+      digit = number / magnitude;
+      if (digit < 10)
+	mon_putc ('0' + digit);
+      else
+	mon_putc ('A' - 10 + digit);
+      number %= magnitude;
+      magnitude /= base;
+    };
+}
+@
+
+
+1.2
+log
+@Fixed bugs...
+@
+text
+@d9 1
+a9 1
+  while (digits > 0)
+@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@d6 1
+d16 5
+a20 1
+      mon_putc (number / magnitude);
+d22 1
+@

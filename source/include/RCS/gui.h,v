@@ -1,0 +1,64 @@
+head	1.2;
+access;
+symbols;
+locks; strict;
+comment	@ * @;
+
+
+1.2
+date	98.04.28.12.54.02;	author iic;	state Exp;
+branches;
+next	1.1;
+
+1.1
+date	98.04.27.14.49.53;	author ejk;	state Exp;
+branches;
+next	;
+
+
+desc
+@Linux GUI - external interface specification.
+@
+
+
+1.2
+log
+@Changed references to "video.h" to "linux.video.h".
+@
+text
+@/* System Design Group 7
+ * gui.h -- Linux GUI
+ * EXTERNAL INTERFACE SPECIFICATION
+ * Edward Knowelden (ejk)
+ */
+
+#ifndef __GUI_H__
+#define __GUI_H__
+
+#include "linux.video.h"
+
+void gui_display_frame(frame_t *frame);
+/* Called by VIDEO_LNX when it has decoded a frame. Copies frame from
+ * specified location and displays it in a window. The frame type is
+ * specified in linux.video.h. */
+
+void gui_display_uid(int uid);
+/* Called by CONTROL_LNX if it receives a uid from motorola board and
+ * the GUI is active. ie. if someone uses a DR to gain access. */
+
+#endif
+@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@d10 1
+a10 1
+#include "video.h"
+d15 1
+a15 1
+ * specified in video.h. */
+@

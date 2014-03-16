@@ -1,0 +1,32 @@
+System Design Group 7
+Software Design Specification (Motorola board)
+(for inclusion in Design document)
+
+-- State --
+
+State Number/Title: 7 - Auto verify
+
+Username: ejk
+
+Functional description of State: Verifies the authenticity of the user
+wishing to gain entry. Looks at UID and PIN read by previous states
+and stored in memory. Compares these with entries in the database,
+stored in RAM. The outcome of this is sent to the client machine for
+logging.
+
+-- Transitions --
+
+Move to state: 8 (open door)
+Conditions on transition: 
+UID is in the database, and PIN is correct.
+
+Move to state: 2
+Conditions on transition: 
+UID is not in the database, OR it *is* but PIN is incorrect.
+
+-- Communications to Client -- 
+
+Message destination: CONTROL
+Message tag: LOG_ENTRY
+Description: Sends UID and outcome of verification process to the
+client machine, where it is stored in a file for security auditing.

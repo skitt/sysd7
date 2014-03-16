@@ -1,0 +1,465 @@
+#This file was created by <skk> Wed May 20 11:28:21 1998
+#LyX 0.12 (C) 1995-1998 Matthias Ettrich and the LyX Team
+\lyxformat 2.15
+\textclass article
+\language default
+\inputencoding default
+\fontscheme palatino
+\graphics default
+\paperfontsize default
+\spacing single 
+\papersize Default
+\paperpackage widemarginsa4
+\use_geometry 0
+\use_amsmath 0
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation skip
+\defskip medskip
+\quotes_language english
+\quotes_times 2
+\papercolumns 1
+\papersides 1
+\paperpagestyle fancy
+
+\layout Title
+
+System Design Project
+\newline 
+Detailed product specification
+\layout Author
+
+Group 7
+\layout Standard
+\added_space_top 0.3cm \added_space_bottom 0.3cm \align center 
+
+\begin_inset Figure size 128 125
+file ../web/images/EUcrest-official-noborder.ps
+flags 11
+
+\end_inset 
+
+
+\layout Standard
+\pagebreak_top 
+
+\begin_inset LatexCommand \tableofcontents
+
+\end_inset 
+
+
+\layout Standard
+\pagebreak_bottom 
+
+\begin_inset LatexCommand \listoffigures
+
+\end_inset 
+
+
+\layout Section
+
+Design decisions
+\layout Standard
+
+The prototype door-entry system is designed to offer the following features:
+\layout Itemize
+
+high level of reliability
+\layout Itemize
+
+failsafe mechanisms in the event of tamper or power failure
+\layout Itemize
+
+simple user interface
+\layout Itemize
+
+voice communication in two directions
+\layout Itemize
+
+video communication in one direction
+\layout Standard
+
+This has been facilitated by the use of various technologies.
+ The failsafe mechanisms are provided by the use of a mechanical and electro-mec
+hanical combination of lock mechanisms.
+ In normal operation, the electro-mechanical door mechanism operates to
+ unlock the door, while a Yale-type latched doorlock allows manual operation
+ with a conventional key.
+ This means that, for example, in the event of system failure due to power
+ supply interruption, access can still be gained to the property by use
+ of a key.
+ Normally this key would be held by only one or two people, such as the
+ security staff, and should not be distributed for widespread use as this
+ would defeat the security features inherent in the electronic mechanism.
+ 
+\layout Standard
+
+The main electro-mechanical mechanism is driven by lock control unit, which
+ in turn is connected by a serial link of variable length to the remote
+ PC.
+ The lock control unit has the capability to automatically control entry
+ without needing to communicate with the remote PC, and is therefore protected
+ from failure in the event of a break in the serial link.
+ 
+\layout Standard
+
+A simple user interface has been designed, which offers a high degree of
+ reliability and security.
+ Although magnetic swipe cards are a widely-used and low-cost technology
+ in door-lock systems, this design does not use them.
+ There is another system which offers greater reliability and convenience,
+ while still being relatively low-cost for small to moderate-sized markets.
+ This technology is called iButton and it is manufactured by Dallas Semiconducto
+r; it consists of a small button-shaped tag which can be mounted on a laminated
+ identity card or a plastic keyring holder.
+ This means it is more convenient to carry around than a conventional magnetic
+ swipe card.
+ 
+\layout Standard
+
+Additionally, it does not require moving contact for it to be read, and
+ cannot be wiped by magnetic fields; this technology was therefore chosen
+ to meet the needs of our chosen market.
+ Each iButton is manufactured with a unique identification number, which
+ our system reads from the device and uses to identify the user.
+ The user is then required to enter a Personal Identification Number (PIN)
+ which then allows them to enter the building.
+ The PIN is entered using a conventional numeric keypad, which is part of
+ the lock control system.
+ 
+\layout Standard
+
+The second mode of operation requires the use of video and audio systems.
+ The design requirement of using a serial link means that this data has
+ to be digitised and sent over the link.
+ These functions are also carried out by the lock control unit.
+ It is proposed that the final product would have the entry buzzer button
+ located just below the camera, so that the picture from the camera would
+ be of the visitor's face.
+ The location of the microphone and speaker of the audio system are less
+ important, but these would be part of the same external unit, and would
+ be separate from the lock control unit itself.
+\layout Standard
+
+Finally, the design is such that external tampering does not make access
+ possible.
+ The input devices (camera, keypad, iButton reader, microphone) and output
+ devices (speaker, status indicators) are wired so that they cannot cause
+ the electro-mechanical door latch mechanism to activate.
+ As a backup to this, the door position sensor will detect if the door has
+ been opened without the electronic authorisation being issued.
+ If this happens, an alarm will sound in the lock control unit and at the
+ PC; this can be overridden from the PC side.
+\layout Section
+
+The door-lock unit hardware
+\layout Subsection
+
+Specific hardware devices 
+\layout Standard
+
+The door entry system consists of several functional hardware components.
+ These components provide the interface to the person who is requesting
+ access to the property.
+ Our hardware interface carries out the following input and output functions:
+\layout Itemize
+
+keypad data input (including the doorbell function)
+\layout Itemize
+
+iButton serial number input 
+\layout Itemize
+
+intercom audio input 
+\layout Itemize
+
+door position detector input 
+\layout Itemize
+
+video camera picture input 
+\layout Itemize
+
+intercom audio output 
+\layout Itemize
+
+door lock control signal output 
+\layout Itemize
+
+visual status output (door open, system ready, access denied) 
+\layout Standard
+
+The hardware component of the prototype system is based around a Motorola
+ 68040 prototyping board (IDP), to which we have connected a Connectix Quickcam.
+ In order to provide the remaining functions we have added an interface
+ board, which incorporates the keypad, the intercom functions, the door
+ position detector, the iButton interface, the visual status outputs, and
+ the door lock control.
+ 
+\layout Subsection
+
+Interface description
+\layout Standard
+
+Component choice was determined by a number of factors.
+ Cost, suitability to the functional task, simplicity of design and interfacing,
+ and suitability for prototyping were paramount in the selection process.
+ The use of the 68230, EPLD, DAC and ADC devices was a direct requirement
+ of the product specification, as these devices provide the majority of
+ the functionality of the product.
+ In addition, the design incorporates a number of secondary devices which
+ complement the interfacing logic and ensure the correct operation of the
+ major components.
+ Finally, the design uses a keypad encoder to minimise the complexity of
+ the keypad software routines and hardware connections.
+ This could have been implemented in a custom logic device, but this was
+ deemed unnecessary as there are good commercial devices available to do
+ this.
+\layout Standard
+
+The interface board uses a Motorola 68230 parallel interface device, which
+ gives a capacity of 24 input or output lines.
+ This device is asynchronous, so it is connected to the IDP through a state
+ machine, implemented in a single logic device (an Electronically Programmable
+ Logic Device or EPLD).
+ A D-type flip-flop is used to synchronise the asynchronous signals from
+ the 68230 with the IDP clock, as required by the IDP bus specifications.
+ The clock signal for the EPLD and the flip-flop is derived from the bus
+ clock (6.25MHz) which is doubled using a phase-lock loop device to 12.5MHz.
+ 
+\layout Standard
+
+The 68230 device and its associated state machine have been designed to
+ operate at a clock speed of 10MHz; this clock signal is provided by a separate
+ clock signal generator device on the interface board.
+ The requirement for tri-state signals on some of the bus lines has been
+ met by using a tri-state buffer device on these lines.
+\layout Section
+
+The software
+\layout Standard
+
+The software is composed of two programs running on two platforms: a GUI
+ running on the client (Linux for the prototype), and general control software
+ running on the board (the Motorola IDP).
+ Many support routines are used, some common to both platforms; these are
+ divided into modules:
+\layout Itemize
+
+serial --- provides the communication subsystem; this operates in parallel
+ with the rest of the software, using interrupts or signals;
+\layout Itemize
+
+low-level --- provides functions to access the hardware on the Motorola
+ IDP board and the secondary board;
+\layout Itemize
+
+video --- grabs, compresses and decompresses frames;
+\layout Itemize
+
+audio --- samples, compresses, decompresses and plays back audio;
+\layout Itemize
+
+control --- handles the database and configuration information, and sends
+ orders to various sections.
+\layout Subsection
+
+The Linux software
+\layout Standard
+
+The user interface runs on a Linux PC running the X Windows user interface,
+ and had been predominantly constructed using the GTK+ toolkit in the C
+ programming language.
+ It is contained in a binary file together with all other non-continuous
+ modules such as video and audio.
+ The UI is launched by the daemon on receiving a message from the Motorola
+ board.
+\layout Standard
+
+\begin_float fig 
+\layout Standard
+\align center 
+
+\begin_inset Figure size 446 353
+file ../guigrab2.ps
+width 3 75
+flags 9
+
+\end_inset 
+
+
+\layout Caption
+
+
+\begin_inset LatexCommand \label{screenshot1}
+
+\end_inset 
+
+Screenshot of the GUI
+\end_float 
+\layout Standard
+
+The main window is shown in fig 
+\begin_inset LatexCommand \ref{screenshot1}
+
+\end_inset 
+
+, page 
+\begin_inset LatexCommand \pageref{screenshot1}
+
+\end_inset 
+
+.
+ Normally the video frames will be updated every few seconds and there will
+ be no audio.
+ When someone presses the buzzer and the PC user reacts, sound transmission
+ will begin, one-way only, and continue until a (long) timeout expires,
+ or the person is accepted or rejected.
+ The PC user can toggle between talking and listening to the person at the
+ door.
+ The functions of the various buttons are as follows:
+\layout Itemize
+
+talk --- this initiates the PC-to-door sound, allowing the PC user to speak
+ to the visitor (this is currently not implemented);
+\layout Itemize
+
+listen --- this allows the visitor to speak to the PC user;
+\layout Itemize
+
+video --- this returns to video mode; the user should return to talk/listen;
+\layout Itemize
+
+unlock --- this causes the door to unlock;
+\layout Itemize
+
+refuse --- this denies entry;
+\layout Itemize
+
+audio control --- this loads an audio configuration program (mixer);
+\layout Itemize
+
+configure --- this opens the system configuration panel (currently only
+ a demonstration of the database editing module);
+\layout Itemize
+
+close --- this closes the interface window.
+\layout Standard
+
+The status bar indicates the state the system is in --- video, talk or listen.
+\layout Standard
+
+Note that in normal operation the window is somewhat simpler; it only displays
+ the video panel and the Video, Audio Control, Configure and Close buttons.
+ The remainder appears when the doorbell is pressed and disappears when
+ the PC user unlocks the door or denies entry.
+\layout Standard
+
+\begin_float fig 
+\layout Standard
+\align center 
+
+\begin_inset Figure size 446 303
+file ../db_grab.ps
+width 3 75
+flags 9
+
+\end_inset 
+
+
+\layout Caption
+
+
+\begin_inset LatexCommand \label{Screenshot 2}
+
+\end_inset 
+
+Screenshot of the database editor
+\end_float 
+\layout Standard
+
+The database editing module is shown in figure 
+\begin_inset LatexCommand \ref{Screenshot 2}
+
+\end_inset 
+
+, page 
+\begin_inset LatexCommand \pageref{Screenshot 2}
+
+\end_inset 
+
+.
+ The Add and Delete buttons allow users to be added or deleted; Change PIN
+ changes a user's PIN, and Close closes the window.
+ The only important information here is the user's name (for logging purposes),
+ their ID number and their PIN.
+ The Last Entry section is automatically filled in by the logging mechanism;
+ User lockout allows a user to be locked out manually, or allowed back in.
+ The Department section could be used for logging purposes only, but it
+ should also allow fine-grained control over possible times of entry, in
+ a fashion similar to user groups --- thus one could have a cleaners group
+ which is allowed in early in the morning, a 
+\begin_inset Quotes eld
+\end_inset 
+
+normal
+\begin_inset Quotes erd
+\end_inset 
+
+ group with 9--5 hours...
+\layout Subsection
+
+The Motorola software
+\layout Standard
+
+This implements the board-side of the door-entry system in software.
+ It interacts with the hardware on the boards, and communicates with the
+ client.
+\layout Standard
+
+Right at the start of execution an initialisation phase places the system
+ in a known state, before moving on to the default mode of operation.
+\layout Standard
+
+The standard state of the system is for it to grab video and send it to
+ the PC, whether or not the PC is actually on.
+ It also checks for an iButton in the reader and for a press of the doorbell.
+\layout Standard
+
+If the doorbell is pressed, the buzzer will sound and a message will be
+ sent to the PC indicating that the doorbell has been pressed.
+ Then the Motorola will wait for a reaction from the PC or a timeout; during
+ this time it continues grabbing and sending video.
+\layout Standard
+
+If the PC user reacts to the doorbell, one of two modes of operation will
+ be entered: talk or listen.
+ In talk mode, the Motorola waits for audio to come from the PC and plays
+ it via the DAC.
+ In listen mode, the Motorola samples audio from the ADC and sends it to
+ the PC.
+ The PC can ask the Motorola to move between the two states, and to move
+ back to the previous state.
+ It can also instruct the Motorola to open the door or deny entry.
+\layout Standard
+
+If the door should be opened, the software activates the green LED on the
+ secondary board, which unlocks the door, then waits for fifteen seconds
+ or the door to be opened, whichever comes first; it then locks the door
+ again and returns to the default mode of operation.
+\layout Standard
+
+If access should be denied, the software flashes the red LED five times
+ before returning to the default mode of operation.
+\layout Standard
+
+Now, going back to the default mode of operation, a user may place an iButton
+ in the reader.
+ In this case, the buzzer sounds twice and the software waits for a four-digit
+ PIN to be entered, key by key, with feeback beeps after every keystroke.
+ Then the user ID given by the iButton and the PIN are compared against
+ known entries in the database; if the user is valid, the door is open,
+ otherwise entry is refused, as described above.
+ This mode of operation can operate without any support from the PC; in
+ fact, switching the PC off doesn't affect it...
+\the_end

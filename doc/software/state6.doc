@@ -1,0 +1,26 @@
+System Design Group 7
+Software Design Specification (Motorola board)
+(for inclusion in Design document)
+
+-- State --
+
+State Number/Title: 6 - Poll keypad
+
+Username: skk
+
+Functional description of State:
+
+This state attempts to read a PIN from the keypad, by repeatedly
+polling it until either a full PIN is read, or the timeout expires.
+
+-- Transitions --
+
+Move to state: 7
+Conditions on transition: a PIN was successfully read.
+
+Move to state: 2
+Conditions on transition: the timeout expired.
+
+-- Communications to Client -- 
+
+None.

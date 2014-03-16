@@ -1,0 +1,1058 @@
+#This file was created by <sxjc> Thu May 14 18:51:49 1998
+#LyX 0.12 (C) 1995-1998 Matthias Ettrich and the LyX Team
+\lyxformat 2.15
+\textclass article
+\language default
+\inputencoding default
+\fontscheme default
+\graphics default
+\paperfontsize default
+\spacing single 
+\papersize Default
+\paperpackage a4
+\use_geometry 0
+\use_amsmath 0
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\defskip medskip
+\quotes_language english
+\quotes_times 2
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+
+\layout Title
+
+Management Report 
+\layout Author
+
+System Design Group Seven
+\layout Standard
+\added_space_top 0.3cm \added_space_bottom 0.3cm \align center 
+
+\begin_inset Figure size 128 125
+file ../web/images/EUcrest-official-noborder.ps
+flags 11
+
+\end_inset 
+
+
+\layout Standard
+\pagebreak_top 
+
+\begin_inset LatexCommand \tableofcontents
+
+\end_inset 
+
+
+\layout Standard
+
+
+\begin_inset LatexCommand \printindex
+
+\end_inset 
+
+
+\layout Section
+\pagebreak_top 
+Introduction
+\layout Standard
+
+This report outlines the management issues and policies which were raised
+ during the execution of the CS3 System Design group practical.
+ It explains how the project was planned, and how the tasks were allocated
+ to the members of the group.
+ It also concludes the project with an evaluation of the relative contribution
+ and effort made by each member of the group.
+\layout Section
+
+Allocation of Tasks
+\layout Subsection
+
+Initial Allocation
+\layout Standard
+
+From the start of the project, it was decided that the tasks involved in
+ carrying out the exercise should be divided into three broad categories;
+ these were defined as software, hardware and documentation.
+ The software category covered all software tasks, from writing the low-level
+ routines, up to the front-end system and graphical user interface (GUI).
+ The hardware category was defined as the design and construction of the
+ prototype hardware and auxilliary components.
+ It was recognised that, as our group did not have an electrical engineering
+ student, we would need to devote extra resources to the hardware area.
+ Finally, the documentation category covered the market research and feasibility
+ report, as well as the writing of the design specifications in consultation
+ with software and hardware, and the keeping of minutes of all the meetings.
+ 
+\layout Subsubsection
+
+General Task Allocations
+\layout Standard
+
+Before the start of the project, we made an assessment of each of our abilities,
+ strengths and weaknesses.
+ It was immediately apparent that Stephen Kitt was best suited to software,
+ while the other strong programmers were identified as Ian Clarke, Edward
+ Knowelden and Duncan Irvine.
+ On the hardware side, it was decided that we should have atleast one person
+ who had done the CS3 Computer Design course, so James Northrop was selected.
+ Stephen Cook already had some hardware experience from a school project,
+ and Stuart Cox had some electrical engineering knowledge gained from Physics;
+ this completed the hardware team.
+ Iain Todd was put in overall charge of documentation, although it was acknowled
+ged that this was not ideal.
+ However, we felt that by giving each member of the group responsibility
+ for documenting their own software or hardware units, we could produce
+ documentation of sufficient quality and quantity.
+ 
+\layout Standard
+
+Having made these allocations, we then subdivided the tasks so that each
+ person had a clear idea of what they were required to do.
+ 
+\layout Subsubsection
+
+Specific Task Allocations
+\layout Standard
+
+We divided the software tasks into four areas, comprising:
+\layout Itemize
+
+Audio systems
+\layout Itemize
+
+Video systems
+\layout Itemize
+
+Serial communication systems
+\layout Itemize
+
+Database and User Interface
+\layout Standard
+
+We then allocated the four people from the software team to each of the
+ four tasks.
+ Duncan chose to work on the audio software, while Stephen Kitt was happy
+ to work on the communications and Ian Clarke on the video system.
+ Edward chose the database and user interface as his preferred area, and
+ thus these tasks were allocated.
+ 
+\layout Standard
+
+For hardware, we split the design work into three distinct tasks:
+\layout Itemize
+
+Interfacing Logic Design
+\layout Itemize
+
+Interfacing Hardware Design
+\layout Itemize
+
+Analogue Audio Design
+\layout Standard
+
+The split was such that design work and prototyping could be done on all
+ three areas at the same time and as early as possible.
+ Stephen Cook elected to work on the Interfacing Hardware Design, while
+ James worked on the Interfacing Logic Design and Stuart on the Analogue
+ Audio Design; these allocations reflected the areas of expertise that had
+ already been established.
+ 
+\layout Standard
+
+The remaining roles of Project Manager and Documentation were given to Stephen
+ Cook and Iain Todd respectively; while Iain acknowledged his weaknesses
+ with documentation, he felt that this role was more suitable than either
+ software or hardware.
+ Stephen Cook agreed to split his time between his managerial role and his
+ tasks in hardware design.
+\layout Subsection
+
+Re-allocation of Tasks
+\layout Standard
+
+We decided that where these task allocations were judged to be unsuitable
+ or not optimal, we would either reassign the task or redefine it to make
+ the work more suitable to the worker.
+ However, there were few instances where this was necessary.
+ Around 3 weeks into the project we decided that the audio system was a
+ task that required added manpower, and so Stephen Kitt and Ian Clarke spent
+ part of their time working on this, alongside Duncan.
+ However, in general the task allocation proved to be effective.
+\layout Subsection
+
+Goal-setting
+\layout Standard
+
+In order to steer the group's efforts in the right direction, we set a number
+ of goals during the lifetime of the project.
+ At each of the supervisor meetings we gave a progress report, which helped
+ to clarify the rate of progress.
+ A Gantt chart was used to track this progress (see end of report).
+ The Gantt chart was updated every week to reflect the state of progress
+ in the project.
+ This chart was made available to the supervisor as well as the other members
+ of the group; however, the most effective form of feedback was definitely
+ the group meetings and setting of goals.
+ 
+\layout Subsection
+
+Management Issues during the Project
+\layout Standard
+
+In hindsight, the group agrees that there was a slight lack of specific
+ management among the software group.
+ It would perhaps have been better to have a software manager in addition
+ to the project manager; the existing arrangement meant that management
+ attention was focused more on hardware than software.
+ However, the software group was sufficiently self-motivated that this was
+ not a major issue; perhaps with different people it would have been more
+ of a problem.
+ 
+\layout Standard
+
+An early management goal was to have the hardware designed, constructed
+ and tested as early as possible.
+ We decided to use a considerable proportion of our consultancy budget to
+ do this, and as a result the hardware was designed by the end of week 2,
+ and fully constructed by the middle of week 3.
+ The management focus then shifted to ensuring that the software team made
+ full use of this advantage, and in particular there was a push to get the
+ audio system up and running, as this was felt to have stalled somewhat.
+ This involved setting specific targets for those involved, and drafting
+ in extra help from others in the group, as well as using some more of our
+ consultancy budget.
+\layout Standard
+
+However, by the end of the project, we had produced a prototype that did
+ nearly everything it was supposed to do.
+ The hardware was complete, fully tested and working, while the software
+ conformed to our initial design specification, and was also substantially
+ complete.
+ The reasons for this achievement are varied, but undoubtedly the general
+ harmony amongst the group and the consistency of attendance and effort
+ of all members was a major part of this.
+ 
+\layout Section
+
+Estimation of Individuals' Effort
+\layout Standard
+
+In estimating the relative contribution made by each group member, we have
+ taken into consideration the existing abilities of each person, and tried
+ to assess the actual effort made.
+ This was done by asking each person for an honest self-assessment of effort,
+ along with their explanation:
+\layout Enumerate
+
+Stephen Kitt - equal to others, with slightly above average for documentation
+ 
+\layout Enumerate
+
+Edward - equal, although time management could have been better
+\layout Enumerate
+
+Duncan - equal, since although the audio did not work completely, the effort
+ involved in achieving partial audio was considerable.
+\layout Enumerate
+
+James - equal, felt that everyone had put in a good effort
+\layout Enumerate
+
+Stephen Cook - equal, with more effort during the hardware stage
+\layout Enumerate
+
+Ian Clarke - equal, video software worked on time
+\layout Enumerate
+
+Iain Todd - below equal, felt the work was less important, complicated or
+ challenging
+\layout Enumerate
+
+Stuart - equal, worked productively
+\layout Standard
+
+As a group, we feel that this is a fair reflection of effort made during
+ the 4 weeks of the project.
+ We do not think that any one member of the group put in significantly less
+ or more effort than any other, and that this balance was one which was
+ ultimately beneficial to all.
+\layout Standard
+
+If we were faced with doing the whole project again, we would make very
+ few changes to the allocation of tasks and people.
+ Aside from the issue of having a separate software manager, as mentioned
+ earlier, the way we divided up the project was generally felt to have been
+ a success.
+\layout Section
+
+Minutes of the Group Meetings
+\layout Subsection
+
+April 21 (11am - 12am) 
+\layout Standard
+
+In our initial meeting it was decided to concentrate on accumulating ideas
+ for the product and the group.
+ We had to decide on the roles each person would be taking and how we would
+ begin to tackle the design specification.
+ Each person stated their preferred interests and the group was split up
+ accordingly
+\layout Itemize
+
+Ian Clarke (Computer Science and Artificial Intelligence) Software 
+\layout Itemize
+
+Stephen Cook (Computer Science and Management) Group coordinator and hardware
+\layout Itemize
+
+Stuart Cox (Computer Science and Physics) Hardware
+\layout Itemize
+
+Duncan Irvine (Computer Science) Software
+\layout Itemize
+
+Stephen Kitt (Computer Science and Artificial Intelligence) Software
+\layout Itemize
+
+Edward Knowelden (Computer Science and and Artificial Intelligence) Software
+\layout Itemize
+
+James Northrop (Computer Science) Hardware 
+\layout Itemize
+
+Iain Todd (Computer Science) Feasibility study and documentation
+\layout Itemize
+
+Gordon Brebner Group Supervisor
+\layout Standard
+
+This enabled us to have three groups each working on specific parts of the
+ project.
+ The three groups will meet up with the group supervisor three times a week.
+ Each group will conduct there own meetings when ever that may may be appropriat
+e.
+ Each of the three groups will have to keep in daily contact with each other,
+ so that their efforts can be coordinated towards one goal.
+\layout Standard
+
+We drew up a time chart for the next four weeks, duly noting the three Deadlines
+ that were imposed on us, and adding our own deadlines.
+ These deadlines included when the design should be finalized, the deadline
+ for hardware and the presentation.
+ This chart will be amended as the project progresses, and our goals became
+ clearer.
+ 
+\noun on 
+<see appendix 1> 
+\layout Subsection
+
+General Ideas
+\layout Standard
+
+Our brainstorming produced specific ideas for the different areas of the
+ practical.
+\layout Subsubsection
+
+Security
+\layout Standard
+
+Swipe cards would be cheap and simple to implement.
+ They also seem to be the favored mechanism for security eg the North Machine
+ Halls, The AI department.
+ Dallas rings are as portable as swipe cards, but we have little information
+ about them.
+ Smart cards would allow us to provide information on the cards, but we
+ are unsure about the cost.
+ We would also need to decide wether a backup of a PIN number would be required
+ by each method
+\layout Subsubsection
+
+Special Features
+\layout Standard
+
+Features such as voice, face or iris recognition were considered but there
+ is a worry over the likelihood of success.
+ We are unsure that any of these methods have been perfected.
+ If we were to implement one of these features we would need to make sure
+ we had a contignancy plan.
+\layout Subsubsection
+
+Market
+\layout Standard
+
+The initial specification states that the system will be designed as a replaceme
+nt for the standard door-entry system of residential flats.
+ We would need to investigate wether residents would accept this product
+ and if they didn't we would investigate new markets.
+\layout Subsection
+
+Goals
+\layout Standard
+
+The task of investigating these ideas was split up between the group.
+ We set a deadline of Thursday Wednesday April 22 to make decisions on our
+ market and our features.
+ The features of the unit will be dependent on the market that we aim for.
+\layout Section
+\pagebreak_top 
+April 22 (10am - 11am)
+\layout Subsection
+
+Research Results
+\layout Subsubsection
+
+Security 
+\layout Standard
+
+Smart cards are expensive but there is an option of making our own using
+ BT phone cards.
+ The principle is quite simple but the implementation may not be.
+ We can not buy smart cards as they are expensive, the card writer alone
+ would cost more than our budget.
+ Dallas rings are not the cheapest option, but we would probably be the
+ only group using them.
+\layout Subsubsection
+
+Features 
+\layout Standard
+
+Examining the area of image recognition as a security mechanism; each user
+ would be given a card with a barcode on it.
+ The user would show this to the camera (which would recognize the code)
+ and then type in a PIN, if the pin and code were correct then they would
+ gain entry.We consider the system to be feasible, the algorithm to recognize
+ the image is quite simple.
+ Advantageously the cost would be low, the image would only be printed onto
+ a piece of laminate, no special equipment would have to be bought.
+ The limitation to this method is that we have not been able to test the
+ camera to check the quality of the image.
+ The image will need to be quite clear to make out the bar-code.
+\layout Subsubsection
+
+Market
+\layout Standard
+
+Our initial research shows apathy from most residents, the standard response
+ to the idea is why should they spend money on a new system when they allready
+ have one that meets all their needs.
+ It was decided that we should target the commercial buyer.
+ We had the specific idea of targeting school security.
+ In light of Dunblane there should be an increased market for low cost security.
+\layout Subsection
+
+Reports
+\layout Standard
+
+The hardware group were looking into the chips on the board and the connection
+ methods.
+ They will need time to get familiarized with the board and the chips involved.
+\layout Standard
+
+It was suggested by supervisor that we were expanding a lot of time on the
+ technical details of the product while neglecting some basic ideas.
+ How would the system cope with general situations; switching it off, the
+ machine been dropped and the PC not been switched on.
+ 
+\layout Subsubsection
+
+Deadlines
+\layout Standard
+
+Documentation would start on the Design Specification today, so that we
+ could meet our first Deadline.
+ We would also make a final system design decision at a meeting later in
+ the day.
+\layout Section
+\pagebreak_top 
+April 22 (4pm - 5pm)
+\layout Subsection
+
+Final Research Results
+\layout Standard
+
+We have fully Investigated Dallas rings, smart cards and swipe cards.
+ Dallas rings cost £2 each, cheaper when bought in bulk.
+ The reader is £5.
+ The smart card will not be a good option as there is no supplier of blank
+ cards.
+ There is only a small amount of literature available, finding information
+ about the cards is proving difficult.
+ If we were to use this method we would be carrying out a lot of work into
+ an area were we may get little help.
+ Swipe cards readers cost £25 but the cards themselves only have a lifespan
+ of one to two years.
+ We have sent away for more data about the rings and the swipe cards.
+ The principal problem with the rings are that the readers is not vandal
+ proof.
+ This would not be a great problem as it is a protype we are designing.
+ The problem with swipe cards is that the programmer is too expensive.
+\layout Standard
+
+Continuing our investigation into image recognition, we think the good points
+ would be: 
+\layout Itemize
+
+It looks impressive, 
+\layout Itemize
+
+It would be very convenient to use 
+\layout Itemize
+
+It would be cheap.
+ 
+\layout Standard
+
+The downside is that we would be unable to test it until near the end of
+ the project.
+ We would have to complete most of the software and the hardware without
+ the guarantee of a working product.
+ Until we get a picture from the Quick-Cam then we will not know wether
+ it is feasible.
+ 
+\layout Subsection*
+
+Reports
+\layout Subsection
+
+Hardware
+\layout Standard
+
+The Hardware team have finished their investigation into the chips and the
+ board.
+ They have booked consultation time to help them start up, and their initial
+ thought is that the hardware is going to be more difficult than first thought.
+ 
+\layout Subsection
+
+Software
+\layout Standard
+
+The software team has checked out the audio capabilities on the Linux machine
+ and it seems as if it will operate correctly.
+ The video capabilities seems to be about one frame per second.
+ They will continue to examine the serial connection between the Motorola
+ board and the PC.
+\layout Subsection
+
+Documentation
+\layout Standard
+
+No company deals directly in school security.
+ Most firms try to make there product available to any market that desires
+ access control.
+ The case of babies been snatched form maternity wards highlights the needs
+ of hospitals for security.
+\layout Subsection
+
+Decisions
+\layout Standard
+
+We made the decision to use Dallas Rings.
+ We will not fully rule out image recognition until we get the camera operating.
+ Our target market will be public institutions such as schools and hospitals.
+\layout Subsection
+
+Plan
+\layout Standard
+
+Documentation will complete the Requirement spec for 12pm April 23.
+ Then it can be corrected and updated by the rest of the group.
+ Hardware use some consultation time and software will have an early morning
+ meeting to allocate tasks amongst themselves.
+\layout Section
+\pagebreak_top 
+April 24 (10.30pm - 11pm)
+\layout Subsection*
+
+Reports
+\layout Standard
+
+The camera was set up this morning and the quality of the picture is not
+ clear enough to continue with image recognition.
+ We tested holding up a card with a barcode to the camera and it was very
+ unclear the gaps between the black and the white bands.
+ We could now dedicate our time fully to the Dallas Rings.
+\layout Subsection
+
+Hardware 
+\layout Standard
+
+They have looked at the capabilities of the chips and have started work
+ on timing diagrams.
+ Once they have the design they should have no problems with the construction.
+ They aim to have the hardware up and running by the start of the third
+ week.
+ To achieve this they will order some chips immediately so that they will
+ not be held back later in the project.
+\layout Subsection
+
+Software 
+\layout Standard
+
+They are considering the software requirements.
+ The software will be split into modules and consideration will have to
+ be given about how the two main areas will connect.
+ The software team have split up to consider their individual assignments
+ but they hope to have something working by Tuesday.
+ They have considered all the features they wish to include (see Design
+ Specification)
+\layout Subsection
+
+Documentation 
+\layout Standard
+
+Has to meet the deadline of 4.30 on April 23.
+ Will check the documentation with Stuart Anderson as soon as possible,
+ to correct the structure and contents.
+ Our market research suggests that schools should be our target market.
+ We have contacted schools to gauge their opinion on the unit, and we hope
+ to get the results of our residents survey over the weekend.
+ 
+\layout Standard
+
+In light of the Cullen inquiry the security should be should be good enough
+ to allay parents worries but not be to restrictive to an environment that
+ should be welcoming.
+ The system will be tailored towards their needs and will have to be configurabl
+e.
+ Different schools will have competing needs.
+ The research indicates a market with the NHS; especially maternity wards
+ which increasingly need a low level of security and identification.
+ The advantage of the Dallas ring over swipe cards is that they will not
+ be wiped in a highly magnetized environment such as a hospital.
+\layout Subsection
+
+Plan
+\layout Standard
+
+To set a clear deadline for the Hardware group, as the software has a limited
+ dependency on their finished project.
+ If the worst comes to the worst they should investigate buying the design.
+ Any any other details are covered by the time chart.
+\layout Section
+\pagebreak_top 
+April 27 (10.30am - 11am) 
+\layout Subsection*
+
+Reports
+\layout Subsection
+
+Hardware
+\layout Standard
+
+It is not possible to buy the hardware design but you can get a good idea
+ on how to go about it by using up consultation time.
+ They hope to start construction by the end of the week and have something
+ working for Monday.
+ They will order some of the hardware today.
+\layout Subsection
+
+Software
+\layout Standard
+
+The video is almost complete but it needs to run faster.
+ They consider progress to be good.
+ The Audio specs has now being decided and they are investigating the interface
+ to see how it will multi-task.
+ They have an idea of using the SSCOP code for the serial link, but this
+ may be overcomplicating the situation.
+\layout Subsection
+
+Documentation
+\layout Standard
+
+Any hand-ins should have a system of proof reading.
+ This should be done by a designated member of the group with good English
+ skills.
+ Hand-ins should be written in a style that will assume no prior knowledge
+ of the subject.
+ The feasibility study is still on going.
+\layout Subsection
+
+Plan
+\layout Standard
+
+The Software team will continue to work on the serial cable and should consider
+ booking consultation time if they have any trouble with it.
+ Programming the video software continues and they will delegate other tasks
+ amongst themselves.
+ The hardware team are making progress, and have ordered the parts.
+ Documentation should start on the feasibility study and there should be
+ corrections made to the design specification
+\layout Section
+\pagebreak_top 
+April 29 (3pm - 4pm)
+\layout Subsection*
+
+Reports
+\layout Subsection
+
+Hardware
+\layout Standard
+
+They have ordered and received some of the parts, but they will need to
+ get a few others.
+ They are nearly ready to start construction; Tim Hopkins has checked their
+ design and seems to have no problem with it.
+ They have started some rudimentary testing.
+ For the Feasibility study it should be noted that two of the chips we are
+ using are obsolete.
+\layout Subsection
+
+Software
+\layout Standard
+
+There is a snag with the interface, we may not be able to get the audio
+ and video working together.
+ The camera will record pictures until the buzzer sounds and then only the
+ audio will be active.
+ The user could then check the previous video frames for a clear picture.
+ We should aim to have the simpler design running before we expand it.
+ It is noted that this design does not meet our minimum spec.
+\layout Standard
+
+The video compression could run at one frame per second.
+ Once all the hardware is finished we we will be able to test the client
+ side software.
+ The audio has has a choice of two different standards one of which might
+ be to hardware intensive to proceed with.
+\layout Subsection
+
+Documentation
+\layout Standard
+
+Has made contact with our target groups to gauge a response to our system.
+ Continues to work on the Feasibility study.
+ Should contact the Royal Infirmary or the Scottish Schools Research Center.
+ A phone can be obtained from the secretaries office.
+\layout Subsection
+
+Plan
+\layout Standard
+
+See time chart
+\layout Section
+\pagebreak_top 
+April 30 (3am - 4am) 
+\layout Subsection*
+
+Reports
+\layout Subsection
+
+Hardware
+\layout Standard
+
+They have completed most of the design.
+ The audio section is proving problematic; it is likely that the hand-in
+ tommorow will contain a faulty design.
+ They hope to have finished construction by Sunday.
+ Some Other Groups are just handing in block diagrams; but we will be handing
+ in documents that contain as much detail as is possible.
+ Comprising of a technical description, flow of data, timing diagrams etc.
+\layout Subsection
+
+Software
+\layout Standard
+
+They have designed a state diagram, and have member of the group has been
+ allocated specific parts to write up and implement.
+ They will write up a description, flow of data and the transitions for
+ each state.
+ The GUI is designed but they will need to work out how the client side
+ operates.
+ The audio will have something up and running by Tuesday.
+ Integration of the states can only take place once all the individual states
+ have been finalized.
+\layout Subsection
+
+Documentation
+\layout Standard
+
+The Feasibility study is still on going.
+\layout Subsection
+
+Plan
+\layout Standard
+
+The individual parts of the hardware and software documentation have to
+ be written by 9am 1st May.
+ Documentation will then put all the parts together for 10.30am.
+ The document will be proof read until approximately 12am to have it completed
+ for 1pm
+\layout Section
+\pagebreak_top 
+May 1st (3am - 4am) 
+\layout Subsection*
+
+Reports
+\layout Subsection
+
+Hardware
+\layout Standard
+
+The hardware is theoretically correct.
+ They have checked it with Tim and hope to start building it.
+ The construction will take place in stages as they need to complete some
+ testing of chips.
+\layout Subsection
+
+Software
+\layout Standard
+
+See the state diagram and the previous minutes.
+ They have allocated 2-3 days next week for integration.
+ Each state has now been documented by each individual, and the document
+ is being produced.
+ GB wants us to write about the functionality rather documenting all the
+ code.
+ Their only worries are with the Audio implementation.
+ It is not known how the Motorola will cope with the code.
+ Last years groups had a lot of trouble porting their code over.
+ 
+\layout Subsection
+
+Documentation
+\layout Standard
+
+We have contacted the SSERC and have managed to get some quotes from them.
+ The document itself is nearly complete.
+ It will be worked on by the Hardware and Software team to clear it of any
+ inaccuracies.
+ Work will now start on updating the minutes into a readable management
+ report.
+\layout Subsection
+
+Plan
+\layout Standard
+
+see time chart
+\layout Section
+\pagebreak_top 
+May 4th (3am - 4am)
+\layout Subsection*
+
+Reports
+\layout Subsection
+
+Hardware
+\layout Standard
+
+The hardware is looking good everything has been tested and it is just a
+ matter of putting it all together.
+ They have built everything apart from the audio compression.
+\layout Subsection
+
+Software
+\layout Standard
+
+Video is as far on as it can get, without the serial being implemented.
+ The video may take up to a day to test once the serial is complete.
+ The serial is continuing.
+ Work is nearly complete on the Linux side, and it is theoretically correct
+ on the Motorola side.
+ The video is being integrated with the GUI.
+ The audio compression algorithm is written, and is being evaluated and
+ improved.
+\layout Subsection
+
+Documentation
+\layout Standard
+
+The Supervisor was surprised at the level of detail in the technical document
+ but praised the hand in, stating he had confidence that we would manage
+ to complete our design.
+ Minor points were that the figures did not always relate to diagrams; and
+ detail was sketchier in some place than others.
+ It should be made clearer that the mechanical lock is a feature of the
+ door and not the unit.
+ We should also state more clearly how refuse entry works.
+\layout Standard
+
+The Feasibility study is still on going.
+ It is now at a point were it should be handed over to somebody else, so
+ they can contribute a different outlook.
+ Progress should now be made on the presentation and the market research.
+\layout Subsection
+
+Plan
+\layout Standard
+
+Documentation to start on presentation.
+ Towards the end of the week the hardware team will split up into software
+ and documentation
+\layout Section
+\pagebreak_top 
+May 7th (3am - 4am)
+\layout Subsection*
+
+Reports
+\layout Subsection
+
+Hardware
+\layout Standard
+
+Everything has been built, wired and individually tested.
+ They need to test and run the system as one unit; but are hopeful of meeting
+ our self imposed Friday deadline.
+ In case anything goes wrong we have copies of all the chips and will be
+ able to replace any broken part.
+ One slight problem is that the video interferes with serial and vice versa,
+ but this is being examined.
+\layout Subsection
+
+Software
+\layout Standard
+
+The database has been tested on the Motorola and seems to be working correctly.
+ The testing will continue for the rest of the day.
+ When we get more Dallas rings then we will be able to use correct values.
+ The GUI is still in development but it shouldn't prove a problem if everything
+ else is up and running.
+ The serial is correct in one direction and work has started on the other
+ way.
+ Video has been tested with the serial and is proving slightly buggy.
+ The first image transmitted is correct the rest are corrupted.
+ The audio standard has been changed from ADPCM to a more simpler method.
+ This comes about as ADPCM was proving to be to hardware intensive for our
+ hardware.
+\layout Subsection
+
+Documentation
+\layout Standard
+
+Worked on 3D packages for the presentation, conclusion is that 3D studio
+ max will have to be used.
+ Has finished the management report up until present.
+\layout Subsection
+
+Plan
+\layout Standard
+
+The hardware team will be splitting up into marketing and documentation,
+ one of them well liase with the software team to explain any design points.
+ Everyone is confident of meeting their individual deadlines for this Friday.
+ The deadline involves having a working unit to demonstrate to our group
+ supervisor.
+\layout Section
+\pagebreak_top 
+May 9th(3.30 pm - 4.30pm)
+\layout Subsection*
+
+Reports
+\layout Subsection
+
+Hardware 
+\layout Standard
+
+The hardware is finished, it is only in need of minor corrections.
+ They have purchased a lock, latch and wood to make a door for the presentation.
+ They will start work on the hardware manual and put their input into the
+ feasibility study.
+ Specifically issues of cost and construction.
+\layout Subsection
+
+Software 
+\layout Standard
+
+The video software is essentially finished.
+ We have had the code working correctly from the Motorola to the PC.
+ The database is virtually done; you can place a ring in the holder and
+ it will read the correct user ID.
+ They are still having problems with the audio, but they have rewritten
+ some of the serial code.
+ They hope to have at least the audio going from the PC to the Motorola
+ over the weekend 
+\layout Subsection
+
+Documentation
+\layout Standard
+
+Finished working on the feasibility study and the management document.
+ Both have been given out to two members of the group to proof check it.
+ 
+\layout Subsection
+
+Marketing
+\layout Standard
+
+We have now decided to make decisions about the presentations.
+ We will allocate people to each depending on their desire to do it and
+ their technical or marketing skills.
+ We will use slides in the afternoon, as this will help us make our point
+ clearly and efficiently.
+ We will also be filming a short video to make fun of the other products.
+ 
+\layout Subsection
+
+Plan
+\layout Standard
+
+The documentation will be corrected over the weekend.
+ The video will be filmed on Sunday and edited on Tuesday.
+ The audio will be completed over the weekend.
+ We don't plan to make any more drastic changes to the product over the
+ next week; but to consolidate our position.
+ 
+\layout Section
+\pagebreak_top 
+May 12th (10am - 11am)
+\layout Subsection*
+
+Reports
+\layout Subsection
+
+Hardware
+\layout Standard
+
+Finished, they have now split up to concentrate on marketing and documentation
+\layout Subsection
+
+Software
+\layout Standard
+
+The video is finished.
+ The serial works and is hopefully fine in both directions.
+ The only remaining problem is the audio, the sound is getting through but
+ it is ending up distorted and crackly.
+ From the PC to the Motorola a voice is some times audible; in the other
+ direction you tend to get a sound like an alarm.
+\layout Standard
+
+We have put more people onto audio in the hope of getting a fresh outlook
+ on it.
+ It is unlikely to be a hardware problem as this has all being tested.
+ They will book consultation time if they are still having problems with
+ it tomorrow.
+\layout Standard
+
+The GUI is virtually done, the database is nearly in operation, and they
+ are just working on connecting the buttons to the door.
+ They are working on the essential features.
+\layout Subsection
+
+Documentation 
+\layout Standard
+
+Has handed over the feasibility and the management report for corrections.
+ 
+\layout Subsection
+
+Marketing 
+\layout Standard
+
+We have chosen our presentation team, we have filmed footage for a video
+ and we have booked time in the hall to practice on Thursday.
+ 
+\layout Subsection
+
+Plan 
+\layout Standard
+
+To have as much implemented by Tuesday as possible.
+ To edit the video on Tuesday morning, to have all the pieces of the presentatio
+n ready for Thursday.
+\the_end

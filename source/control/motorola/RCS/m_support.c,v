@@ -1,0 +1,56 @@
+head	1.1;
+access;
+symbols;
+locks
+	ejk:1.1; strict;
+comment	@ * @;
+
+
+1.1
+date	98.05.04.11.11.59;	author ejk;	state Exp;
+branches;
+next	;
+
+
+desc
+@Motorola support functions
+@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@/* Support functions for motorola board */
+
+/* Simple strcmp function for motorola */
+/* Not the same as one in string.h - still returns 0 if strings are the
+ * same and 1 otherwise. 
+ */
+
+
+int strcomp(char *string1,char *string2) 
+{
+  int index=0;
+
+  while(string1[index] != '\0' && string2[index] != '\0' 
+	&& string1[index] == string2[index]) {
+    index++;
+  }
+  if(string1[index] == '\0' && string2[index] == '\0') return 0; else return 1;
+}
+
+
+/* String copy function for motorola */
+void strcopy(char *to, char *from)
+{
+  int index=0;
+  
+  while(from[index] != '\0'){
+    to[index] = from[index];
+    index++;
+  }
+  to[index] = '\0';
+}
+@

@@ -1,0 +1,65 @@
+head	1.1;
+access;
+symbols;
+locks
+	iic:1.1; strict;
+comment	@# @;
+
+
+1.1
+date	98.04.30.09.43.28;	author iic;	state Exp;
+branches;
+next	;
+
+
+desc
+@State 2 documentation
+@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@System Design Group 7
+Software Design Specification (Motorola board)
+(for inclusion in Design document)
+
+-- State --
+
+State Number/Title: 2
+
+Username: iic, skk
+
+Functional description of State:
+This state performs 4 functions:
+1) This state polls the video camera, it captures an image and uses a
+   combination of frame-difference and RLE encoding to compress the image
+   before sending it via serial to the Linux client machine.
+2) The state polls the Dallas Ring to detect whether a ring is present in
+   the detector.
+3) The state awaits a signal from the client.
+4) The state polls the buzzer
+
+-- Transitions --
+
+Move to state: 1
+Conditions on transition:
+A signal from the client instructing the Motorola board to enter
+initialisation state.
+
+Move to state: 3
+Conditions on transition:
+Buzzer is pressed
+
+Move to state: 5
+Conditions on transition:
+Dallas ring present
+
+-- Communications to Client -- 
+
+Message destination: Video Module
+Message tag: VIDEO
+Description: Compressed frame from video camera
+@

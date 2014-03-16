@@ -1,0 +1,191 @@
+head	1.4;
+access;
+symbols;
+locks
+	ejk:1.4; strict;
+comment	@ * @;
+
+
+1.4
+date	98.05.14.13.36.00;	author ejk;	state Exp;
+branches;
+next	1.3;
+
+1.3
+date	98.05.14.10.18.07;	author dwi;	state Exp;
+branches;
+next	1.2;
+
+1.2
+date	98.05.14.01.47.16;	author dwi;	state Exp;
+branches;
+next	1.1;
+
+1.1
+date	98.05.13.22.58.05;	author skk;	state Exp;
+branches;
+next	;
+
+
+desc
+@State 4 - PC to Motorola audio
+@
+
+
+1.4
+log
+@Removed syncing.
+@
+text
+@/* State 4 */
+#include <serial.h>
+#include <m68kboard.h>
+#include <support.h>
+#include <board.h>
+#include <audio.h>
+
+/******************************************
+  State 4  Linux PC -> M68k board
+  Compile with :
+gcc68s /home/sysd7/source/states/motorola/state4.c /home/sysd7/source/audio/audio.c /home/sysd7/source/transport/motorola/polling.c /home/sysd7/source/low.level/motorola/board.c
+
+NOTE : -- 
+  This is just a DUMMY routine although I
+have included all the stuff that I have 
+been using to check how well it all
+integrates with the rest.
+******************************************/
+
+#define SAMPLE_DELAY 39
+volatile struct mc68230fm * tpit = (void *)0x05000000;
+
+void initAudio(void)
+{
+  tpit->cph=0x0;
+  
+  tpit->cpm=0x0;
+
+  tpit->cpl=0x10;
+
+  tpit->tcr=0x43;
+
+  tpit->ddra=0xE0;
+
+  tpit->dra=0xE0;
+}
+
+int state4(void)
+{
+  int otimer=10000000;
+
+  /* PlayBuf[]  -  incoming data is decompressed into this array and then played. */
+  unsigned char PlayBuf[2];
+
+  /* Holds the position of the next sample to be played.  When this is 0, the routine
+     will attempt to read a byte from the serial port and decompress it into PlayBuf.*/
+  char BufPos=0;
+
+  /* Serial data is read into this byte before being decoded. */
+  unsigned char Data_next;
+
+/**********************************************************************
+  Dummy routine just returns 10.
+  
+  return 10;
+  */
+
+  /* Initialise the board settings, the serial driver and the decompression routines.*/
+  initAudio();
+  serialinit();
+  initDecompr();
+  
+  /* Set the direction bits of data register A to 11100000. */
+  tpit->ddra=0xE0;
+  /* Set data register A to the same thing. */
+  tpit->dra=0xE0;
+
+  /* Send a synchronisation byte to the Linux side. */
+  puts("Say hello to PC.\n\r");
+#if 0
+  serialtransmit('A');
+#endif
+  puts("Waiting for PC to be socialble...");
+  serialreceive();
+  puts("Let's have a chat...\n\r");
+
+  starttimer(SAMPLE_DELAY);
+  Data_next = serialreceive();
+  while (1) {
+    if (BufPos) {
+      Data_next = serialreceive();
+      if (Data_next == 0xFF) {
+	Data_next = serialreceive();
+	if (Data_next != 0xFF) {
+#if 0
+	  serialtransmit('B');
+#endif
+	  return (int) Data_next;
+	}
+      }
+    } else {
+      decompress(Data_next, PlayBuf);
+    }
+    /*    while ( otimer > (otimer=gettimer()) );
+	  Essentially the same but faster?
+     */
+    while ( otimer > (otimer=gettimer()));
+    setsample (PlayBuf[BufPos]);
+    BufPos = 1 - BufPos;
+  }
+
+}
+
+
+@
+
+
+1.3
+log
+@Altered the setsamplen() call in state4() to be setsample().
+@
+text
+@d70 1
+d72 1
+d85 1
+d87 1
+@
+
+
+1.2
+log
+@I have altered the state so that it behaves as normal rather than returning
+10 straight away.  This may go some way to curing the problems Ed & I were
+having earlier this evening whilst trying to integrate the GUI & audio on
+the PC.  It only struck me that I was talking bollocks when I started
+writing the documentation for it.  Maybe documentation does have its uses
+after all....
+ - Duncan
+@
+text
+@d53 1
+a53 1
+  Dummy routine just retunrs 10.
+d94 1
+a94 1
+    setsamplen (PlayBuf[BufPos]);
+@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@d54 2
+a56 2
+return 10;
+
+d62 1
+a62 1
+
+@

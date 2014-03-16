@@ -1,0 +1,2 @@
+gcc -I/home/sysd7/source/include -O2 -Wall -o gui$1 gui.c xpm.c ~/source/audio/linux/lstate4.c ~/source/audio/audio.c ../transport/linux/interrupt.c ../video/linux/video.c ~/source/linux/lx_main.c -I/home/sysd7/lib/glib/include -I/home/sysd7/include -I/usr/X11R6/include -L/home/sysd7/lib -L/usr/X11R6/lib -lgtk -lgdk -lglib -lXext -lX11 -lm
+

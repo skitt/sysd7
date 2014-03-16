@@ -1,0 +1,1 @@
+main.c state1.c state10.c state2.c state3.c state4.c state5.c state7.c state8.c ../../transport/motorola/polling.c ../../low.level/motorola/board.c ../../control/motorola/validate.c ../../video/motorola/video.c ../../audio/audio.c ../../control/motorola/m_support.c

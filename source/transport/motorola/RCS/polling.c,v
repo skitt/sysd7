@@ -1,0 +1,242 @@
+head	1.2;
+access;
+symbols;
+locks
+	skk:1.2; strict;
+comment	@ * @;
+
+
+1.2
+date	98.05.13.23.00.08;	author skk;	state Exp;
+branches;
+next	1.1;
+
+1.1
+date	98.04.30.08.35.17;	author skk;	state Exp;
+branches;
+next	;
+
+
+desc
+@Initial implementation of the Motorola serial code, using polling.
+@
+
+
+1.2
+log
+@Many bugs corrected.
+@
+text
+@#include <m68kboard.h>
+#include <serial.h>
+
+volatile struct mc68681wfm * uartw = (struct mc68681wfm *) 0x00B00000; 
+volatile struct mc68681rfm * uartr = (struct mc68681rfm *) 0x00B00000;
+
+#define DEBUG
+
+int __ack;
+
+/* Initialise the DUART channel B, for polled serial */
+int serialinit (void)
+{
+  __ack = 0;
+  
+  /* Reset ACR */
+  uartw->acr = 0;
+  /* Reset MRB pointer */
+  uartw->crb = 0x10;
+  /* Setup no parity, 8-bits per character, IRQ on RxRDY */
+  uartw->mr1b = 0x33;
+  /* One stop bit */
+  uartw->mr2b = 0x07;
+  /* 38.4kbps both ways */
+  uartw->csrb = 0xCC;
+  /* Reset receiver, transmitter and error status */
+  uartw->crb = 0x20;
+  uartw->crb = 0x30;
+  uartw->crb = 0x40;
+  /* Enable transmitter and receiver */
+  uartw->crb = 0x05;
+
+  return 0;
+}
+
+/* Shut the serial down */
+int serialclose (void)
+{
+  return 0;
+}
+
+/* Ping the PC */
+int ping (void)
+{
+  int sr;
+  
+  packet pkt;
+  pkt.datatype = 1;
+  pkt.length = 0;
+  pkt.data = 0;
+  puts ("Sending ping packet, type 1, length 0, data 0\n\r");
+  senddata (&pkt);
+  puts ("Waiting for response\n\r");
+  do
+    sr = serialreceive ();
+  while (sr != 2 && sr != -1);
+  if (sr == 2)
+    {
+      puts ("Response received\n\r");
+      return 0;
+    }
+  else
+    {
+      puts ("Ping timed out\n\r");
+      return -1;
+    }
+}
+
+/* Acknowledge a ping and wait for new state */
+int pingack (void)
+{
+#ifdef DEBUG
+  puts ("Serial: ping received, noting need to acknowledge\n\r");
+#endif
+  __ack = 1;
+  return 0;
+}
+
+/* Transmits a single byte of data */
+int serialtransmit (unsigned char value)
+{
+  int r = 0;
+  /* Wait for TxRDY; if RxRDY and ping happens, get byte and return
+     corresponding value */
+  while (!(uartr->srb & 0x04));
+  /* Transmit character */
+  uartw->tbb = value;
+  if ((uartr->srb & 0x01) && uartr->rbb == 1)
+    r = pingack ();
+
+  return r;
+}
+
+/* Receives a single byte of data */
+int serialreceive (void)
+{
+  unsigned char r;
+  /* Wait for RxRDY */
+  while (!(uartr->srb & 0x01));
+  /* Receive character */
+  r = uartr->rbb;
+#ifdef DEBUG
+  puts ("Serial: received ");
+  putn (r, 16, 2);
+  puts ("\n\r");
+#endif
+  return r;
+}
+
+/* Sends a packet of data; doesn't return until the packet's been
+   transmitted */
+int senddata (packet * out)
+{
+  int i;
+
+  serialtransmit (out->datatype);
+  puts ("Sending packet, length ");
+  putn (out->length, 10, 6);
+  puts ("\n\r");
+  for (i = 24; i >= 0; i -= 8)
+    serialtransmit ((out->length >> i) & 0xFF);
+  for (i = 0; i < out->length; i++)
+    serialtransmit (out->data [i]);
+
+  if (__ack)
+    {
+#ifdef DEBUG
+      puts ("Serial: acknowledging ping\n\r");
+#endif
+      serialtransmit (2);
+      for (i = 0; i < 4; i++)
+	serialtransmit (0);
+      __ack = 0;
+#ifdef DEBUG
+      puts ("Serial: acknowledged, waiting for new state\n\r");
+#endif
+      return serialreceive ();
+    }
+  else
+    return 0;
+}
+
+packet pkt;
+unsigned char pktbuf [32768];
+
+/* Received a packet; everything must be copied before calling
+   receivepacket again */
+packet * receivepacket (void)
+{
+  int i;
+#if 0
+  puts ("Receiving a packet");
+#endif
+  pkt.datatype = serialreceive ();
+#if 0
+  puts ("; datatype ");
+  putn (pkt.datatype, 10, 3);
+#endif
+  pkt.length = 0;
+  for (i = 0; i < 4; i++)
+    pkt.length = (pkt.length << 8) + serialreceive ();
+#if 0
+  puts ("; length ");
+  putn (pkt.length, 10, 3);
+#endif
+  for (i = 0; i < pkt.length; i++)
+    pktbuf [i] = serialreceive ();
+#if 0
+  puts ("; done\n\r");
+#endif
+  pkt.data = pktbuf;
+  return &pkt;
+}
+@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@d4 6
+a9 2
+volatile struct mc68681wfm * uartw = 0x00B00000;
+volatile struct mc68681rfm * uartr = 0x00B00000;
+d14 4
+d20 2
+a21 2
+  /* Setup even parity, 8-bits per character, IRQ on RxRDY */
+  uartw->mr1b = 0x03;
+d33 1
+a33 1
+  return 1;
+d39 38
+a76 1
+  return 1;
+d80 1
+a80 1
+void serialtransmit (unsigned char value)
+d82 3
+a84 1
+  /* Wait for TxRDY */
+d88 4
+d95 1
+a95 1
+unsigned char serialreceive (void)
+d97 1
+d101 7
+a107 1
+  return uartr->rbb;
+d117 3
+d124 49
+@

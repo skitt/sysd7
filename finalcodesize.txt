@@ -1,0 +1,207 @@
+Build
+=====
+
+     60     145    1701 ./source/audio/linux/scardtest.c            dwi
+      0       7    4096 ./source/audio/linux/asample.s              dwi
+    581    1738   13698 ./source/audio/linux/lstate4.c              dwi
+      9      11     113 ./source/audio/linux/soundbounce.c          dwi
+    163     361    3550 ./source/audio/linux/testing/readsound.c    dwi
+     13      29     189 ./source/audio/linux/testing/printhex.c     dwi
+     94     243    2173 ./source/audio/linux/grabsound.c            dwi
+     91     234    2065 ./source/audio/linux/playsound.c            dwi
+    486    1127   10804 ./source/audio/linux/old.lstate4.c          dwi
+    216     417    3341 ./source/audio/motorola/DACcode/ADC.c       dwi
+    128     235    1765 ./source/audio/motorola/DACcode/ADC-test.c  dwi
+     96     145    1325 ./source/audio/motorola/sampler.c           dwi
+      6      17     147 ./source/audio/motorola/sampler.h           dwi
+     26      46     406 ./source/audio/motorola/linux_test_s10.c    dwi
+     73     137    1488 ./source/audio/motorola/linux_test_s4.c     dwi
+     35      71     637 ./source/audio/motorola/linux_test_s5.c     dwi
+     31      55     531 ./source/audio/motorola/linux_test_s11.c    dwi
+     18      27     254 ./source/audio/motorola/rxraw.c             dwi
+     61      92     818 ./source/audio/motorola/sendraw.c           dwi
+     11      19     119 ./source/audio/motorola/temptest.c          dwi
+    298     735    6086 ./source/audio/motorola/state4.c            dwi
+     12      14     181 ./source/audio/motorola/soundbounce.c       dwi
+     85     165    1531 ./source/audio/motorola/audio.c             dwi
+    163     785    5929 ./source/audio/audio.c                      dwi
+    132     272    3753 ./source/audio/atmp.c                       dwi
+    133     276    3779 ./source/audio/atmp2.c                      dwi
+    141     412    3985 ./source/audio/atmp3.c                      dwi
+    163     785    5937 ./source/audio/revised_audio.c              dwi
+    141     442    4062 ./source/audio/audio.old.c                  dwi
+     52     110    1168 ./source/states/motorola/state10.c          dwi
+    104     299    2441 ./source/states/motorola/state4.c           dwi
+   3622
+
+     21      91     566 ./source/include/gui.h                      ejk
+     62     176    1418 ./source/include/database.h                 ejk
+     35     190    1168 ./source/include/control_040.h              ejk
+     26     130     862 ./source/include/control_lnx.h              ejk
+     93     458    3985 ./source/X/test.c                           ejk
+    145     488    4554 ./source/X/pixmap.c                         ejk
+     91     426    3478 ./source/X/test2.c                          ejk
+     11      14     149 ./source/X/xpm_test.c                       ejk
+    505    1281   13945 ./source/X/gui.c                            ejk
+     22      72     485 ./source/X/xpm.h                            ejk
+    736    1939   23763 ./source/X/config.c                         ejk
+     37      57     576 ./source/X/name_test.c                      ejk
+    108     296    2454 ./source/X/xpm.c                            ejk
+      5      12      74 ./source/X/gui_main.c                       ejk
+      9      16     147 ./source/X/test_strcmp.c                    ejk
+     91     426    3478 ./source/X/entry.c                          ejk
+     87     216    1963 ./source/control/linux/db_download.c        ejk
+    116     261    2560 ./source/control/linux/load_db.c            ejk
+     24      48     555 ./source/control/linux/db_test.c            ejk
+     52     132    1294 ./source/control/linux/load_db_array.c      ejk
+     88     237    2152 ./source/control/motorola/db_recieve.c      ejk
+     30      97     608 ./source/control/motorola/m_support.c       ejk
+     77     220    1530 ./source/control/motorola/validate.c        ejk
+    127     291    2531 ./source/control/motorola/test.c            ejk
+     46      92     810 ./source/control/motorola/test2.c           ejk
+     15      20     141 ./source/control/motorola/lnx_stubs.c       ejk
+    220     411    2932 ./source/control/motorola/test.s            ejk
+     18      63     405 ./source/control/motorola/uid_convert.c     ejk
+     11      26     205 ./source/control/motorola/uidc.c            ejk
+     53     130     980 ./source/control/motorola/conv_test.c       ejk
+     85     264    2075 ./source/control/dbm_defs.h                 ejk
+     30     120     714 ./source/control/support.c                  ejk
+     65     135    1360 ./source/control/test.c                     ejk
+     83     209    1603 ./source/states/motorola/state5.c           ejk
+     42      86     788 ./source/states/motorola/state1.c           ejk
+   3266
+     
+    141     460    3219 ./source/video/linux/video.c                iic
+    159     563    4053 ./source/video/motorola/video.c             iic
+    194     629    4451 ./source/video/compression.testbed.c        iic
+     35     101     698 ./source/include/audio.h                    iic
+     23      86     596 ./source/include/motorola.video.h           iic
+     25      61     474 ./source/include/linux.video.h              iic
+     97     191    2356 ./source/audio/iancomp/audiocomp.c          iic
+     37      43     998 ./source/audio/iancomp/comp2.c              iic
+     73     162     941 ./source/states/motorola/worksmain.c        iic
+    118     354    2800 ./source/states/motorola/state3.c           iic
+    183     549    4107 ./source/states/motorola/state2.c           iic
+   1085
+
+     58     158     917 ./source/video/camera.testing/sertest.c     skk
+     72     248    1556 ./source/video/camera.testing/test.c        skk
+     94     278    1813 ./source/video/camera.testing/xortest.c     skk
+    178     621    3566 ./source/video/camera.testing/comprtest.c   skk
+    265     962    5649 ./source/video/camera.testing/skkcompr.c    skk
+     70     195    1154 ./source/video/camera.testing/rle1test.c    skk
+    116     338    2002 ./source/video/bittest.c                    skk
+     11      18     147 ./source/lib/motorola/puts.c                skk
+      6      10      71 ./source/lib/motorola/test.c                skk
+     24      64     437 ./source/lib/motorola/putn.c                skk
+     24      39     265 ./source/lib/motorola/puts.s                skk
+     58     265    1646 ./source/include/intserial.h                skk
+     30      91     579 ./source/include/support.h                  skk
+     76     303    1883 ./source/include/serial.h                   skk
+     20      68     504 ./source/include/data.h                     skk
+     95     394    2314 ./source/include/board.h                    skk
+     40     165    1181 ./source/include/control.h                  skk
+    100     244    1773 ./source/transport/linux/polling.c          skk
+     17      44     335 ./source/transport/linux/copy.c             skk
+    213     631    4583 ./source/transport/linux/oldint.c           skk
+    447    1439    9404 ./source/transport/linux/interrupt.c        skk
+    234     748    4714 ./source/transport/motorola/polling.c       skk
+    385     704    5864 ./source/transport/motorola/interrupt.s     skk
+    289    1070    6984 ./source/transport/motorola/interrupt.c     skk
+     21      42     274 ./source/transport/motorola/serialirq.S     skk
+     36      91     693 ./source/testing/linux/serial.c             skk
+     28      92     580 ./source/testing/linux/polltest.c           skk
+     24      55     401 ./source/testing/linux/inttest.c            skk
+      8      13      89 ./source/testing/linux/keypad.c             skk
+     19      38     344 ./source/testing/linux/video.c              skk
+     17      39     224 ./source/testing/linux/256test.c            skk
+     20      59     377 ./source/testing/linux/inttest2.c           skk
+     21      65     416 ./source/testing/linux/pkttest.c            skk
+     15      28     172 ./source/testing/linux/256testp.c           skk
+     11      26     167 ./source/testing/linux/receiveserial.c      skk
+    163     576    3987 ./source/testing/motorola/serial.c          skk
+     46     123     712 ./source/testing/motorola/sizeofint.c       skk
+     17      41     285 ./source/testing/motorola/camspeed.c        skk
+     21      42     274 ./source/testing/motorola/serialirq.S       skk
+    185     342    2588 ./source/testing/motorola/serial.s          skk
+     22      63     391 ./source/testing/motorola/polltest.c        skk
+     30      54     411 ./source/testing/motorola/polltest.s        skk
+    253     820    6244 ./source/testing/motorola/videotest.c       skk
+     72     235    1741 ./source/testing/motorola/oldserial.c       skk
+      7      15     101 ./source/testing/motorola/kptest.c          skk
+     41     106     642 ./source/testing/motorola/230speed.c        skk
+     68     116     813 ./source/testing/motorola/230speed.s        skk
+     28      84     539 ./source/testing/motorola/buzzerled.c       skk
+      4       7      34 ./source/testing/motorola/zero.c            skk
+     14      43     242 ./source/testing/motorola/sendserial.c      skk
+     17      51     297 ./source/testing/motorola/dr.c              skk
+     19      57     360 ./source/testing/motorola/inttest.c         skk
+     25      51     399 ./source/testing/motorola/inttest2.c        skk
+     24      64     386 ./source/testing/motorola/256test.c         skk
+     25      72     471 ./source/testing/motorola/keypad.c          skk
+     22      48     306 ./source/testing/motorola/pkttest.c         skk
+     20      58     336 ./source/testing/motorola/256testp.c        skk
+    122     370    2628 ./source/testing/motorola/harddiag.c        skk
+     36      98     593 ./source/testing/230speed.c                 skk
+     65     113     791 ./source/testing/230speed.s                 skk
+     16      38     230 ./source/testing/lpt.c                      skk
+     23      50     317 ./source/testing/mpt.c                      skk
+      8      17      97 ./source/low.level/motorola/frog.c          skk
+     96     273    1725 ./source/low.level/motorola/sertest.c       skk
+     60     136     806 ./source/low.level/motorola/led.c           skk
+     94     143    1294 ./source/low.level/motorola/sampler.c       skk
+     73     129     898 ./source/low.level/motorola/keypad.s        skk
+     35      90     596 ./source/low.level/motorola/keypad.c        skk
+      6      17     147 ./source/low.level/motorola/sampler.h       skk
+     52     162     932 ./source/low.level/motorola/dacadc.c        skk
+    415    1427    8294 ./source/low.level/motorola/board.c         skk
+     12      24     193 ./source/low.level/motorola/timetest.c      skk
+     25      71     475 ./source/low.level/motorola/ringtest.c      skk
+     29      87     567 ./source/low.level/motorola/clocktest.c     skk
+    160     681    4984 ./source/low.level/motorola/crc.c           skk
+     14      52     277 ./source/low.level/motorola/crctest.c       skk
+     19      25     251 ./source/support/tobin.c                    skk
+     73     162     941 ./source/states/motorola/main.c             skk
+     22      61     380 ./source/states/motorola/state7.c           skk
+     17      57     351 ./source/states/motorola/state8.c           skk
+   5737
+
+Total: 13710
+
+Final
+=====
+
+    574    1724   13533 ./source/linux/audio_main.c                 dwi
+    124     477    3274 ./source/motorola/state4.c                  dwi
+     75     332    2381 ./source/motorola/state10.c                 dwi
+    142     625    4983 ./source/audio.c                            dwi
+    915                 4 files
+
+     20      59     420 ./source/linux/lx_main.c                    ejk
+    118     270    2609 ./source/linux/load_db.c                    ejk
+     82     195    1804 ./source/linux/db_download.c                ejk
+    508    1293   13705 ./source/linux/gui.c                        ejk
+    662    1786   21015 ./source/linux/config.c                     ejk
+    109     303    2493 ./source/linux/xpm.c                        ejk
+     81     245    1664 ./source/motorola/validate.c                ejk
+     88     237    2152 ./source/motorola/db_recieve.c              ejk
+     30      97     608 ./source/motorola/m_support.c               ejk
+   1698                 9 files
+     
+    141     460    3219 ./source/linux/video.c                      iic
+    183     549    4107 ./source/motorola/state2.c                  iic
+    118     354    2800 ./source/motorola/state3.c                  iic
+    159     563    4053 ./source/motorola/video.c                   iic
+    601                 4 files
+    
+    418    1350    8663 ./source/linux/serial.c                     skk
+     22      61     380 ./source/motorola/state7.c                  skk
+     17      57     351 ./source/motorola/state8.c                  skk
+    415    1427    8294 ./source/motorola/board.c                   skk
+    234     748    4714 ./source/motorola/serial.c                  skk
+     24      64     437 ./source/motorola/putn.c                    skk
+     11      18     147 ./source/motorola/puts.c                    skk
+    126     377    2680 ./source/motorola/harddiag.c                skk
+   1267                 8 files
+
+Total: 4481

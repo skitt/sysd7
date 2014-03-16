@@ -1,0 +1,677 @@
+
+
+1 The software
+
+The software is composed of four components running on two platforms:
+a daemon and GUI running on the client (Linux for the prototype),
+and a program loader and general control software running on the board
+(the Motorola IDP). Many support routines are used, some common to
+both platforms; these are divided into modules:
+
+* serial --- provides the communication subsystem; this operates in
+  parallel with the rest of the software, using interrupts or signals;
+
+* low-level --- provides functions to access the hardware on the Motorola
+  IDP board and the secondary board;
+
+* video --- grabs, compresses and decompresses frames;
+
+* audio --- samples, compresses, decompresses and plays back audio;
+
+* control --- handles the database and configuration information, and
+  sends orders to various sections.
+
+1.1 The Linux software
+
+1.1.1 The daemon
+
+The daemon runs continuously as long as the PC is switched on. It acts
+as an intermediary between the Motorola board and the user interface;
+it also provides vital functions to the Motorola board to allow the
+latter to download its software and the user interface for automatic
+operation without the user interface being loaded.
+
+Communication with the Motorola board uses the serial subsystem; data
+transfers with the user interface go through the System V IPC shared
+memory mechanism([footnote] Note that System V IPC must therefore
+be compiled in the Linux kernel.) . A user signal (SIGUSR1) can be sent
+by either the daemon or the GUI to indicate that data needs to be
+transferred.
+
+During normal operation, the daemon stores the last frame taken at
+any given time; audio is never transferred without the GUI. When the
+board indicates the doorbell has been rung, the daemon activates the
+GUI, starting it up if necessary, unless the user has indicated they
+wish to use the PC without being bothered by the door-entry software.
+
+1.1.2 The user interface
+
+The user interface runs on a Linux PC running the X Windows user interface,
+and had been predominently constructed using the GTK+ toolkit in the
+C programming language. It is contained in a binary file together
+with all other non-continuous modules such as video and audio. The
+UI is launched by the deamon on receiving a message from the Motorola
+board.([fig] \resizebox*{0.5\textwidth}{!}{\includegraphics{gui_grab.ps}} \label{screenshot1}Screenshot
+of prototype GUI) 
+
+The main window is shown in fig \ref{screenshot1}, page \pageref{screenshot1}.
+If this window is minimised it will be activated whenever someone
+comes to the door. Normally the video frames will be updated approximately
+once every second and there will be no audio. When someone presses
+the buzzer and the PC user reacts, two way sound transmission will
+begin and continue until a (long) timeout expires, or the person is
+accepted or rejected. The functions of the various buttons are as
+follows:
+
+* recapture --- pressing this button transmits a request to the Motorola
+  board to recapture a frame of video;
+
+* unlock --- this causes the door to unlock;
+
+* refuse --- this denies entry;
+
+* audio --- this loads an audio configuration program (mixer);
+
+* config --- this opens the system configuration panel;
+
+* close --- this closes the interface window;
+
+* do not disturb (not present in the screenshot) --- this minimises
+  the interface window and tells the daemon no to pop it up.
+
+1.2 The Motorola software
+
+1.2.1 The initial program loader
+
+This piece of software sits in a tight polling loop waiting for the
+client to activate; it then proceeds to download the board software
+into memory and transfer control to it. It is burnt into a PROM and
+automatically loaded when the board is switched on.
+
+1.2.2 The board control software
+
+This implements the board-side of the door-entry system in software.
+It interacts with the hardware on the boards, and communicates with
+the client.([fig] \resizebox*{1\textwidth}{!}{\rotatebox{270}{\includegraphics{board_flowchart.eps}}} \label{Motorola state diagram}The
+Motorola software state diagram) The Motorola software state diagram
+(figure \ref{Motorola state diagram}, page \pageref{Motorola state diagram})
+gives an overview of the operation of this software. The program can
+be in one of eight states at any given time, and certain well defined
+circumstances cause it to move from one state to another. In the diagram,
+rounded boxes represent states, and arrows represent transitions;
+the text on the arrows gives an indication of the condition which
+provokes the transition. Communication between states is achieved
+through global flags.
+
+State 1 --- Initialisation
+
+Functional description
+
+This state will:
+
+* initialise the serial transport subsytem;
+
+* retrieve configuration information from the client;
+
+* retrieve the user database from the client;
+
+* initialise the hardware subsystems using their initialisation functions.
+
+Transitions
+
+State 2 will be entered upon completion of the above.
+
+Communications to the client
+
+Configuration information and the database are requested from the client's
+control module using the CONTROL tag (more specifically with the REQUEST_CFG
+and REQUEST_DB sub-tags).
+
+Communications from the client
+
+The above information is transferred using CONTROL tags (DATA_CFG and
+DATA_DB).
+
+Support used
+
+This states makes use of all the support modules --- it needs serial
+to communicate, control to store the configuration and database, and
+it has to initialise everything.
+
+State 2 --- Normal operation
+
+Functional description
+
+This state performs four functions: 
+
+* it polls the video camera, it captures an image and uses a combination
+  of frame-difference and RLE encoding to compress the image before
+  sending it via serial to the Linux client machine;
+
+* it polls the Dallas Ring to detect whether a ring is present in the
+  detector;
+
+* it checks for a signal from the client;
+
+* it polls the buzzer (linked to the keypad).
+
+Transitions
+
+The following states can be entered from state 2:
+
+* state 1 --- a signal is received from the client instructing the
+  board to enter the initialisation state;
+
+* state 3 --- the buzzer is pressed;
+
+* state 5 --- a Dallas ring is detected.
+
+Otherwise state 2 will loop.
+
+Communications to the client
+
+Compressed frames from the video camera are sent to the video module
+using the VIDEO tag.
+
+Communications from the client
+
+The client can request a transition to state 1 using the CONTROL tag
+(RESET sub-tag).
+
+Support
+
+This state uses the control, low-level and video modules.
+
+State 3 --- Wait for PC user to respond
+
+Functional description
+
+This state informs the client that the buzzer has been pressed. It
+then continues to transmit video until it times out (according to
+a preset timeout value) or the client acknowledges the buzzer. 
+
+Transitions
+
+The following states can be entered from state 3:
+
+* state 2 --- the timeout expires (i.e. the client fails to respond);
+
+* state 4 --- the client responds to the buzzer signal.
+
+Otherwise state 3 will loop.
+
+Communications to the client
+
+A CONTROL message (BUZZER sub-tag) informs the client that the buzzer
+has been pressed.
+
+Communications from the client
+
+A CONTROL message (BUZZER_ACK sub-tag) acknowledges receipt of the
+BUZZER signal.
+
+Support
+
+This state makes use of the control and video modules.
+
+State 4 --- Conversation with the visitor
+
+Functional description
+
+State 4 is the state which handles the audio when there is someone
+at the door. It samples from the microphone at the door, compresses
+the data and sends it to the PC. It also takes compressed samples
+from the PC and plays them via the speaker at the door. Additionally,
+the system must check for input from the PC user, so that they can
+choose to grab some more video, open the door, or refuse entry.
+
+Transitions
+
+The following states can be entered from state 4:
+
+* state 2 --- the client refuses entry, or the timeout expires;
+
+* state 8 --- the client authorises entry.
+
+Otherwise state 4 will loop.
+
+Communications to the client
+
+AUDIO messages transmit audio to the audio module; VIDEO messages can
+also be used to transmit video.
+
+Communications from the client
+
+AUDIO messages transmit audio; CONTROL messages indicate the user's
+response (AUTHORISE or REJECT) or a request for more video (GRABFRAME).
+
+Support
+
+This state uses the control, low-level and audio modules.
+
+State 5 --- Read the Dallas ring
+
+Functional description
+
+This state is entered when a Dallas ring is present in the reader;
+it reads the 64 bits of information off the ring and stores them in
+a buffer for later use.
+
+Transitions
+
+The following states can be entered from state 5:
+
+* state 6 --- the information was successfully read;
+
+* state 2 --- an error occurred during the read.
+
+Communications to the client
+
+A CONTROL message (USERID) will be sent to allow the auto alert window
+to display information about the visitor.
+
+Support
+
+This state uses the control and low-level modules.
+
+State 6 --- Retrieve PIN
+
+Functional description
+
+This state attempts to read a PIN from the keypad, by repeatedly polling
+it until either a full PIN is read, or the timeout expires.
+
+Transitions
+
+The following states can be entered from state 6:
+
+* state 7 --- a PIN is successfully read;
+
+* state 2 --- the timeout expires.
+
+Support
+
+This state uses the low-level module only (it doesn't even use the
+serial module).
+
+State 7 --- Verify user ID and PIN
+
+Functional description
+
+This state verifies the authenticity of the user wishing to gain entry.
+It looks at UID and PIN read by previous states and stored in memory,
+compares these with entries in the database, stored in RAM, and decides
+whether to authorise or reject the visitor. The outcome is sent to
+the client for logging.
+
+Transitions
+
+The following states can be entered from state 7:
+
+* state 8 --- the user ID is in the database and the PIN is correct;
+
+* state 2 --- the user ID isn't in the database, or the PIN is incorrect.
+
+Communications to the client
+
+A CONTROL message (LOG_ENTRY) informs the client of the outcome of
+the verification.
+
+Support
+
+This state uses the control module.
+
+State 8 --- Open door
+
+Functional description
+
+This state opens the door.
+
+Transitions
+
+State 2 will be entered once the door is opened.
+
+Communications to the client
+
+A CONTROL message (DOOR_OPEN) indicates the door was opened.
+
+Support
+
+This state uses the control and low-level modules.
+
+1.3 The secondary board support software (``low-level'' module)
+
+These functions provide the interface to the secondary board, and to
+some features of the IDP board.
+
+1.3.1 The Dallas ring reader
+
+The Dallas ring reader is accessed through the MC68230 on the secondary
+board, using the bus. A signal can be sent to it to determine whether
+a ring is present; if one is, the ring can be told to transmit its
+contents using a well-defined protocol.
+
+Two functions and a structure are provided to access information on
+the ring. The structure is defined as follows:
+
+typedef struct
+
+{
+
+  unsigned char product;
+
+  unsigned char id [6];
+
+  unsigned char crc;
+
+} ringinfo;
+
+The functions are:
+
+* int checkring (void) --- returns 1 if a ring is present, 0 otherwise;
+
+* ringinfo * getringinfo (void) --- retrieves the ring's information
+  and places it in a structure.
+
+1.3.2 The keypad
+
+The keypad is accessed through the MC68230 controller. The doorbell
+is wired through the keypad, as well as the standard keys. Again,
+a signal can be sent to determine whether a key is currently being
+pressed; then its value can be read. Obviously when polling the keypad
+it is necessary to ensure that the key has been released before waiting
+for a new keypress.
+
+Two functions are provided:
+
+* int checkkeypad (void) --- returns 1 if a key is being pressed, 0
+  otherwise;
+
+* unsigned char getkeypad (void) --- returns the value of the key being
+  pressed; this is an integer between 0 and 12, 0--9 corresponding
+  to the digits 0--9, KP_STAR to the star symbol, KP_HASH to the hash
+  symbol, and KP_DOORBELL to the doorbell.
+
+Note that initially one of the auxiliary keys (star or hash) may be
+used instead of an actual doorbell.
+
+1.3.3 The ADC and DAC
+
+The ADC and DAC are accessed through the MC68230 controller. The ADC
+samples its input every time its clock signal fires, and stores the
+result in an on-board register which can be queried; the DAC generates
+the sound corresponding to any input it receives using a special trigger
+signal.
+
+Two functions are provided:
+
+* unsigned char getsample (void) --- returns the current sample from
+  the ADC;
+
+* void setsample (unsigned char) --- sends a sample to the DAC.
+
+1.3.4 The NVRAM and RTC
+
+The NVRAM (non-volatile memory) and RTC (real-time clock) are stored
+on a memory-mapped chip on the Motorola board.
+
+The following structure stores time information:
+
+typedef struct
+
+{
+
+  unsigned char seconds;
+
+  unsigned char minutes;
+
+  unsigned char hours;
+
+  unsigned char day;
+
+  unsigned char date;
+
+  unsigned char month;
+
+  unsigned char year;
+
+} rtctime;
+
+Their precise meaning (with regard for example to the year field) is
+up to the programmer, but the values stored in the RTC will be updated
+automatically.
+
+The following functions access the RTC:
+
+* rtctime getrtctime (void) --- retrieves the current time from the
+  RTC;
+
+* void setrtctime (rtctime) --- stores new data in the RTC.
+
+The programmer can use 760 bytes in NVRAM, and these are accessed using
+the following functions:
+
+* unsigned char * getnvram (int, int) --- returns the data stored in
+  the given range;
+
+* void setnvram (unsigned char *, int, int) --- stores the data in
+  the given range.
+
+The range is specified as going from the first integer argument to
+the second, inclusive; so for example setnvram (&data, 0, 759) would
+fill the whole NVRAM.
+
+1.3.5 The LED display
+
+The memory-mapped, 7-segment LED display on the IDP can be accessed
+using the void leddisplay (int) function, which display the given
+hexadecimal digit or blanks the LED if -1 is given as an argument.
+
+1.3.6 The door
+
+The door lock's status can be verified and changed using:
+
+* int getdoorstatus (void) --- returns 0 if the door is closed, 1 if
+  it's open;
+
+* int opendoor (void) --- opens the door, returning 0 in case of success,
+  -1 in case of failure.
+
+1.3.7 The jiffies counter
+
+A global variable, defined as
+
+unsigned int jiffies
+
+is updated regularly (the exact interval to be used hasn't yet been
+determined), using the UART's counter. This can be used as a precise
+measure of elapsed time.
+
+1.4 The serial subsystem
+
+1.4.1 External interface
+
+The serial interface is designed to be the same on both the Linux and
+Motorola sides of the system. The subsystem transmits packets of data
+between the two platforms; these can be of any length.
+
+A data packet, as supplied to and by the serial functions, has the
+following structure:
+
+typedef struct
+
+{
+
+  unsigned char datatype;
+
+  unsigned int length;
+
+  unsigned char * data;
+
+} packet;
+
+The datatype is used by handler functions at the receiving end; the
+serial subsystem maintains a programmer-controlled list of handlers,
+and upon receiving a complete packet, calls the relevant handler.
+Two datatypes are predefined by the serial subsystem though: 0 corresponds
+to the default handler, used when no handler is defined for the datatype
+of a packet, and 1 is the PING packet, used to check whether the system
+is alive. The first of these can be redefined by the programmer.
+
+The data pointed to is copied immediately, so that the supplying function
+needn't keep a copy. Likewise, receiving functions should copy the
+data immediately...
+
+The functions defined are as follows:
+
+* int serialinit (void) --- initialises the serial subsystem;
+
+* int serialclose (void) --- closes the serial subsystem;
+
+* int senddata (packet *) --- queues a packet (pointed to by the argument);
+
+* int registerhandler (unsigned char, packethandler) --- registers
+  a function which will be called with any incoming packet containing
+  data of the type given in the first argument;
+
+* int unregisterhandler (unsigned char) --- removes any handler previously
+  defined for the given data type; if the default data handler is
+  removed, the system reverts to the supplied default handler which
+  discards any incoming packets apart from the PING packet;
+
+* int ping (void) --- checks to see whether the opposite member of
+  the link is still responding.
+
+1.4.2 Implementation
+
+The implementation of the serial subsystem on both platforms is event-based.
+Queues of incoming and outgoing data are maintained, and whenever
+the UARTs are ready to send or receive data is fed to (if there is
+any outgoing data) or read from them. The queues are big enough for
+data overflow never to be a problem, at least with essential data;
+if there's no room for a video frame for example it can just be dropped,
+but control packets must be transmitted at all costs.
+
+Common sections
+
+The event-handling function is void serialevent (void), which is called
+whenever the UART signals it's ready to transmit or receive; it then
+determines which direction data is needed for, and transfers it to
+and from the queues.
+
+A 32768-byte buffer stores the incoming data until a complete packet
+is received, as determined by the length descriptor. Whenever a complete
+packet is formed, the corresponding handler is called, and the buffer
+can then be re-used.
+
+Output data is stored in a circular, 65536-byte buffer as a stream
+of raw bytes which need sent out. When a packet is received, its contents
+are simply added to the buffer.
+
+Linux specifics
+
+The Linux code communicates with the serial port by using the ttyS0
+terminal device. Events are provided using the IO signal; a call to
+select(2) is then used to determine whether the UART is ready to transmit
+or receive. serialevent is called by void iosighandler (int), which
+is registered as the SIGIO handler. termios functions are used to
+set the communications port up.
+
+Motorola specifics
+
+On the Motorola, access to the UART is done directly since the MC68681
+is memory-mapped and there is no operating system. The PIT (MC68230)
+is also used since the UART's IRQ line goes through it. The assembler
+function serialirq is set up to handle the UART IRQ exception; it
+simply calls serialevent.
+
+1.5 The audio module
+
+The audio module provides functions to retrieve a compressed sample
+and to play back a compressed sample. All the audio functionality
+is internal to state 4.
+
+1.5.1 Compression
+
+The audio compression system is based around ADPCM compression, and
+takes the audio down from 8 bits per sample to 2 bits per sample.
+With an 8kHz sampling rates this reduces the bandwidth requirements
+from 64kbps to 16kbps.
+
+The ADPCM compression standard is defined in the CCITT G.726 16kpbs
+audio compression standard. G.726 specifications are available from
+the ITU Web site (www.itu.ch). The code is taken from Sun Microsystem's
+implementation, which has been released into the public domain.
+
+1.5.2 Format of the data from the hardware
+
+On the client, the system uses the Open Sound System (OSS) which is
+part of the Linux kernel. On the board, sound is taken directly from
+the 8-bit ADC, or fed into an 8-bit DAC. In all cases data is an unsigned,
+8-bit sample (0 to 255) at 8kHz. 
+
+1.5.3 Communications
+
+For the data to be compressed, it first has to be converted to a signed
+8-bit sample (-128 to 127), then bit-shifted into a 14-bit word for
+the ADPCM encoder to work on. Decompression feeds the 2-bit code into
+the ADPCM decoder and transforms the resulting 14-bit word into an
+8-bit sample.
+
+The 2-bit codes are transported as compactly as possible, i.e. four
+per byte, in quarter-second packets of approximately 500 bytes.
+
+1.6 The video module
+
+This provides functions to retrieve, compress and decompress a frame.
+
+1.6.1 Format of image as received from video camera
+
+The image returned from the camera is an array of 19200 bytes. Each
+of these has a value between 0 and 15 (therefore only the lower 4
+bits of each byte are used). Each byte represents one pixel of the
+image. After translation([footnote] The original data represents black
+as 0, white as 1, and gray-scales from white to black respectively
+as values from 2 to 15.) , 0 represents black and 15 represents white,
+intermediate values represent grey values increasing in lightness
+as their value increases. The first 160 bytes represent the first
+horizontal line of the image, and subsequent sub-arrays of 160 bytes
+represent subsequent lines of the image.
+
+1.6.2 Compression algorithm
+
+The last frame grabbed is always stored locally, so that a logical
+exclusive or can be preformed between it and the new frame; the default
+last frame is all zero (black). The result of this is that pixels
+of the image which remain constant between the two frames become black.
+
+The resulting frame difference image is then scanned using a Run Length
+Encoding (RLE) algorithm prior to transmission.
+
+1.6.3 Format of Run Length Encoded data
+
+The Run Length Encoded file should be treated as a stream of 5 bit
+blocks. 
+
+The first bit of the block determines it's nature. If the first bit
+is 0 then the subsequent 4 bits represent the colour of an individual
+pixel. If the first bit is 1 then the subsequent 4 pixels represent
+the colour of a pixel, and the subsequent block represents the number
+of pixels of that colour (minus two, since we never encode a run of
+zero or one pixel).
+
+1.7 The control module
+
+The control functions handle user authentication and database storage.
+Functions are provided to access and modify the user database on the
+PC, and to transfer the database to the Motorola board --- it's stored
+in RAM on the board whenever the Motorola is switched on, and only
+downloaded again when it changes. A single function takes a user ID
+and PIN and validates it against the database.
+
+The control module also has a CONTROL handler for the communications
+subsystem, but this can be replaced by individual states' own handler,
+for instance to allow a change of state to be requested. Various control
+tokens are defined and refine the CONTROL packet; the states are well
+enough constrained for it to be possible for handlers to ignore tokens
+they don't know.

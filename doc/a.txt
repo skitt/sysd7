@@ -1,0 +1,685 @@
+
+
+Feasibility study of a PC - based door entry system
+
+CS3 Group Seven 
+
+\includegraphics{../web/images/EUcrest-official-noborder.ps} 
+
+\tableofcontents
+
+\printindex
+
+1 Introduction
+
+Ding Dong Doorentry Systems Ltd has commissioned our group to develop
+an idea for a new product. Their business has so far been based on
+selling simple but supposedly vandal-proof door entry systems for
+stair doors. Their new idea involves branching out into high - specification
+door- entry systems, and in particular, taking advantage of the fact
+that most small companies and may homes now have a PC inside them.
+Since PC's already incorporate a screen and sound facilities, the
+intention is to sell a door-entry system that allows a person within
+the premises to use a PC to view the person at the door which interfaces
+to the PC via a serial port. This unit would be sold together with
+the necessary PC software .
+
+Since all PC's have serial ports, Ding Dong's idea is to produce a
+unit to be sited by the door which interfaces to the PC via a serial
+port. This unit would be sold together with the necessary PC software.
+
+Ding Dong would also like to offer the facility of having the PC contol
+control entry automatically (ie without a person being present at
+the PC) and suggest this could be done by operating the door with
+a combination of some kind of personal card or key, and a PIN number.
+
+We have been commissioned to produce, rapidly and inexpensively a demonstration
+prototype. We have have to refine its vague specification for the
+product , decide on the best way to provide the facilities that Ding
+Dong wants to see, and to develop additional features that might increase
+the product's marketability.
+
+2 Market Research
+
+The design specification identified two markets for the product. We
+carried out a survey to gauge the degree of practicality and interest
+in producing a product for these markets. The results are separated
+into Residential and Commercial Properties
+
+2.1 Residential Properties
+
+We carried out an informal survey of 127 residents in and around Marchmont.
+The accommodation in this area mostly comprises of flats. The majority
+of people living in this area are between 20-35 years old. They were
+al ltold the idea of the product before the questions were asked.
+Anybody who answered no to any question, was excluded from the rest
+of the survey.
+
++----------------------------------------------------------------------+-----+----+
+|                             Residential                              | YES | NO |
++----------------------------------------------------------------------+-----+----+
++----------------------------------------------------------------------+-----+----+
+|                 Do you have a PC in you Household?                   | 42  | 85 |
++----------------------------------------------------------------------+-----+----+
+|             Do you have some form of door entry system?              | 35  | 7  |
++----------------------------------------------------------------------+-----+----+
+|Would you be interested in combining the PC with a door entry system? |  6  | 29 |
++----------------------------------------------------------------------+-----+----+
+
+
+Our survey indicates that only 17% of the people who had a PC and a
+door entry system would be interested in a product that combined the
+two. Although the market demand currently is low; the demand in future
+may rise. We identified the main residential markets to assess their
+likely future demands.
+
+2.1.1 Blocks of Flats 
+
+The increase of PC's in the home may allow this product to become an
+alternative to the standard door-entry system. According to a representative
+of Castle Security (a local security company) the system would face
+the problem of convincing sections of the population of its value.
+Their will always be a percentage who will be resistant to new technology,
+and a section who will resist having to pay for a new technology. 
+
+2.1.2 Accommodation with a servitor
+
+The servitors office would contain the PC and during the day people
+could be let in by visual identification only. During the night a
+form of security could be set for the main entrances. The potential
+here is for accommodation similar to halls of residence. 
+
+A spokesmen for Pollock halls of residence was enthusiastic about the
+system, the individual halls all have offices next to the only entrance,
+all the offices also contain PC's that are unused overnight. The system
+would be beneficial in enabling only residents to enter their building
+after the site has been locked. The also suggested an application
+for the front gate of the halls were they use visual identification
+to let cars in. It would be cheaper to run the system automatically
+than to hire doormen.
+
+2.1.3 Semi / Detached Property
+
+Presently these properties have little or no door entry system; convincing
+them to purchase an audio/visual system would mean convining them
+that they need some form of access control. 
+
+The biggest market in this area would be properties sited within large
+grounds ie. estate houses, which can have entrances that are set a
+significant distance away from the property. These properties could
+use the improved security of visual communication. 
+
+2.1.4 Conclusion
+
+Examining th residential user group, their needs and their response
+to our proposed design it is clear that although there is enthusiasm
+from some parts of the market, Pollock halls, most others currently
+have no need or desire to own this product. The majority of people
+are quite happy with their present system.
+
+2.2 Commercial
+
+We carried out an informal survey of fourteen small to medium size
+commercial properties.. The business' comprised of a lawyers firm
+to a Dental surgery. They were all explained the initial design specification
+before the questions were asked. Anybody who answered no to any question,
+was excluded from the rest of the survey.
+
++----------------------------------------------------------------------+-----+----+
+|                             Commercial                               | YES | NO |
++----------------------------------------------------------------------+-----+----+
++----------------------------------------------------------------------+-----+----+
+|                   Does your office contain a PC?                     | 15  | 0  |
++----------------------------------------------------------------------+-----+----+
+|             Do you have some form of door entry system?              | 14  | 1  |
++----------------------------------------------------------------------+-----+----+
+|Would you be interested in combining the PC with a door entry system? |  8  | 6  |
++----------------------------------------------------------------------+-----+----+
+
+
+Our survey indicates that 57% of the companies who had a PC and a door
+entry system would be interested in a product that combined the two.
+Specific commercial targets were then identified so that we could
+determine a business strategy.
+
+2.2.1 Education
+
+Enabling schools to place this system at their entry points would allow
+them to limit unauthorized visitor movement. Allowing the children
+and the teachers to have their own entry device would allow them to
+have authorized access to the school. Anyone else would require to
+identify themselves using the audio/visual communication. Outside
+of school times the site would be closed to all but those with security
+access. 
+
+2.2.2 NHS 
+
+The system would be integrated to the front doors of wards that demand
+security eg maternity wards. Visitors would only be able to enter
+these areas if they have a specific reason to be there. The problem
+with existing NHS security include
+
+* security being lax because no-one monitors the video cameras.
+
+* security is bypassed by people who pretend to be some one else
+
+The system would have to be reliable and easy to use as there may be
+emergency situations when time is critical,specifically a cardiac
+arrest alert needs a Doctor to get to the patient as soon a possible.
+Therefore the system will involve Doctors needing instant access to
+wards, whilst there is still a level of security that will satisfy
+parents.
+
+2.2.3 Small/large business
+
+The system would work as stated in the design specification.
+
+2.2.4 Conclusion
+
+Examining the commercial user group, their needs and their response
+to our proposed design it is clear that there is enthusiasm from the
+majority of this market. Our decision will be wether to design the
+product for a general Commercial group or wether we should concentrate
+on a specific user group.
+
+3 Product Strategy
+
+Three points influenced our decision to aim the product at a specific
+niche market.
+
+3.1 Government Legislation 
+
+In the wake of the bombing of the Murrah Federal Building in Oklahoma
+City, the Justice Department reviewed security at federal facilities
+around the country. The review resulted in some 8,500 countermeasures
+now being implemented by the General Services Administration (GSA).
+A significant number of which concern visitor access to sites.
+
+3.2 Worries About School Security
+
+In light of the Cullen Inquiry into the Dunblane report Lord Cullen
+stated
+
+It is recognized that there should be arrangements for security to
+prevent unauthorized access to the school.
+
+The national union of teachers stated that 
+
+EVERY school in Britain should be redesigned so that they have only
+one entrance 
+
+Which was first recommended by Lord Elton in his 1989 inquiry into
+school security. The Manchester branch called for 
+
+legislation which will ensure that each school invests in adequate
+and appropriate safety and surveillance systems to protect staff and
+deter intruders.
+
+3.2.1 Case Study
+
+Several schools have suffered devastating arson attacks. Millions have
+had to be spent on refurbishment or rebuilding, simply because arsonists
+could walk on to school premises at will.
+
+Then there is theft. It is quite common for thieves to wander into
+school in search of easy pickings during the working day. One school
+had people and property protected by a security guard with an Alsatian
+during parents' evenings.
+
+The tragic deaths of Philip Lawrence, the head teacher who died protecting
+a pupil, and of Nicky Conroy, the schoolgirl shot dead while quietly
+at work in a school classroom, should have focused attention on the
+problem of how to keep undesirable away from schools. 
+
+One week prior to the government report into school security. The deranged
+Thomas Hamilton ran amok and killed 16 infants and a teacher at Dunblane
+in March 1996.
+
+The Times (Friday, 24 May 1996)
+
+3.2.2 Interview with Mr N McLeod (Assistant Head Teacher of Stornoway Primary
+  School)
+
+Stornoway Primary has a roll of approximately 420. All the classes
+are contained in one complex, and the site is self contained. There
+are seven entrences, one for each year of the school, and two main
+entrences for visitors and teachers etc.
+
+Is There any problem with security at the school?
+
+``The main problem we have is the rise of vandalism at the weekends,
+the breaking of school windows and the setting a light of dustbins,
+costs the school approximately £10,000 per annum''
+
+What measures does the school have In tackling security issues?
+
+``During the day the school is open to anyone; at night the entrances
+are all locked and the police make regular patrols to discourage the
+vandals. By the autumn the school will be connected up to Stornoway's
+CCTV system.''
+
+Does the school have a budget for security?
+
+``No, we use part of our building allowance to pay for any security
+needs. In the past this has meant buying better security for the windows
+on the ground floor.''
+
+Is there more Pressure on schools in light of the Dunblane Incident?
+
+``In the immediate aftermath, there was a degree of anxiety from parents,
+I think it has made the more aware that schools can find it hard to
+properly look after every individual pupil.''
+
+3.3 Maternity Wards
+
+Over recent years a number of baby's have been snatched from hospitals
+
+A BABY girl was snatched from her cot in a hospital maternity unit
+yesterday three hours after being born, in front of her drowsing mother
+who lay in an adjacent bed recovering from a Caesarian section.
+
+Kali Hawthorne was grabbed by a blonde-haired woman who walked into
+the ward as the baby's father was telephoning relatives from a nearby
+corridor to tell them of the birth ... The abduction again raised
+major questions about security in hospital maternity wards which was
+supposed to have been increased following the abduction of four-hour-old
+Abbie Humphreys from the Queen's Medical Center, Nottingham, in July
+1994. 
+
+The Daily Telegraph (6th Decembers 1997)
+
+3.3.1 An interview with Brian Liddle(Chairman of the Western Isles Health
+  Board)
+
+Ospadal Nan Eileen is the only major hospital in the Western Isles.
+They facility has to cater for a Population of 45,000. The facilities
+include the only Maternity, Surgery and Emergency facilities on the
+Island.
+
+What security Measures do you have in place?
+
+``At present the hospital has closed circuit television cameras a 12
+major points in the hospital. These are mainly at the significant
+entrances and exits, as well as covering some wards. The pictures
+from the cameras are stored on to long play video, which is changed
+at the end of a receptionists shift. The tape is kept for one week
+and then re-used.''
+
+How do you contol access throughout the hospital?
+
+``The only locked wards we have are psychiatric and maternity. Maternity
+has a locked entrance with visitors requesting access by ringing a
+door bell. Any sensitive areas of the hospital are accessed by a pin
+number. Anybody who is in an area they should not be in will be asked
+to leave by a nurse or a porter.''
+
+Are you governed by legislation in this area?
+
+``We have policies covering the safety of Doctors, Nurses and Patients.''
+
+Would Access contol be useful in a Hospital Environment?
+
+``I think in the near-future there will be some control of the movement
+of personnel and visitors but I don't think at this moment in time
+there is a 100% reliable system for achieving this.
+
+3.4 Conclusion
+
+Our Groups decision is to specifically target the area of school and
+maternity ward security. The case of the Murrah building does highlight
+the increasing needs for public buildings to examine security. 
+
+Building planners, architects, and managers must consider security
+in the early stages of design; foresight can mean significant rewards.
+Making a building secure does more than protect occupants and the
+contents of buildings.
+
+The Health and Safety at Work Regulations(1974) and as amended (1992)
+requires 
+
+That every employer shall make a suitable and sufficient assessment
+of ... the risks to the health and safety of persons not in his employment
+arising out of or in connection with the conduct by him or his undertaking. 
+
+Employers now have a legal obligation to ensure the security of their
+staff.
+
+
+Over all, regardless of the purpose or size of a building, a security
+system can serve to restrict access to controlled areas, prevent incidents,
+and monitor/record activity to facilitate intervention and investigation
+if a security breach occurs, cut personnel costs, and raise morale
+and productivity. Equally, an effective security can reduce an owner's
+liability for damage. Courts have held building owners or managers
+liable for assaults and other criminal acts committed on their properties.
+Evidence of a security system design to prevent such acts can mitigate
+the damages awarded by proving that reasonable care was taken to prevent
+such occurrences.
+
+By considering the needs of building occupants and visitors for easy
+access, the desire to display or not display security aspects, and
+by applying building codes and regulations, planners can design a
+security system which meets but need not exceed standards. A graduated
+scale of protection ensures that security can be cost effective. 
+
+4 An Overview
+
+4.1 The Unit
+
+The unit will be a high security, low cost access contol system. Each
+entrance to the site will have an all in one unit comprising of:
+
+* A Dallas ring reader
+
+* Speaker
+
+* Microphone
+
+* Video camera
+
+* Buzzer
+
+This unit would be connected to the PC using ....
+
+The unit will have two modes of operation
+
+4.1.1 Manuel Operation
+
+Access can be gained by placing a Dallas ring into the reader. The
+door will then open if a correct keynumber is provided. If the correct
+pin number is not forthcoming the the user will be timed out and will
+have to replace their Dallas ring. If access is required and the visitor
+does not have a Dallas Ring then they will be able to ring the buzzer
+to talk to the operator. The operator will be able to view video pictures
+streamed from the camera to gauge wether the visitor should gain access.
+The user will be able to enable access to the site from their computer.
+
+4.1.2 Automatic Operation
+
+Access can be gained by placing a Dallas ring into the reader. The
+door will then open if a correct key number is provided. If the correct
+pin number is not forthcoming the the user will be timed out and will
+have to replace their Dallas ring. If access is required and the visitor
+does not have a Dallas Ring then they will not be able to gain entry.
+
+4.2 Case Study1
+
+4.2.1 The System
+
+All entrances to the school will be covered by the unit, 
+
+4.2.2 The Users
+
+The holders of the Dallas ring will be the teachers and the pupils.
+This will enable them to have access throughout the school day.
+
+The system will be configurable so that access time for pupils and
+teachers can vary eg pupils will not need to be able to gain access
+to the school at the weekend or in the holidays. Teachers may need
+to work late or gain access during breaks. 
+
+4.2.3 The System Manager 
+
+The manager should have contol over who should be able to gain access
+to the site. They will also need to have contol over the data held
+in the Database. If the computer is an a receptionists office then
+they should also be able to continue using the normal features over
+their computer whilst nobody is requesting access.
+
+4.3 casestudy2
+
+4.3.1 The system
+
+The system would be placed at any entry point in the hospital that
+requires access control security. 
+
+4.3.2 The users
+
+The main system requirement would be reliability. The Access could
+not be impared at 
+
+5 The Product
+
+The system is based on state of the art ibutton technology. 
+
+5.1 Serial ID Button
+
+What is an ibutton? 
+
+\includegraphics{../web/images/ibutton.ps} 
+
+The ibutton is a 16mm computer chip housed in a stainless steel can.
+The iButton can be worn by a person or attached to an object for up-to-date
+information at the point of use.The steel button is rugged enough
+to withstand harsh outdoor environments; it is durable enough for
+a person to wear everyday on a digital accessory like a ring, key
+fob, wallet, watch, or badge.
+
+\includegraphics{../web/images/overvw3.ps} 
+
+There are a variety of buttons with different features. Each starts
+with a guaranteed-unique registration number engraved in the silicon.
+Some buttons add computer memory to store typed text or digitized
+photos; information can be updated as often as needed with a simple,
+momentary contact. Other buttons contain a real-time clock to track
+the number of hours a system is turned on for maintenance and warranty
+purposes; a temperature sensor for applications where spoilage is
+a concern, such as food transport; a transaction counter that allows
+the button to be used as a small change purse; or complete cryptographic
+circuitry to secure Internet transactions.  
+
+The fragile silicon chip within the iButton is protected by the ultimate
+durable material: stainless steel. You can drop it, step on it, scratch
+it, or wear it swimming. IButtons' have a useful life of around 10
+years while a magnetic / barcode system 's useful life is only 3 months
+to 2 years depends on the usage and maintenance. The ibutton has a
+unique Read Only Serial Number, no one can copy your ibutton or master
+ibutton.
+
+Authorization Buttons are sophisticated microelectronics, sealed into
+miniature stainless steel cans, creating a low cost, portable medium
+for storing and controlling access to sensitive information
+
+The iButton is ideal for any application where information needs to
+travel with a person or object. Affixed to a badge, key fob, watch,
+or ring, an iButton can grant its owner access to a building, a PC,
+a piece of equipment, or a vehicle. Attached to a work tote, it can
+measure a variety of processes to improve efficiency, such as manufacturing,
+delivery, and maintenance. Some versions of the iButton can be used
+to store cash for small transactions, such as transit systems, parking
+lots, and vending machines. The iButton can also be used as an electronic
+asset tag to store information needed to keep track of valuable capital
+equipment. 
+
+With 20 million iButton currently in circulation, the list of users
+is very long. Some of the larger installations include the U.S. Post
+Office, which has iButtons affixed to blue corner mailboxes nationwide
+so they can do the tracking needed to ensure on-time delivery of the
+mail. Ryder has its entire truck fleet fitted with iButtons that track
+vehicle maintenance. Citizens of Istanbul, Turkey store digital cash
+in the iButton, using the device as a small change purse on their
+mass transit system. iButton Applications Worldwide highlights a variety
+of iButton applications. 
+
+In conclusion, the architecture is very elegant, can migrate into the
+mainstream PC market with little engineering effort, and offers opportunity
+for the emergence of distributed security solutions that are both
+cost effective and reliable. 
+
+6 Competitors
+
+There are a great number of companies working in the field of Security
+systems. Most selling products that are scalable; if you want Access
+Control you buy one part, if you need video as well then you an on.
+A minority of companies have designed specialised systems for Residential
+or small busineess' and only one or two have decided to target a unique
+market.
+
+6.1 School Security
+
+6.1.1 ECr Concepts
+
+ECr Concepts in Merthyr Tydfil plan to introduce a new credit card-style
+pass system to secondary and primary schools. It will monitor on computer
+everything from attendance to what children eat for lunch. Parents
+can pay for school meals in advance and this will be recorded on a
+computer. When a child goes for a meal, the card is swiped and a picture
+of the youngster appears on the computer for identification. What
+is ordered is also recorded.
+
+Parents can ask for a weekly read-out of meals eaten and obtain a breakdown
+of their fat, carbohydrate and protein content to ensure a healthy,
+balanced diet. The card will incorporate an entry function. It can
+be used to enter the school and selected controlled areas. As well
+as keeping out intruders, staff will be able to monitor attendance
+and record daily movements in the school.
+
+Their local councillor stated: 
+
+"It sounds a great idea for the future of security and paying for meals
+and other services in schools. The card will not only ensure that
+unauthorized access is not allowed at school but can cover simple
+everyday things like ensuring children have their school meals. I
+can envisage a day in the not too distant future when every schoolchild
+in Britain will have one of these cards to use in their schools."
+
+6.2 Specialised Security Systems
+
+6.2.1 CEM Security Systems
+
+CEM security systems has a similar marketing strategy to our own. They
+have seen a specific gap in the market (airport security) and designed
+their product accordingly. 
+
+Since installing their first system at Belfast International Airport
+in 1987, CEM Systems Ltd. has migrated their Airport 2000 system throughout
+the major airports of the United Kingdom including Heathrow, Gatwick,
+Stansted, Glasgow, Manchester, East Midlands, Luton and Edinburgh.
+CEM have also installed similar systems in airports around the globe. 
+
+Each different airport in the United Kingdom has differing security
+needs. However, all use the Airport 2000 Visual Imaging Pass Production
+System (VIPPS) in one manner or another. VIPPS captures, compresses,
+stores and retrieves graphical and textual data such as images, logos
+and signatures. 
+
+Their chairman states:
+
+"VIPPS allows the airport to add graphical and textual information
+to the database, capture images from live or still cameras and photographs,
+retrieve and update previously entered data, write data to various
+card technologies and define badge layouts."
+
+6.3 Security using iButton technology
+
+6.3.1 Seadan Security & Electronics
+
+Seadan Security & Electronics offers the EL1200 Access System for physical
+access control of medium-size offices and buildings, or areas within
+buildings. The EL1200 system can store information for up to 1,500
+individuals permitted to access a building. 
+
+To gain entrance to a building secured with the EL1200 Access System,
+an employee touches his or her iButton-based key ring or token to
+an iButton reader mounted by the door, then enters their Personal
+Identification Number (PIN). The system compares the data read from
+the iButton and PIN number to the system's data base, then unlocks
+the door if the data is verified as correct. An entry log is maintained
+by the EL1200 showing all persons who entered by a specific door,
+and what date and time they entered. 
+
+The system allows for 10 access time zones or categories, allowing
+the system to compensate for a company's holiday schedule. The iButton
+reader unit has 12 keys and 4 display characters for simple operation
+and programming. Output point can be configured as a door open alarm
+output, timer-driven output, or sensor alarm output Standard software
+packages are available 
+
+The EL1200 is equipped with a standard interface for network operation.
+Ultimately connecting the units to a PC for centralized monitoring
+and control. 
+
+6.3.2 Cansec Systems Ltd. 
+
+Cansec offers two iButton access readers for use with Cansec- and OEM-manufactured
+access control systems, and the associated TAS100 Data Management
+Software package supports up to 1,000 users and four reader groups
+for either the TAS100 or the RT100. 
+
+TAS100 Touch Access Stand-Alone System is a self-contained, programmable
+access control system. It is simple to install and operate, requiring
+no communications wires for use. The system includes easy-to-use programming
+software, and access keys are programmed with a read/write iButton
+key. The reader features rugged metal construction and bi-color LED
+status. A Sonalert tone alerts users to someone attempting or achieving
+access to a building or room. . A bi-colored LED and Sonalert provide
+users with both visual and audible signals of access being granted
+or denied. The face plate and stainless steel read head are vandal-resistant
+and suitable for both indoor and outdoor use. While in use, the last
+64 access granted messages can be retrieved from the Reader with an
+audit key.
+
+6.4 General Security Companies
+
+6.4.1 Gyr secutity 
+
+Gyr market an advanced security management system specifically designed
+to assist professional facilities and security managers by providing
+a single screen solution. It's claimed to be the ideal tool for building
+access, parking access and CCTV control at single or multiple locations.
+
+6.4.2 PAC access control
+
+PAC for Windows Residential is a PC based housing security system running
+under Microsoft Windows. The system has been designed for single and
+multi-block estates with up to 30,640 doors and any number of users.
+
+PAC for Windows Residential offers a wide range of building management
+functions which include: monitoring and controlling security cameras;
+linking to paging systems for mobile personnel and monitoring fire
+doors and lift doors to check wether thy have been left open; 
+
+Tenants are issued with PAC proximity keys, three per flat, color coded
+for easy recognition. Local authority staff carry PAC proximity ID
+cards which include a photograph for identification purpose
+
+At the Housing Office, PAC readers are fitted to external doors, to
+restrict access to the building, and system administration is carried
+out at a central PC. Additional PCs are located in the concierge of
+each of the residential blocks for monitoring alarms and system events,
+and to allow guards manual control of doors and carpark barriers.
+
+Ancillary equipment, including panic buttons, fire exits, ventilation
+and heating equipment in the main building are monitored using PAC
+Alarm Event Managers. Concierge and maintenance staff are alerted
+to problems via pagers.
+
+Car park lighting is time-controlled via the PAC Alarm Event Manager.
+
+Elevator control is used in each of the residential blocks to restrict
+access by tenants to different floors of the main building.
+
+6.5 Conclusion
+
+There are only a couple of companies working in the field of iButton
+building access control, none of which have identified a niche market
+or offer audio visual communication. 
+
+Our Group is unique in that it is supplying a state of the art system
+that will meet the needs of our market. Like Cemsys we have identified
+a specific need and therefore we should be able to reap the dividend.
+
+7 Bibliography
+
+Building Security: Are You Overlooking Something? by Robert Hager,
+IDenticard Systems, Inc. 
+
+www.telegraph.co.uk
+
+www.cemsys-na.com
+
+www.gyr.com
+
+www.pac.co.uk 
+
+www.ibutton.com/Connections/Catalogs/seadan.html

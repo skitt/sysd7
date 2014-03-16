@@ -1,0 +1,308 @@
+/* gui.c */
+/* Need to dynamically allocate strings and an array of pointer to them */
+
+#include <gtk/gtk.h>
+#include <string.h>
+#include "blank.xpm"
+
+#define JAMES 1
+#define DUNCAN 2
+
+#define XPM_WIDTH 320
+#define XPM_LINES 256
+#define IMAGE_DATA_SIZE 19200
+#define XPM_DATA_OFFSET 17
+
+void get_xpm_info(char *info_line, int *w, int *h, int *c);
+void clean_exit(char *);
+void make_xpm_info(char *string,int w,int h,int c);
+void init_gui(int argc, char *argv[]);
+extern int itos(int num,char *result,int mlength);
+
+/*extern char image_data[IMAGE_DATA_SIZE];*/
+
+/* GtkWidget is the storage type for widgets */
+
+GtkWidget *window, *pixmapwid, *button1, *button2, *rc_button,
+  *cl_button, *cf_button, *au_button, *dn_button, *lbox, *button_box,
+  *rbox, *box;
+
+GdkPixmap *pixmap;
+GdkBitmap *mask;
+GtkStyle *style;
+GtkTooltips *cf_tips;
+int picture = JAMES;
+
+/* allocate mem for doubled xpm */
+/*char xpm[XPM_LINES][XPM_WIDTH+1];*/
+
+/* XPM data of Open-File icon */
+/*static const char * xpm_data[] = {
+  "16 16 3 1",
+  "       c None",
+  ".      c #000000000000",
+  "X      c #FFFFFFFFFFFF",
+  "                ",
+  "   ......       ",
+  "   .XXX.X.      ",
+  "   .XXX.XX.     ",
+  "   .XXX.XXX.    ",
+  "   .XXX.....    ",
+  "   .XXXXXXX.    ",
+  "   .XXXXXXX.    ",
+  "   .XXXXXXX.    ",
+  "   .XXXXXXX.    ",
+  "   .XXXXXXX.    ",
+  "   .XXXXXXX.    ",
+  "   .XXXXXXX.    ",
+  "   .........    ",
+  "                ",
+  "                "};
+
+  */
+/* when invoked (via signal delete_event), terminates the application.
+ */
+void close_application( GtkWidget *widget, gpointer *data ) {
+  /* deallocate double xpm */
+  gtk_main_quit();
+}
+
+void clean_exit(char *text)
+{
+  printf("%s\n",text);
+  exit(1);
+}
+
+/* Double_xpm : Expands xpm to double its size and returns a pointer
+   to the new xpm */
+
+void double_xpm(char *image_data)
+{
+
+  char temp_char[XPM_WIDTH];
+  int yindex=0,xindex=0,data_count,c;
+  char temp[] = " ";  /* for transferring a char to a string */
+
+  /* make infoline */
+  /*strcpy(xpm[0],"320 239 16 1");*/
+
+  /* copy colour map */
+  /*  strcpy(xpm[1],"0 c #000000");
+  strcpy(xpm[2],"1 c #111111");
+  strcpy(xpm[3],"2 c #222222");
+  strcpy(xpm[4],"3 c #333333");
+  strcpy(xpm[5],"4 c #444444");
+  strcpy(xpm[6],"5 c #555555");
+  strcpy(xpm[7],"6 c #666666");
+  strcpy(xpm[8],"7 c #777777");
+  strcpy(xpm[9],"8 c #888888");
+  strcpy(xpm[10],"9 c #999999");
+  strcpy(xpm[11],"A c #aaaaaa");
+  strcpy(xpm[12],"B c #bbbbbb");
+  strcpy(xpm[13],"C c #cccccc");
+  strcpy(xpm[14],"D c #dddddd");
+  strcpy(xpm[15],"E c #eeeeee");
+  strcpy(xpm[16],"F c #ffffff");*/
+
+  /* copy pixel data but doubling width and height */
+  for(data_count = 0;data_count < IMAGE_DATA_SIZE;data_count++){
+    printf(" %i ",data_count);
+    /* on end of line... */
+    if(xindex == XPM_WIDTH){
+      xindex = 0;
+      printf("Line %i\n",yindex);
+      /* double vertically */
+      strcpy(xpm[XPM_DATA_OFFSET+yindex+1],xpm[XPM_DATA_OFFSET+yindex]);
+      yindex+=2;
+    }
+    
+    /* display a blank image if we have no image pointer */
+    if(image_data) c = image_data[data_count]; 
+    else c = 0;
+    
+    /* convert to HEX */
+    if (c < 10)
+      c = c + '0';
+    else
+      c = c + 'A' - 10;
+
+    printf("Copying...");
+    xpm[0][0] = 1;
+    printf("done eg\n");
+    *((xpm[yindex+XPM_DATA_OFFSET])+xindex) = c;
+    *((xpm[yindex+XPM_DATA_OFFSET])+xindex+1) = c;
+    printf("done %i\n",xindex);
+  }
+}
+
+/* is invoked when the button is clicked.  It just prints a message.
+ */
+void button_clicked( GtkWidget *widget, gpointer *data ) {
+  printf( "button clicked\n" );
+}
+
+void output_xpm()
+{
+  int i;
+  for(i=0;i<XPM_LINES;i++){
+    printf("\"%s\",\n",xpm[i]);
+  }
+  exit(1);
+}
+
+
+void get_new_image( GtkWidget *widget, gpointer *data) 
+{
+  GtkStyle *style;
+  GdkBitmap *mask;
+
+  printf("Getting new image\n");
+  printf("Resizing...");
+
+  /*  double_xpm();*/
+  printf("done.\n");
+
+  gdk_pixmap_unref(pixmap);
+
+  style = gtk_widget_get_style( window );
+  pixmap = gdk_pixmap_create_from_xpm_d( window->window,  &mask,
+					 &style->bg[GTK_STATE_NORMAL],
+					 (char **)xpm);
+  gtk_pixmap_set( (GtkPixmap *)pixmapwid,pixmap,mask);
+}
+
+int main( int argc, char *argv[] )
+{
+  init_gui(argc,argv);
+  return 1;
+}
+
+void init_gui(int argc, char *argv[])
+{
+  /* create the main window, and attach delete_event signal to terminating
+     the application */
+  gtk_init( &argc, &argv );
+
+
+  window = gtk_window_new( GTK_WINDOW_TOPLEVEL );
+
+  gtk_window_set_title (GTK_WINDOW (window), "Door Entry System");
+
+  gtk_signal_connect( GTK_OBJECT (window), "delete_event",
+		      GTK_SIGNAL_FUNC (close_application), NULL );
+  gtk_container_border_width( GTK_CONTAINER (window), 10 );
+
+
+  /* create new boxes */
+  box = gtk_hbox_new (FALSE, 1);
+  button_box = gtk_hbox_new(TRUE,1);
+  lbox = gtk_vbox_new(FALSE,1);
+  rbox = gtk_vbox_new(TRUE,1);
+
+  /* now for the pixmap from gdk */
+
+  style = gtk_widget_get_style( window );
+  printf("Resizing...");
+  double_xpm(NULL);
+  printf("done\n");
+  /*output_xpm();*/
+  pixmap = gdk_pixmap_create_from_xpm_d( window->window,  &mask,
+				       &style->bg[GTK_STATE_NORMAL],
+				       (char **)xpm);
+  printf("Created pixmap\n");
+  /* a pixmap widget to contain the pixmap */
+  pixmapwid = gtk_pixmap_new( pixmap, mask );
+  gtk_box_pack_start (GTK_BOX (lbox), pixmapwid, TRUE, TRUE, TRUE);
+
+  printf("Created pixmap widget\n");
+  /* define the buttons and pack into boxes */
+  /*cf_tips = gtk_tooltips_new();*/
+
+  button1 = gtk_button_new_with_label("Unlock");
+  gtk_signal_connect( GTK_OBJECT(button1), "clicked",
+		      GTK_SIGNAL_FUNC(button_clicked), NULL );
+  gtk_box_pack_start (GTK_BOX (button_box), button1, TRUE, TRUE, TRUE);
+  gtk_widget_show( button1 );
+
+  button2 = gtk_button_new_with_label("Refuse");
+  gtk_signal_connect( GTK_OBJECT(button2), "clicked",
+		      GTK_SIGNAL_FUNC(button_clicked), NULL );
+  gtk_box_pack_start (GTK_BOX (button_box), button2, TRUE, TRUE, TRUE);
+  gtk_widget_show( button2 );
+
+  rc_button = gtk_button_new_with_label("Recapture");
+  gtk_signal_connect( GTK_OBJECT(rc_button), "clicked",
+		      GTK_SIGNAL_FUNC(get_new_image ), NULL );
+  gtk_box_pack_start (GTK_BOX (rbox), rc_button, TRUE, TRUE, TRUE);
+  gtk_widget_show( rc_button );
+
+  au_button = gtk_button_new_with_label("Audio Control");
+  gtk_signal_connect( GTK_OBJECT(au_button), "clicked",
+		      GTK_SIGNAL_FUNC(button_clicked), NULL );
+  gtk_box_pack_start (GTK_BOX (rbox), au_button, TRUE, TRUE, TRUE);
+  gtk_widget_show( au_button );
+
+  cf_button = gtk_button_new_with_label("Configure");
+  gtk_signal_connect( GTK_OBJECT(cf_button), "clicked",
+		      GTK_SIGNAL_FUNC(button_clicked), NULL );
+  /*  gtk_tooltips_set_tips(GTK_OBJECT(cf_tips),GTK_OBJECT(cf_button),
+			"Add/delete users and change options"); */
+
+  gtk_box_pack_start (GTK_BOX (rbox), cf_button, TRUE, TRUE, TRUE);
+  gtk_widget_show( cf_button );
+
+  dn_button = gtk_button_new_with_label("Do not disturb");
+  gtk_signal_connect( GTK_OBJECT(dn_button), "clicked",
+		      GTK_SIGNAL_FUNC(button_clicked), NULL );
+  gtk_box_pack_start (GTK_BOX (rbox), dn_button, TRUE, TRUE, TRUE);
+  gtk_widget_show( dn_button );
+
+  cl_button = gtk_button_new_with_label("Close");
+  gtk_signal_connect( GTK_OBJECT(cl_button), "clicked",
+		      GTK_SIGNAL_FUNC (close_application), NULL );
+  gtk_box_pack_start (GTK_BOX (rbox), cl_button, TRUE, TRUE, TRUE);
+  gtk_widget_show( cl_button );
+
+  gtk_widget_show( button_box );
+  gtk_widget_show( rbox );
+
+  /* pack button box into main box */
+  gtk_box_pack_start (GTK_BOX (lbox), button_box, TRUE, TRUE, TRUE);
+  gtk_widget_show( pixmapwid );  
+  gtk_widget_show( lbox );
+  printf("showed pixmap and lbox\n");
+
+  /* pack left and right boxes into main box */
+
+  gtk_box_pack_start (GTK_BOX (box), lbox, TRUE, TRUE, TRUE);
+  gtk_box_pack_start (GTK_BOX (box), rbox, TRUE, TRUE, TRUE);
+  printf("Packed main box\n");
+  gtk_widget_show(box);
+
+  gtk_container_add( GTK_CONTAINER(window), box );
+  
+  printf("Done button and added box to window\n");
+  /* show the window */
+  gtk_widget_show( window );
+  gtk_main ();
+}
+
+void display_image(char *image)
+{
+  GtkStyle *style;
+  GdkBitmap *mask;
+
+  printf("Getting new image\n");
+  printf("Resizing...");
+
+  double_xpm(image);
+  printf("done.\n");
+
+  gdk_pixmap_unref(pixmap);
+
+  style = gtk_widget_get_style( window );
+  pixmap = gdk_pixmap_create_from_xpm_d( window->window,  &mask,
+					 &style->bg[GTK_STATE_NORMAL],
+					 (char **)xpm);
+  gtk_pixmap_set( (GtkPixmap *)pixmapwid,pixmap,mask);
+}

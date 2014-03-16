@@ -1,0 +1,31 @@
+<html>
+<head>
+<title>Step by step basic spec. 21/6/98</title>
+<h1>Basic step-by-step spec.</h1>
+</head>
+<body><br>
+<br>Step 1 : Enter Number
+<br>Step 2 : If number is just flat number (2 digits) then goto step 4
+<br>Step 3 : If number is flat number plus password (6 digits) goto step
+12
+<br>Step 4 : Broadcast number to all flats
+<br>Step 5 : PC in appropriate flat begins to buzz if not in 'Privacy
+mode' -
+(all others ignore).
+<br>Step 5a: Send sampled 'Not in' message.
+<br>Step 6 : Start receiving video and wait for user to acknowledge
+<br>Step 7 : If user acknowledges then goto step 8 else goto step 1
+<br>Step 8 : Receive and transmit audio
+<br>Step 9 : User either opens door or rejects person at door.
+<br>Step 10: If user rejects send 'You're not coming in' message goto step
+1
+<br>Step 11: If user accepts open door and goto step 1
+
+<br>Step 12: Broadcast number to all flats.
+<br>Step 13: Appropriate PC (i.e. one with same number as first 2 digits)
+         responds.
+<br>Step 14: If password (last 4 digits of number) is in PCs database then
+accept, open door and goto step 1.
+<br>Step 15: If password is not in database then reject and goto step 1.
+</body>
+</html>

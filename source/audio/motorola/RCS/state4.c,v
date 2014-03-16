@@ -1,0 +1,538 @@
+head	1.3;
+access;
+symbols;
+locks
+	dwi:1.3; strict;
+comment	@ * @;
+
+
+1.3
+date	98.05.12.11.39.31;	author dwi;	state Exp;
+branches;
+next	1.2;
+
+1.2
+date	98.05.09.13.16.29;	author dwi;	state Exp;
+branches;
+next	1.1;
+
+1.1
+date	98.05.07.19.41.29;	author dwi;	state Exp;
+branches;
+next	;
+
+
+desc
+@This is the initial revision of the audio stuff for the motorola.
+It should receive data from the serial port and play it, as well as
+accepting instructions from a CONTROL packet (probably issued by Ed's
+GUI.
+@
+
+
+1.3
+log
+@This works to send compressed audio to the PC.
+@
+text
+@/*
+  Code for implementing states 4 & 10 on the motorola board.  Includes state4a(), which
+  is used to test the serial interface by just grabbing away merrily until it receives
+  a state change signal.
+
+  State changes are indicated by a 0xFF byte being transmitted, followed by a byte
+  containing the state to change to.  If the sound data being transmitted actually is
+  an FF, the second byte will also be an FF and no state transition should occur.
+
+
+  Compile with :
+  gcc68s -I/home/sysd7/source/include -o state4 state4.c ../audio.c ~/source/transport/motorola/polling.c ~/source/low.level/motorola/board.c
+  
+*/
+#include <serial.h>
+#include <m68kboard.h>
+#include <support.h>
+#include <control.h>
+#include <board.h>
+#include <audio.h>
+
+/*
+  Actual delay calculated as :
+     32                     1
+------------  X Delay  =  ------
+ 10,000,000                8000
+
+hence:
+           10,000       1250       625
+Delay  =  --------  =  ------  =  -----  =  39 1/16
+           32 x 8        32        16
+
+16
+
+#define SAMPLE_DELAY 39
+*/
+
+int SAMPLE_DELAY = 39;
+
+/*
+  Parallel interface timer interface.  Memory-mapped into 0x05000000.
+  Registers are dereferenced thus :
+  Data = tpit->dra;
+
+*/
+volatile struct mc68230fm * tpit = (void *)0x05000000;
+
+/* 
+   A buffer used for testing the code.  Holds a record of all incoming data.
+*/
+unsigned char Incoming[16384];
+
+void realhex (unsigned char c)
+{
+  if (c > 9)
+    mon_putc (c + 'A' - 10);
+  else
+    mon_putc (c + '0');
+}
+
+void hex (unsigned char c)
+{
+  realhex ((c & 0xF0) >> 4);
+  realhex (c & 0x0F);
+}
+
+
+int state4a(void)
+{
+  unsigned char PlayBuf[2];
+  char v=0;
+  unsigned char t;
+  unsigned int j=0;
+  unsigned char Data_next;
+  
+  serialinit();
+  boardinit();
+  initDecompr();
+
+  tpit->ddra=0xE0;
+  tpit->dra=0xE0;
+
+  for (j=0;j<100;j++){
+    for (t=0;t<255;t++)
+      setsample(t);
+    for (t=255;t>0;t--)
+      setsample(t);
+  }
+  
+  j=0; 
+  puts("Starting sound reproduction...\n\r");
+  serialtransmit('A');
+  puts("synched..\n\r");  
+
+  Incoming[j++] = (unsigned char) serialreceive ();
+  /*  mon_putc('.');*/
+  Incoming[j++] = (unsigned char) serialreceive ();
+  /*  mon_putc('.');*/
+  while(!((Incoming[j-2] == 0xFF) && (Incoming[j-1] != 0xFF))){
+    /*    if (!(j % 70))
+      puts ("\n\r");    mon_putc('.');*/
+    Incoming[j++]=(unsigned char)serialreceive();
+    /*    if ((Incoming[j-1]==0xFF) && (Incoming[j++]!=0xFF)) break;*/
+  }
+  /*return 1;*/
+  puts("\n\rSending data acknowledge...");
+  serialtransmit('B');
+
+  puts("Received ");
+  putn(j,10,5);
+  puts ("samples OK.\n\rPlaying...\n\r");
+
+  j=0;
+
+  while (1) {
+    starttimer (10000000);
+    if (!v) {
+      Data_next=Incoming[j++];
+      /*Data_next = serialreceive();*/
+      /*      hex (Data_next); 
+	      puts("R\n\r");*/
+      if (Data_next == 0xFF) {
+	/*puts ("Waiting for new state\n\r");*/
+	Data_next = serialreceive();
+	if (Data_next != 0xFF) 
+	  return (int) Data_next;
+      }
+      /*      Incoming[j++]=Data_next;*/
+      decompress(Data_next, PlayBuf);
+    }
+    setsample (PlayBuf[v]);
+    while ( gettimer() > 10000000 - SAMPLE_DELAY );
+    v = 1 - v;
+  }
+
+}
+
+
+
+void initAudio(void)
+{
+  tpit->cph=0x0;
+  
+  tpit->cpm=0x0;
+
+  tpit->cpl=0x10;
+
+  tpit->tcr=0x43;
+
+  tpit->ddra=0xE0;
+
+  tpit->dra=0xE0;
+}
+
+
+void setsamplen(unsigned char sample)
+{
+  /*-- init DAC --*/
+  tpit->dra=0xE0;
+
+  tpit->ddrb=0xFF;
+
+  /*-- Send sample --*/
+  tpit->drb=sample;
+
+  /*-- Set DAC --*/
+  tpit->dra=0xA0;
+
+  tpit->dra=0xE0;
+}
+
+
+
+
+/******************************************
+  State 4  Linux PC -> M68k board
+******************************************/
+
+int state4(void)
+{
+  /* PlayBuf[]  -  incoming data is decompressed into this array and then played. */
+  unsigned char PlayBuf[2];
+
+  /* Holds the position of the next sample to be played.  When this is 0, the routine
+     will attempt to read a byte from the serial port and decompress it into PlayBuf.*/
+  char BufPos=0;
+
+  /* Serial data is read into this byte before being decoded. */
+  unsigned char Data_next;
+  
+  /* Initialise the board settings, the serial driver and the decompression routines.*/
+  initAudio();
+  serialinit();
+  initDecompr();
+
+  /* Set the direction bits of data register A to 11100000. */
+  tpit->ddra=0xE0;
+  /* Set data register A to the same thing. */
+  tpit->dra=0xE0;
+
+  /* Send a synchronisation byte to the Linux side. */
+  serialtransmit('A');
+
+  mon_putc('A');
+
+  Data_next = serialreceive();
+  while (1) {
+    starttimer (16);
+    if (BufPos) {
+      Data_next = serialreceive();
+      if (Data_next == 0xFF) {
+	Data_next = serialreceive();
+	if (Data_next != 0xFF) {
+	  serialtransmit('B');
+	  return (int) Data_next;
+	}
+      }
+    } else {
+      decompress(Data_next, PlayBuf);
+    }
+    while ( gettimer() > 0 );
+    setsamplen (PlayBuf[BufPos]);
+    BufPos = 1 - BufPos;
+  }
+
+}
+
+int state10(void)
+{
+  unsigned char RecBuf[2];
+  char v=1;
+  int otime;
+  unsigned char Data_next;
+  int Control=0;
+  serialinit();
+  initAudio();
+  initCompr();
+  
+  /* Synch with PC... */
+  serialtransmit('A');
+  otime=10000000;
+  starttimer(SAMPLE_DELAY);
+  while ( otime > (otime=gettimer()) );
+  RecBuf[0] = (getsample());
+  otime=10000000;
+  while (1) {
+    /*starttimer(SAMPLE_DELAY);*/
+    while ( otime > (otime= gettimer() > 0) );
+    RecBuf[v] = (getsample());
+    if (v) {
+      Control = compress(RecBuf[0],RecBuf[1]);
+    } else {
+      Control = serialtransmit(Control);
+      if (Control) 
+	return Control;
+    }
+    v=1-v;
+  }
+}
+
+
+int s4test(void)
+{
+  int i;
+  serialinit();
+  puts("Synching...\n\r");
+  serialtransmit('1');
+  for (i=0;i<800;i++) {
+    Incoming[i] = serialreceive();
+  }
+  i = serialreceive();
+  puts("synching...\n\r");
+  serialtransmit('2');
+  return i;
+}
+
+
+void main(void)
+{
+  int j;
+  /*  putn ((unsigned char) state10 (), 16, 2);*/
+  putn (SAMPLE_DELAY, 10, 2);
+  while (state10()==10)
+    putn (--SAMPLE_DELAY, 10, 2);
+
+  for (j=0;j<800;j++) {
+    if (!(j % 25))
+      puts ("\n\r");
+    /*putn (Incoming [j], 16, 2);*/
+    hex(Incoming[j]);
+    mon_putc (' ');
+  }
+  serialclose();
+}
+@
+
+
+1.2
+log
+@I think that it should work this time.  It now has two states : 4 and 10 for
+receiving and transmitting data.  I have taken out all mon_put
+@
+text
+@d1 14
+a17 1
+/*#include <data.h>*/
+d22 24
+d48 4
+a51 9
+int TransitionTo=0;
+
+unsigned char InBuffer[8][511];
+unsigned char PlayBuffer=7;
+unsigned char P_NextFree=0;
+
+unsigned char OutBuffer[8][511];
+unsigned char RecordBuffer=7;
+unsigned char R_NextFree=0;
+a66 6
+#ifdef OLD
+void control_handler(packet *p)
+{
+  if (p->data[0]==MAKE_TRANSITION)
+    TransitionTo=(int)p->data[1];    
+}
+d68 1
+a68 1
+void audio_handler(packet *p)
+d70 9
+a78 10
+  int i=510;
+  unsigned char *Buf=InBuffer[P_NextFree];
+  unsigned char *PBuf=p->data;
+  if (P_NextFree!=PlayBuffer) {
+    while(i--)
+      *(Buf++)=*(PBuf++);
+    *(Buf)=1;
+    P_NextFree=(++P_NextFree)&7;
+  }
+}
+d80 2
+d83 29
+a111 6
+int state4(void)
+{
+  unsigned char tmpPBuf[2];
+  unsigned char otpitcrl,ntpitcrl;
+  int tPBufCount=0;
+  packet pkt;
+d113 1
+a113 2
+  serialinit();
+  pitinit();
+a114 20
+  pkt.length=510;
+  pkt.datatype=AUDIO;
+  /* 
+     Initialise the serial Input buffers.
+  */
+  InBuffer[7][510] = 0;
+  InBuffer[0][510] = 0;
+  PlayBuffer = 7;
+  P_NextFree = 0;
+
+  /*
+    Initialise the serial output buffers.
+  */
+  OutBuffer[7][510] = 0;
+
+  TransitionTo = 0;
+  registerhandler (CONTROL,control_handler);
+  registerhandler (AUDIO,audio_handler);
+  initCompr();
+  initDecompr();
+d116 11
+a126 12
+    if (TransitionTo) {
+      unregisterhandler(CONTROL);
+      unregisterhandler(AUDIO);
+      /*Stop the audio*/
+      return TransitionTo;
+    }
+    if ( InBuffer[PlayBuffer][510]) {
+      if (tPBufCount==2) {
+	tPBufCount=0;
+	decompress(InBuffer[PlayBuffer][InBuffer[PlayBuffer][510]++],tmpPBuf);
+	if (InBuffer[PlayBuffer][510]>=510)
+	  PlayBuffer=(++PlayBuffer)&7;
+d128 2
+a129 3
+    } else {
+      if (InBuffer[(PlayBuffer+1)&7][510]) 
+	PlayBuffer=++PlayBuffer&7;
+d131 3
+a133 17
+    otpitcrl=tpit->crl;
+    while (otpitcrl>(ntpitcrl=tpit->crl))
+      otpitcrl=ntpitcrl;
+    setsample(tmpPBuf[tPBufCount++]);
+    /*    tmpRBuf[tRBufCount++]=getsample();*/
+
+    /*    Compress,buffer, send samples.*/
+    /*
+    if (tRBufCount==2) {
+      OutBuffer[RecBuffer][OutBuffer[RecBuffer][510]++]=compress(tmpRBuf[0],tmpRBuf[1]);
+      if (OutBuffer[RecBuffer][510]>=510) {
+	pkt.data=OutBuffer[RecBuffer++];
+	senddata(&pkt);
+	RecBuffer=RecBuffer&7;
+      }
+    }
+    */
+d135 1
+a136 1
+#else
+d138 19
+a156 1
+int state4(void)
+d158 12
+a169 8
+  int i=state4a();
+  while (i==4 || i==10) {
+    if (i==4)
+      i=state4a();
+    else
+      i=state10();
+  }
+  return i;
+d172 8
+a179 1
+int state4a(void)
+d181 1
+d183 6
+a188 1
+  char v=0;
+d190 3
+a193 1
+  boardinit();
+d195 2
+d198 1
+d200 7
+a206 1
+  
+d208 2
+a209 2
+    starttimer (10000000);
+    if (!v) {
+d212 5
+a216 3
+	Data_next = serialreceive();       
+	if (Data_next != 0xFF) 
+	  return Data_next;
+d218 1
+d221 3
+a223 3
+    setsample (PlayBuf[v]);
+    v = 1 - v;
+    while ( gettimer() > 10000000 - 2500 );
+d225 1
+d231 2
+a232 1
+  char v=0;
+d236 1
+a236 1
+  boardinit();
+d238 8
+a245 1
+
+d247 3
+a249 3
+    starttimer(10000000);
+    while ( gettimer() > 10000000 -2500 );
+    RecBuf[v] = getsample();
+d251 3
+a253 1
+      Control = serialtransmit(compress(RecBuf[0],RecBuf[1]));
+d261 16
+a276 1
+#endif
+d280 14
+a293 1
+  mon_putc((unsigned char)state4a());
+@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@d4 1
+a4 1
+#include <data.h>
+d21 13
+d35 1
+d55 1
+d123 66
+d192 1
+a192 1
+  mon_putc((unsigned char)state4());
+@

@@ -1,0 +1,74 @@
+head	1.1;
+access;
+symbols;
+locks
+	iic:1.1; strict;
+comment	@ * @;
+
+
+1.1
+date	98.05.07.15.48.19;	author iic;	state Exp;
+branches;
+next	;
+
+
+desc
+@Main function for entire Motorola board
+@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@/* 
+  State transition glue code
+*/
+
+#include <board.h>
+
+/* Prototypes for states 1-9 */
+
+int state1();
+int state2();
+int state3();
+int state4();
+int state5();
+int state6();
+int state7();
+int state8();
+int state9();
+
+void main()
+{
+  int cs=9;
+  while(1)
+    {
+      /* Display current state on LED */
+
+      leddisplay('0'+cs);
+      switch(cs)
+	{
+	case 1:
+	  cs=state1();
+	case 2:
+	  cs=state2();
+	case 3:
+	  cs=state3();
+	case 4:
+	  cs=state4();
+	case 5:
+	  cs=state5();
+	case 6:
+	  cs=state6();
+	case 7:
+	  cs=state7();
+	case 8:
+	  cs=state8();
+	case 9:
+	  cs=state9();
+	}
+    }
+}
+@

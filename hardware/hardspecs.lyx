@@ -1,0 +1,396 @@
+#This file was created by <sxjc> Fri May  1 16:06:19 1998
+#LyX 0.12 (C) 1995-1998 Matthias Ettrich and the LyX Team
+\lyxformat 2.15
+\textclass article
+\language default
+\inputencoding default
+\fontscheme default
+\graphics default
+\paperfontsize default
+\spacing single 
+\papersize Default
+\paperpackage widemarginsa4
+\use_geometry 0
+\use_amsmath 0
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation skip
+\defskip medskip
+\quotes_language english
+\quotes_times 2
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+
+\layout Section
+
+Lock Control Unit (Hardware) 
+\layout Subsection
+
+Hardware Design Decisions 
+\layout Standard
+
+The prototype hardware door lock system is designed to offer the following
+ features: 
+\layout Itemize
+
+high level of reliability
+\layout Itemize
+
+failsafe mechanisms in the event of tamper or power failure
+\layout Itemize
+
+simple user interface
+\layout Itemize
+
+voice communication in two directions
+\layout Itemize
+
+video communication in one direction
+\layout Standard
+
+This has been facilitated by the use of various technologies.
+ The failsafe mechanisms are provided by the use of a mechanical and electro-mec
+hanical combination of lock mechanisms.
+ In normal operation, the electro-mechanical door mechanism operates to
+ unlock the door, while a Yale-type latched doorlock allows manual operation
+ with a conventional key.
+ This means that, for example, in the event of system failure due to power
+ supply interruption, access can still be gained to the property by use
+ of a key.
+ Normally this key would be held by only one or two people, such as the
+ security staff, and should not be distributed for widespread use as this
+ would defeat the security features inherent in the electronic mechanism.
+ 
+\layout Standard
+
+The main electro-mechanical mechanism is driven by lock control unit, which
+ in turn is connected by a serial link of variable length to the remote
+ PC.
+ The lock control unit has the capability to automatically control entry
+ without needing to communicate with the remote PC, and is therefore protected
+ from failure in the event of a break in the serial link.
+ 
+\layout Standard
+
+A simple user interface has been designed, which offers a high degree of
+ reliability and security.
+ Although magnetic swipe cards are a widely-used and low-cost technology
+ in door-lock systems, this design does not use them.
+ There is another system which offers greater reliability and convenience,
+ while still being relatively low-cost for small to moderate-sized markets.
+ This technology is called iButton and it is manufactured by Dallas Semiconducto
+r; it consists of a small button-shaped tag which can be mounted on a laminated
+ identity card or a plastic keyring holder.
+ This means it is more convenient to carry around than a conventional magnetic
+ swipe card.
+ 
+\layout Standard
+
+Additionally, it does not require moving contact for it to be read, and
+ cannot be wiped by magnetic fields; this technology was therefore chosen
+ to meet the needs of our chosen market.
+ Each iButton is manufactured with a unique identification number, which
+ our system reads from the device and uses to identify the user.
+ The user is then required to enter a Personal Identification Number (PIN)
+ which then allows them to enter the building.
+ The PIN is entered using a conventional numeric keypad, which is part of
+ the lock control system.
+ 
+\layout Standard
+
+The second mode of operation requires the use of video and audio systems.
+ The design requirement of using a serial link means that this data has
+ to be digitised and sent over the link.
+ These functions are also carried out by the lock control unit.
+ It is proposed that the final product would have the entry buzzer button
+ located just below the camera, so that the picture from the camera would
+ be of the visitor's face.
+ The location of the microphone and speaker of the audio system are less
+ important, but these would be part of the same external unit, and would
+ be separate from the lock control unit itself.
+\layout Standard
+
+Finally, the design is such that external tampering does not make access
+ possible.
+ The input devices (camera, keypad, iButton reader, microphone) and output
+ devices (speaker, status indicators) are wired so that they cannot cause
+ the electro-mechanical door latch mechanism to activate.
+ As a backup to this, the door position sensor will detect if the door has
+ been opened without the electronic authorisation being issued.
+ If this happens, an alarm will sound in the lock control unit and at the
+ PC; this can be overriden from the PC side.
+\layout Subsection
+
+Specific Hardware Devices 
+\layout Standard
+
+The door entry system consists of several functional hardware components.
+ These components provide the interface to the person who is requesting
+ access to the property.
+ Our hardware interface carries out the following input and output functions:
+\layout Itemize
+
+keypad data input (including the doorbell function)
+\layout Itemize
+
+iButton serial number input 
+\layout Itemize
+
+intercom audio input 
+\layout Itemize
+
+door position detector input 
+\layout Itemize
+
+video camera picture input 
+\layout Itemize
+
+intercom audio output 
+\layout Itemize
+
+door lock control signal output 
+\layout Itemize
+
+visual status output (door open, system ready, access denied) 
+\layout Standard
+
+The hardware component of the prototype system is based around a Motorola
+ 68040 prototyping board (IDP), to which we have connected a Connectix Quickcam.
+ In order to provide the remaining functions we have added an interface
+ board, which incorporates the keypad, the intercom functions, the door
+ position detector, the iButton interface, the visual status outputs, and
+ the door lock control.
+ 
+\layout Subsection
+
+Detailed Interface Description
+\layout Standard
+
+Component choice was determined by a number of factors.
+ Cost, suitability to the functional task, simplicity of design and interfacing,
+ and suitability for prototyping were paramount in the selection process.
+ The use of the 68230, EPLD, DAC and ADC devices was a direct requirement
+ of the product specification, as these devices provide the majority of
+ the functionality of the product.
+ In addition, the design incorporates a number of secondary devices which
+ complement the interfacing logic and ensure the correct operation of the
+ major components.
+ Finally, the design uses a keypad encoder to minimise the complexity of
+ the keypad software routines and hardware connections.
+ This could have been implemented in a custom logic device, but this was
+ deemed unnecessary as there are good commercial devices available to do
+ this.
+\layout Standard
+
+The interface board uses a Motorola 68230 parallel interface device, which
+ gives a capacity of 24 input or output lines.
+ This device is asynchronous, so it is connected to the IDP through a state
+ machine, implemented in a single logic device (an Electronically Programmable
+ Logic Device or EPLD).
+ A D-type flip-flop is used to synchronise the asynchronous signals from
+ the 68230 with the IDP clock, as required by the IDP bus specifications.
+ The clock signal for the EPLD and the flip-flop is derived from the bus
+ clock (6.25MHz) which is doubled using a phase-lock loop device to 12.5MHz.
+ 
+\layout Standard
+
+The 68230 device and its associated state machine have been designed to
+ operate at a clock speed of 10MHz; this clock signal is provided by a separate
+ clock signal generator device on the interface board.
+ Finally, the requirement for tri-state signals on some of the bus lines
+ has been met by using a tri-state buffer device on these lines.
+\layout Standard
+
+The interface functionality is provided by four devices; the Analogue-to-
+ Digital Converter (ADC), the Digital-to-Analogue Converter (DAC), the iButton
+ interrogation circuit and the keypad.
+ Each of these systems is described in detail below.
+ The arrangements for connecting these devices to the 68230 are based on
+ the allocation of the 24 input/output lines of this device.
+ 8 of these lines have been allocated to a bi-directional data bus which
+ connects the ADC and the DAC.
+ In addition, 1 timer line is required to control the rate of sampling.
+\layout Standard
+
+Another 4 lines have been allocated as inputs for the keypad interface bus;
+ up to 16 individual keys can be multiplexed onto this.
+ The prototype design uses a 12 key keypad, so this leaves the possibility
+ of another 4 inputs being added later.
+ A fifth input serves as a status line, signalling to the 68230 that a key
+ has been pressed.
+ This arrangement allow the status of the keypad to be monitored by checking
+ the state of a single input.
+\layout Standard
+
+One line has been allocated as a bidirectional line for connnection to the
+ iButton interrogation device.
+ In practice, this output is always low, due to the design of the interface
+ protocol to the iButton hardware.
+\layout Subsection
+
+Data Flow within the Interface Board 
+\layout Standard
+
+The central component in the interface board is the 68230 device, through
+ which all of the data is passed.
+ The 68230 consists of a set of 32 registers, 3 of which are mapped to the
+ 24 pins of the bidirectional parallel lines.
+ Another 3 registers control the direction of the data flow in these lines;
+ by writing to and reading from these registers, the direction of data movement
+ can be controlled and the movement of data can be achieved.
+ The 68230 is attached to the first 8 bits of the IDP bus 32-bit data channel,
+ and the registers are indexed by connection to address lines A2 to A6.
+ In practice, this means that the 68230 registers are addressed in steps
+ of 4; this has been done to maintain consistency with the existing 68230
+ device on the IDP board.
+\layout Standard
+
+The bus from the IDP interface to the 68230 is bidirectional, and the data
+ flow is controlled by the following handshaking signals: 
+\layout Itemize
+
+Address Strobe 
+\layout Itemize
+
+Slot Address 
+\layout Itemize
+
+Read/Write 
+\layout Itemize
+
+Reset 
+\layout Itemize
+
+Transfer Acknowledge 
+\layout Itemize
+
+Cache Inhibit 
+\layout Standard
+
+These signals are managed by the EPLD state machine (see figure 
+\begin_inset LatexCommand \ref{blockdiagram}
+
+\end_inset 
+
+), which generates the necessary signals for the IDP bus and the 68230 device
+ at the correct times in relation to the bus clock frequency.
+\layout Standard
+
+\begin_float fig 
+\layout Standard
+\align center 
+
+\begin_inset Figure size 595 376
+file blockdiag.eps
+width 3 100
+angle 270
+flags 9
+
+\end_inset 
+
+
+\layout Caption
+
+
+\begin_inset LatexCommand \label{blockdiagram}
+
+\end_inset 
+
+Data transfer block diagram
+\end_float 
+\layout Standard
+
+From the 68230 the data flow takes a variety of forms.
+ There is an 8-bit bus which connects to the ADC and DAC components, and
+ which is bidirectional to allow reading from and writing to these devices.
+ There is a read-only 4-bit bus which allows reading of the status of the
+ keypad, and there is a 1-bit bidirectional bus which allows the interrogation
+ of the iButton device.
+\layout Subsection
+
+Hardware Construction 
+\layout Standard
+
+The prototype hardware will consist of three distinct units; the remote
+ PC, the Motorola IDP board and the IDP interface board.
+ The first two of these are supplied in assembled form, while the latter
+ will be constructed on prototyping board.
+ The construction technology used for this will be wire-wrap interconnection,
+ which allows for rapid development and board reworking in the event of
+ minor redesigns.
+ The keypad will be mounted on the prototype board as this provides a stable,
+ flat surface, while the iButton reader, speaker and microphone will be
+ external components.
+ There will also be connections for the electro-mechanical latch and the
+ door position sensor.
+ The status indicators will be board-mounted to minimise the number of external
+ connections.
+\layout Standard
+
+The custom logic EPLD is programmed from a state diagram (see 
+\begin_inset LatexCommand \ref{readtiming}
+
+\end_inset 
+
+).
+ This ensures that the interface between the 68230 and the IDP bus adheres
+ to the standards given in the IDP documentation (see 
+\begin_inset LatexCommand \ref{writetiming}
+
+\end_inset 
+
+for bus timing diagrams).
+\layout Standard
+
+\begin_float fig 
+\layout Standard
+\align center 
+
+\begin_inset Figure size 595 337
+file time-read.eps
+width 3 100
+angle 270
+flags 9
+
+\end_inset 
+
+
+\layout Caption
+
+
+\begin_inset LatexCommand \label{readtiming}
+
+\end_inset 
+
+Read timing diagram
+\end_float 
+\layout Standard
+
+\begin_float fig 
+\layout Standard
+\align center 
+
+\begin_inset Figure size 595 317
+file time-write.eps
+width 3 100
+angle 270
+flags 9
+
+\end_inset 
+
+
+\layout Caption
+
+
+\begin_inset LatexCommand \label{writetiming}
+
+\end_inset 
+
+Write timing diagram
+\end_float 
+This concludes the hardware specification.
+\layout Standard
+
+\the_end

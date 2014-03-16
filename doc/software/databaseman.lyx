@@ -1,0 +1,244 @@
+#This file was created by <ejk> Fri May 15 05:01:06 1998
+#LyX 0.12 (C) 1995-1998 Matthias Ettrich and the LyX Team
+\lyxformat 2.15
+\textclass article
+\language default
+\inputencoding default
+\fontscheme palatino
+\graphics default
+\paperfontsize default
+\spacing single 
+\papersize Default
+\paperpackage a4
+\use_geometry 0
+\use_amsmath 0
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\defskip medskip
+\quotes_language english
+\quotes_times 2
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+
+\layout Subsection
+
+The Database system
+\layout Subsubsection
+
+Linux
+\layout Paragraph
+
+Structure
+\layout Standard
+
+The original design was to store the database on disk on the PC.
+ This was to be downloaded onto the Motorola on power-up.
+ All the code exists to do this, but is not fully integrated yet.
+ An intermediate solution was to hard-code the database into the Motorola
+ binary.
+ This is the state of the system at present, although it would not take
+ much effort to fully integrate it.
+ As such, the Linux side of the database system is not in use at present.
+ It will be described for completeness.
+\layout Standard
+
+The structure of a database record on the PC differs from that on the Motorola.
+ The latter stores only a list of iButton serial numbers and corresponding
+ PINs, whereas the former stores much more.
+ It is described below.
+\layout LyX-Code
+
+struct db_struct { 
+\layout LyX-Code
+
+
+\protected_separator 
+ char uid[UID_SIZE+1]; 
+\layout LyX-Code
+
+
+\protected_separator 
+ char pin[PIN_SIZE+1]; 
+\layout LyX-Code
+
+
+\protected_separator 
+ char fname[NAME_SIZE+1]; 
+\layout LyX-Code
+
+
+\protected_separator 
+ char sname[NAME_SIZE+1]; 
+\layout LyX-Code
+
+
+\protected_separator 
+ char dept[NAME_SIZE+1]; 
+\layout LyX-Code
+
+
+\protected_separator 
+ char photo[NAME_SIZE]; 
+\layout LyX-Code
+
+
+\protected_separator 
+ char lock; 
+\layout LyX-Code
+
+
+\protected_separator 
+ struct db_struct *next; 
+\layout LyX-Code
+
+};
+\layout Standard
+
+As the above shows, the database is stored in memory as a linked list of
+ these structures.
+ The function reads an ASCII file with each line containing a space-separated
+ record.
+ It then dynamically allocates memory for each record, and creates the linked
+ list.
+ An example of where this is used is the configuration program, where one
+ can edit the user database.
+\layout Paragraph
+
+Download
+\layout Standard
+
+In the finished system, the Motorola startup routine (state 1) requests
+ a download from PC by transmitting a certain value.
+ The PC then loads the database, and transmits the UID/PIN pair for each
+ user using a packet format.
+ The Motorola receives these packets and saves the data into memory.
+\layout Paragraph
+
+User Interface
+\layout Standard
+
+The database user interface allows an administrator to manage the users
+ of the iDoor system.
+ This includes operations such as adding or deleting a user, changing a
+ PIN, or viewing a log of entries made by a particular person.
+ At this stage, the level of functionality of this part of the system is
+ quite low.
+ The interface itself is, however, complete.
+ This gives an idea of the 
+\begin_inset Quotes eld
+\end_inset 
+
+look and feel
+\begin_inset Quotes erd
+\end_inset 
+
+ of the finished product.
+ An example database window is shown below.
+\layout Standard
+\added_space_top 0.3cm \added_space_bottom 0.3cm \align center 
+
+\begin_inset Figure size 283 192
+file ../../db_grab.ps
+width 1 10
+flags 9
+
+\end_inset 
+
+
+\layout Subsubsection
+
+Motorola
+\layout Paragraph
+
+Structure
+\layout Standard
+
+The structure of a database record on the Motorola is simply UID / PIN pairs,
+ as shown below.
+ Nothing else is needed for automatic validation.
+ The rest of the data stored on the PC is really just for convenience.
+ Another difference is that the memory to hold the database is not dynamically
+ allocated - as the board has no operating system, no 
+\family typewriter 
+malloc
+\family default 
+ function is available.
+ This means that the database store is not a linked list, but an array.
+ The size must be specified at compile time, and therefore we use a 
+\family typewriter 
+MAX_USERS
+\family default 
+ define for this purpose.
+ The 
+\family typewriter 
+\shape italic 
+actual
+\family default 
+\shape default 
+ size of the database within this array can be determined because an 
+\begin_inset Quotes eld
+\end_inset 
+
+end-of-file
+\begin_inset Quotes erd
+\end_inset 
+
+ character 'X' is inserted in the first element of the last uid string.
+ This is fine for our purposes, as a real iButton uid is a hex number, and
+ hence only uses characters up to F.
+\layout LyX-Code
+
+typedef struct { 
+\layout LyX-Code
+
+
+\protected_separator 
+ char uid[UID_SIZE+1]; 
+\layout LyX-Code
+
+
+\protected_separator 
+ int pin; 
+\layout LyX-Code
+
+} local_db_item;
+\layout Paragraph
+
+Validation
+\layout Standard
+
+State 5 is the user validation state.
+ It is entered into when an iButton has been detected in the reader.
+ The serial number (or uid) is read using low-level functions, and copied
+ into a global variable.
+ We then wait for a keypress four times, each time 
+\begin_inset Quotes eld
+\end_inset 
+
+appending
+\begin_inset Quotes erd
+\end_inset 
+
+ that digit onto the global pin integer variable.
+ An int is used here for ease of comparison with the database.
+ It cannot be used for the uid because the base-10 version of the hex uid
+ could not be stored in an int.
+\layout Standard
+
+After reading the fourth digit, 
+\family typewriter 
+validate_user()
+\family default 
+ is called.
+ First, this function searches the database for the uid.
+ This is done linearly, although in future designs it could be a more efficient
+ search (eg.
+ binary).
+ Next, if the uid is found, it compares the PIN paired with that uid with
+ the entered PIN.
+ Depending on the outcome of this test, the Motorola state will get moved
+ to unlock or refuse respectively.
+\the_end

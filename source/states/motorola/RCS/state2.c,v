@@ -1,0 +1,736 @@
+head	1.12;
+access;
+symbols;
+locks
+	iic:1.12; strict;
+comment	@ * @;
+
+
+1.12
+date	98.05.12.22.13.00;	author iic;	state Exp;
+branches;
+next	1.11;
+
+1.11
+date	98.05.12.09.10.20;	author iic;	state Exp;
+branches;
+next	1.10;
+
+1.10
+date	98.05.09.13.22.22;	author skk;	state Exp;
+branches;
+next	1.9;
+
+1.9
+date	98.05.08.15.13.18;	author iic;	state Exp;
+branches;
+next	1.8;
+
+1.8
+date	98.05.08.09.56.49;	author iic;	state Exp;
+branches;
+next	1.7;
+
+1.7
+date	98.05.07.13.39.41;	author iic;	state Exp;
+branches;
+next	1.6;
+
+1.6
+date	98.05.07.13.00.43;	author iic;	state Exp;
+branches;
+next	1.5;
+
+1.5
+date	98.05.06.15.20.55;	author iic;	state Exp;
+branches;
+next	1.4;
+
+1.4
+date	98.05.06.15.04.14;	author skk;	state Exp;
+branches;
+next	1.3;
+
+1.3
+date	98.05.06.10.07.30;	author iic;	state Exp;
+branches;
+next	1.2;
+
+1.2
+date	98.05.04.12.04.17;	author iic;	state Exp;
+branches;
+next	1.1;
+
+1.1
+date	98.05.04.11.19.49;	author iic;	state Exp;
+branches;
+next	;
+
+
+desc
+@State 2
+@
+
+
+1.12
+log
+@Changed so keypad and dallas ring are checked during frame grab
+@
+text
+@/* State 2 
+   
+   This state performs 4 functions
+
+   * it polls the video camera, it captures an image and uses a combination
+     of frame-difference and RLE encoding to compress the image before 
+     sending it via serial to the Linux client machine;
+
+   * it polls the Dallas Ring to detect whether a ring is present in the
+     detector;
+
+   * it checks for a signal from the client;
+
+   * it polls the buzzer (linked to the keypad).
+
+   Transitions
+  
+   The following states can be entered from state 2:
+
+   * state 1 --- a signal is received from the client instructing the
+     board to enter the initialisation state;
+
+   * state 3 --- the buzzer is pressed;
+
+   * state 5 --- a Dallas ring is detected.
+
+   Otherwise state 2 will loop.
+
+   $Id: state2.c,v 1.11 1998/05/12 09:10:20 iic Exp iic $
+   $Log: state2.c,v $
+   Revision 1.11  1998/05/12 09:10:20  iic
+   Minor debugging
+
+   Revision 1.10  1998/05/09 13:22:22  skk
+   Changes for new serial code.
+
+   Revision 1.9  1998/05/08 15:13:18  iic
+   Changed for new serial
+
+   Revision 1.8  1998/05/08 09:56:49  iic
+   Minor changes.
+
+   Revision 1.7  1998/05/07 13:39:41  iic
+   The damn thing works!
+
+   Revision 1.6  1998/05/07 13:00:43  iic
+   Works, but still has loads of debugging stuff (incl CRC)
+
+   Revision 1.5  1998/05/06 15:20:55  iic
+   Added CRC checking to Video - not yet tested it though
+
+   Revision 1.4  1998/05/06 15:04:14  skk
+   Initial changes to merge with new serial code.
+
+   Revision 1.3  1998/05/06 10:07:30  iic
+   Minor changes
+
+   Revision 1.2  1998/05/04 12:04:17  iic
+   Further debugging, now compiles without errors but haven't tried to run it yet
+
+
+*/
+
+#include <motorola.video.h>
+#include <serial.h>
+#include <m68kboard.h>
+#include <quickcam.h>
+#include <support.h>
+#include <control.h>
+#include <board.h>
+#include <data.h>
+
+#define frameBufferSz 19200
+
+/* Refer to buffers defined in video/motorola/video.c */
+
+extern unsigned char in[2][frameBufferSz];
+extern unsigned char diff[frameBufferSz];
+extern unsigned char compressed[frameBufferSz+1];
+
+int grabframe(char *buffer)
+{
+  int x, ret;
+  for(x=0;x<20;x++)
+    {
+      QC_grabdata(buffer+(x*(19200/20)),19200/20);
+      if (checkkeypad())
+	if(getkeypad()==KP_DOORBELL)
+	  {
+	    ret=3;
+	    break;
+	  }
+      if (checkring())
+	{
+	  ret=5;
+	  break;
+	}
+    }
+  return ret;
+}
+
+/*
+void main (void)
+{
+  serialinit();
+  state2 ();
+}
+*/
+
+int state2 (void)
+{
+  packet pkt;
+  int errno, current=0, last=1, csz, x, y, *a, *b, *c,doorbell=0, ns;
+  /* Set retransmit flag to 1 for first transmission */
+  int retransmitFlag=1, changeState=0;
+  QC_init ();
+  while(changeState==0)
+    {
+      /* Check doorbell */
+      if (checkkeypad())
+	if (getkeypad()==KP_DOORBELL)
+	  changeState=3;
+
+      /* Check Dallas Ring */
+      if (checkring())
+	changeState=5;
+
+      /* Test for retransmit flag */
+      if(retransmitFlag==1)
+	{    
+	  /* Reset last frame so that when it is XORd a full picture is
+	     transmitted */
+	      for(x=0;x<frameBufferSz;x++)
+		{
+		  in[last][x]=0;
+		}
+	      retransmitFlag=0;
+	}
+
+      /* Attempt to grab a frame */
+      puts ("State 2: Grabbing a frame\n\r");
+      if ((changeState = grabframe (in[current])) == 0)
+	{
+	  puts ("State 2: Correcting and smoothing\n\r");
+	  /* Correction and smoothing */
+	  for(x=0;x<frameBufferSz;x++)
+	    {
+	      if (in[current][x] != 0)
+		in[current][x]=16-in[current][x];
+#ifdef SMOOTHING
+	      if(in[current][x-1]==in[current][x+1])
+		in[current][x]=in[current][x-1];
+#endif
+	    }
+
+
+	  /* XOR frame with previous to obtain difference
+	     Here I exploit the fact that the 68040 is 32 bit
+	     so by treating the bytes as ints I can XOR
+	     4 bytes at a time.... clever huh?
+	  */
+	  puts ("State 2: XORing\n\r");
+	  a=(int *) in[current];
+	  b=(int *) in[last];
+	  c=(int *) diff;
+	  for (x = 0; x < (frameBufferSz / 4); x++)
+	    c[x] = a[x] ^ b[x];
+
+	  /* Use RLE to compress the difference 
+	     (We increment compressed by 1 to make room for
+	     a control byte) */
+	  puts ("State 2: Encoding\n\r");
+	  csz=RLEencode(diff,frameBufferSz,compressed+1);
+
+	  /* Tell the receiver whether this is the first frame in
+	     a sequence (compressed[0]=1) or not (compressed[0]=0) */
+	  compressed[0]=retransmitFlag;
+
+	  /* Construct Packet */
+
+	  pkt.datatype=VIDEO;
+	  pkt.length=csz/8+2;
+	  pkt.data=compressed;
+	  
+	  /* Place it in serial Queue and check for change of state
+	     instruction from client */
+
+	  puts ("\n\rState 2: Sending to serial\n\r");
+	  ns=senddata(&pkt);
+	  if(ns > 0)
+	    changeState=ns;
+	  
+	  /* Reverse what is current and what is previous */
+	  current=1-current;
+	  last=1-last;
+	}
+    };
+  return changeState;
+}
+@
+
+
+1.11
+log
+@Minor debugging
+@
+text
+@d29 1
+a29 1
+   $Id: state2.c,v 1.10 1998/05/09 13:22:22 skk Exp iic $
+d31 3
+d81 21
+d142 1
+a142 1
+      if ((errno = QC_grabframe (in[current])) == QC_SUCCESS)
+a195 13
+	}
+      else
+	{
+	  /* Handle Failed Framegrab */
+	  switch (errno)
+	    {
+	    case QC_BAD_RESPONSE:
+	      puts ("Framegrab: Bad response from camera\n\r");
+	      break;
+	    case QC_TIMEOUT:
+	      puts ("Framegrab: Camera timed out\n\r");
+	      break;
+	    }
+@
+
+
+1.10
+log
+@Changes for new serial code.
+@
+text
+@d29 1
+a29 1
+   $Id: state2.c,v 1.9 1998/05/08 15:13:18 iic Exp skk $
+d31 3
+d78 1
+d81 1
+d84 1
+@
+
+
+1.9
+log
+@Changed for new serial
+@
+text
+@d29 1
+a29 1
+   $Id: state2.c,v 1.8 1998/05/08 09:56:49 iic Exp iic $
+d31 3
+a62 1
+#include <data.h>
+d65 1
+d75 6
+a80 1
+int state2()
+d86 1
+@
+
+
+1.8
+log
+@Minor changes.
+@
+text
+@d29 1
+a29 1
+   $Id: state2.c,v 1.7 1998/05/07 13:39:41 iic Exp iic $
+d31 3
+a63 2
+#define SMOOTHING /* Attempt to increase compression by ignoring troublesome
+		     pixels */
+d66 1
+a66 7
+/* Define buffers */
+unsigned char in[2][frameBufferSz];
+unsigned char diff[frameBufferSz];
+unsigned char compressed[frameBufferSz+1];
+
+/* Flag to go to init state */
+int goToInit=0;
+d68 3
+a70 10
+/* Flag for retransmission */
+int retransmit;
+
+void control_handler(packet p)
+{
+  if (p.data[0]==RESET_MOTOROLA)
+    goToInit=1;
+  if (p.data[0]==RESTART_VIDEO)
+    retransmit=1;
+}
+d75 4
+a78 10
+  int errno, current=0, last=1, csz, x, y, rt, *a, *b, *c,doorbell=0;
+
+  retransmit=1; /* Ensure last frame is clear to avoid confusion */
+
+  serialinit ();
+  
+  /* Register a control data handler */
+  registerhandler(CONTROL,(packethandler) control_handler);
+
+  while((!checkring())&&(!doorbell)&&(!goToInit))
+a79 1
+ 
+a80 1
+      puts ("State 2: Checking doorbell\n\r");
+d83 5
+a87 1
+	  doorbell=1;
+a88 4
+      rt=retransmit; /* This is done because we want to make sure that
+			if retransmit is set while we are halfway
+			through this function, it won't cause confusion */
+      retransmit=0;
+d90 1
+a90 1
+      if(rt==1)
+d98 1
+d100 1
+d103 1
+a103 1
+      if ((errno = grabframe (in[current])) == QC_SUCCESS)
+d138 1
+a138 1
+	  compressed[0]=rt;
+d146 2
+a147 1
+	  /* Place it in serial Queue */
+d150 3
+a152 2
+	  if( senddata(&pkt) != 0)
+	    retransmit=1;
+d172 1
+a172 6
+  if(checkring())
+    return 5;
+  if(goToInit)
+    return 1;
+  if(checkkeypad())
+    return 3;
+@
+
+
+1.7
+log
+@The damn thing works!
+@
+text
+@d29 1
+a29 1
+   $Id: state2.c,v 1.6 1998/05/07 13:00:43 iic Exp iic $
+d31 3
+a75 4
+#define checkring() 0
+#define checkkeypad() 0
+#define getkeypad() 0
+
+d84 1
+a84 1
+int main()
+@
+
+
+1.6
+log
+@Works, but still has loads of debugging stuff (incl CRC)
+@
+text
+@d29 1
+a29 1
+   $Id: state2.c,v 1.5 1998/05/06 15:20:55 iic Exp iic $
+d31 3
+d89 1
+a89 1
+  unsigned char crc, tcrc;
+d99 1
+a99 1
+      crc=0; /* Reset CRC */
+a133 1
+	      crc+=in[current][x];
+d136 1
+a136 7
+	  /******** Output Frame ************/
+	  for(y=0;y<120;y++)
+	    {
+	      puts("\r\n");
+	      for(x=0;x<160;x++)
+		mon_putc(in[current][x+y*160]+65);
+	    }
+d153 1
+a153 1
+	  csz=RLEencode(diff,frameBufferSz,compressed+2);
+a157 15
+	  /* Set CRC */
+	  puts("\r\nState 2: Sending...\n\r");
+	  compressed[1]=crc;
+	  puts("State 2: CRC: ");
+	  putn(crc,10,3);
+	  puts("\n\rState 2: Packet Length: ");
+	  putn(csz/8+3,10,10);
+
+	  /******** CALC COMPRESSION CRC *********/
+	  tcrc=0;
+	  for(x=0;x<csz/8+3;x++)
+	    tcrc+=compressed[x];
+	  puts("State 2: Transmission CRC:");
+	  putn(tcrc,10,3);
+	  /******** END COMPRESSION CRC CODE **********/
+d162 1
+a162 1
+	  pkt.length=csz/8+3;
+@
+
+
+1.5
+log
+@Added CRC checking to Video - not yet tested it though
+@
+text
+@d29 1
+a29 1
+   $Id: state2.c,v 1.4 1998/05/06 15:04:14 skk Exp iic $
+d31 3
+d85 2
+a86 1
+  int errno, current=0, last=1, csz, x, rt, *a, *b, *c,doorbell=0, crc;
+d133 8
+d158 1
+a158 1
+	  
+d163 1
+a163 1
+	  puts("State 2: Sending...\n\r");
+d166 1
+a166 1
+	  putn(crc,10,20);
+d169 9
+@
+
+
+1.4
+log
+@Initial changes to merge with new serial code.
+@
+text
+@d29 1
+a29 1
+   $Id: state2.c,v 1.3 1998/05/06 10:07:30 iic Exp skk $
+d31 3
+d75 2
+d82 1
+a82 1
+  int errno, current=0, last=1, csz, x, rt, *a, *b, *c,doorbell=0;
+d92 1
+d94 1
+a94 1
+      puts ("Checking doorbell\n\r");
+d114 1
+a114 1
+      puts ("Grabbing a frame\n\r");
+d117 1
+a117 1
+	  puts ("Correcting and smoothing\n\r");
+d127 1
+d134 1
+a134 1
+	  puts ("XORing\n\r");
+d144 2
+a145 2
+	  puts ("Encoding\n\r");
+	  csz=RLEencode(diff,frameBufferSz,compressed+1);
+d150 7
+a156 1
+	  
+d160 1
+a160 1
+	  pkt.length=csz/8+2;
+d165 1
+a165 1
+	  puts ("Sending\n\r");
+@
+
+
+1.3
+log
+@Minor changes
+@
+text
+@d29 1
+a29 1
+   $Id: state2.c,v 1.2 1998/05/04 12:04:17 iic Exp iic $
+d31 3
+d47 1
+d64 4
+d74 1
+a74 1
+void main()
+d79 7
+a85 1
+  if((errno=QC_init())==QC_SUCCESS)
+d87 15
+a101 19
+      /* Register a control data handler */
+      registerhandler(CONTROL,(packethandler) control_handler);
+
+      while((!checkring())&&(!doorbell)&&(!goToInit))
+	{
+	  /* Check doorbell */
+	  if (checkkeypad())
+	    if (getkeypad()==KP_DOORBELL)
+	      doorbell=1;
+
+	  rt=retransmit; /* This is done because we want to make sure that
+			    if retransmit is set while we are halfway
+			    through this function, it won't cause confusion */
+	  retransmit=0;
+	  /* Test for retransmit flag */
+	  if(rt==1)
+	    {    
+	      /* Reset last frame so that when it is XORd a full picture is
+		 transmitted */
+d106 8
+a113 3
+	    }
+	  /* Attempt to grab a frame */
+	  if ((errno = QC_grabframe (in[current])) == QC_SUCCESS)
+d115 2
+a116 5
+	      /* Correction and smoothing */
+	      for(x=0;x<frameBufferSz;x++)
+		{
+		   if (in[current][x] != 0)
+		    in[current][x]=16-in[current][x];
+d118 2
+a119 2
+		   if(in[current][x-1]==in[current][x+1])
+		     in[current][x]=in[current][x-1];
+a120 35
+		}
+	      /* XOR frame with previous to obtain difference
+	         Here I exploit the fact that the 68040 is 32 bit
+	         so by treating the bytes as ints I can XOR
+	         4 bytes at a time.... clever huh?
+	      */
+	      a=(int *) in[current];
+	      b=(int *) in[last];
+	      c=(int *) diff;
+	      for(x=0;x<(frameBufferSz/4);x++)
+		c[x] = a[x] ^ b[x];
+
+	      /* Use RLE to compress the difference 
+	       (We increment compressed by 1 to make room for
+	        a control byte) */
+	      csz=RLEencode(diff,frameBufferSz,compressed+1);
+	      
+	      /* Tell the receiver whether this is the first frame in
+	         a sequence (compressed[0]=1) or not (compressed[0]=0) */
+	      compressed[0]=rt;
+	      
+	      /* Construct Packet */
+
+	      pkt.datatype=VIDEO;
+	      pkt.length=csz/8+2;
+	      pkt.data=compressed;
+
+	      /* Place it in serial Queue */
+
+	      if( senddata(&pkt) != 0)
+		retransmit=1;
+	      
+	      /* Reverse what is current and what is previous */
+	      current=1-current;
+	      last=1-last;
+d122 42
+a163 1
+	  else
+d165 6
+a170 10
+	      /* Handle Failed Framegrab */
+	      switch (errno)
+		{
+		case QC_BAD_RESPONSE:
+		  puts ("Framegrab: Bad response from camera\n\r");
+		  break;
+		case QC_TIMEOUT:
+		  puts ("Framegrab: Camera timed out\n\r");
+		  break;
+		}
+d173 1
+a173 16
+      /* Unregister Control handler */
+      unregisterhandler(CONTROL);
+    }
+  else
+    {
+      /* Handle Failed Init */
+      switch (errno)
+	{
+	case QC_BAD_RESPONSE:
+	  puts ("Init: Bad response from camera\n\r");
+	  break;
+	case QC_TIMEOUT:
+	  puts ("Init: Camera timed out\n\r");
+	  break;
+	}
+    }
+@
+
+
+1.2
+log
+@Further debugging, now compiles without errors but haven't tried to run it yet
+@
+text
+@d29 5
+a33 2
+   $Id$
+   $Log$
+d69 1
+a69 1
+  int errno, current=0, last=1, csz, x, rt, *a, *b, *c;
+d76 1
+a76 1
+      while((!checkring())&&(!checkkeypad())&&(!goToInit))
+d78 5
+d175 6
+@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@d29 2
+a30 5
+   $Id: state2.c,v 1.2 1998/05/04 11:19:17 iic Exp iic $
+   $Log: state2.c,v $
+   Revision 1.2  1998/05/04 11:19:17  iic
+   Debugged slightly.
+
+d71 1
+a71 1
+      registerhandler(CONTROL,control_handler);
+d130 1
+a130 1
+	      if( senddata(pkt) != 0)
+@

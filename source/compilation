@@ -1,0 +1,11 @@
+To compile video/gui code:
+
+gcc -I/home/sysd7/source/include -o video ~/source/testing/linux/video.c
+../../transport/linux/interrupt.c ../../video/linux/video.c
+~/source/X/gui.c ~/source/X/xpm.c `gtk-config --cflags` `gtk-config
+--libs`
+
+To compile Motorola:
+
+gcc68s -o state2 state2.c ../../transport/motorola/polling.c
+../../video/motorola/video.c ../../low.level/motorola/board.c -lqcam

@@ -1,0 +1,19 @@
+
+
+\resizebox*{0.9\textwidth}{!}{\includegraphics{duncan.eps}} 
+Duncan Irvine
+
+\resizebox*{0.9\textwidth}{!}{\includegraphics{iain.eps}} 
+Iain Todd
+
+\resizebox*{0.9\textwidth}{!}{\includegraphics{stuart.eps}} 
+Stuart Cox
+
+\resizebox*{0.9\textwidth}{!}{\includegraphics{james.eps}} 
+James Northrop
+
+\resizebox*{0.9\textwidth}{!}{\includegraphics{ed.eps}} 
+Edward Knowelden
+
+\resizebox*{0.9\textwidth}{!}{\includegraphics{stephenk.eps}} 
+Stephen Kitt

@@ -1,0 +1,1678 @@
+#This file was created by <sgc> Thu May 14 17:05:41 1998
+#LyX 0.12 (C) 1995-1998 Matthias Ettrich and the LyX Team
+\lyxformat 2.15
+\textclass article
+\language default
+\inputencoding default
+\fontscheme palatino
+\graphics default
+\paperfontsize default
+\spacing single 
+\papersize Default
+\paperpackage widemarginsa4
+\use_geometry 0
+\use_amsmath 0
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation skip
+\defskip medskip
+\quotes_language english
+\quotes_times 2
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+
+\layout Title
+
+Hardware Manual
+\layout Author
+
+System Design Group Seven
+\layout Standard
+\added_space_top 0.3cm \added_space_bottom 0.3cm \align center 
+
+\begin_inset Figure size 128 125
+file ../web/images/EUcrest-official-noborder.ps
+flags 10
+
+\end_inset 
+
+
+\layout Standard
+\pagebreak_top \pagebreak_bottom 
+
+\begin_inset LatexCommand \tableofcontents
+
+\end_inset 
+
+
+\layout Section
+
+Introduction
+\layout Standard
+
+The minimum specification that the hardware team had to meet was detailed
+ in the design specification as follow; 
+\layout Subsection
+
+(2.3) Minimum specification
+\layout Itemize
+
+Have a keypad for inputing pin numbers
+\layout Itemize
+
+Handle duplex audio with no compression
+\layout Itemize
+
+Relay to open/close lock
+\layout Subsection
+
+(3.3) Intended specification
+\layout Itemize
+
+iButton reader
+\layout Itemize
+
+Door sensor
+\layout Subsection
+
+(4.3) Ideal specification
+\layout Itemize
+
+Hardware Audio compression.
+\layout Standard
+
+
+\protected_separator 
+
+\layout Standard
+
+We succeeded in implementing the hardware up to and including the intended
+ system.
+\layout Section
+
+Hardware Details
+\layout Subsection
+
+Hardware provided
+\layout Standard
+
+The hardware provided consisted of;
+\layout Itemize
+
+Motorola M68ECOxO Integrated Development Platform
+\layout Itemize
+
+RS 591-253 DC Power Supply
+\layout Itemize
+
+TPS-4000 DC Power Supply
+\layout Itemize
+
+Student board and 96-way connector ribbon cable
+\layout Itemize
+
+MC88916 module
+\layout Itemize
+
+Pentium MMX 200 with 64 MB RAM, Matrix Milenium Graphics card and a 3.4 GB
+ Hard Disk.
+\layout Itemize
+
+Connectix quick cam
+\layout Itemize
+
+Two microphones
+\layout Itemize
+
+Two Typhoon Speakers
+\layout Subsection
+
+Component choice
+\layout Standard
+\added_space_bottom 0.3cm 
+Component choice was determined by a number of factors; simplicity, cost
+ and suitability for prototyping.
+ The fact that two way audio between PC and the IDP board was required by
+ the specification made the use of a DAC and ADC obvious design decisions.
+ The 68230 and EPLD were chosen to overcome input/output and timing problems
+ between IDP and student board.
+ A keypad and iButton reader provide the electronic verification.
+ A second EPLD could have been used to encode the signals from a keypad,
+ but this was deemed unnecessary as commercial versions are available at
+ a modorate cost.
+ The clock signal (12.5MHz) is restored from the bus clock (6.25MHz) using
+ the phase - lock loop device provided.
+ With these design decisions in mind we designed the block diagram (figure
+ 1) showing the data flow.
+\layout Standard
+
+\begin_float fig 
+\layout Caption
+
+Block flow diagram
+\layout Standard
+\align center 
+
+\begin_inset Figure size 297 187
+file blockdiag.eps
+width 4 100
+angle 270
+flags 9
+
+\end_inset 
+
+
+\end_float 
+\layout Standard
+
+
+\protected_separator 
+
+\layout Subsection
+
+Specific hardware details
+\layout Standard
+
+The interface board uses a Motorola 68230 parallel interface device, which
+ gives a capacity of 24 input or output lines.
+ This device is asynchronous, so it is connected to the IDP through a state
+ machine, implemented in a single EPLD.
+ A D-type flip-flop is used to synchronise the asynchronous signals from
+ the 68230 with the IDP clock, as required by the IDP bus specifications.
+ The clock signal for the EPLD and the flip-flop is derived from the bus
+ clock (6.25MHz) which is doubled using a phase-lock loop device to 12.5MHz.
+ 
+\layout Standard
+
+The 68230 device and its associated state machine have been designed to
+ operate at a clock speed of 10MHz; this clock signal is provided by a separate
+ clock signal generator device on the interface board.
+ The requirement for tri-state signals on some of the bus lines has been
+ met by using a tri-state buffer device on these lines.
+\layout Standard
+
+The interface functionality is provided by four devices: the Analogue-to-Digital
+ Converter (ADC), the Digital-to-Analogue Converter (DAC), the iButton interroga
+tion circuit and the keypad.
+ Each of these systems is described in detail below.
+ The arrangements for connecting these devices to the 68230 are based on
+ the allocation of the 24 input/output lines of this device.
+ 8 of these lines have been allocated to a bi-directional data bus which
+ connects the ADC and the DAC.
+ In addition, 1 timer line is required to control the rate of sampling.
+\layout Standard
+
+Another 4 lines have been allocated as inputs for the keypad interface bus;
+ up to 16 individual keys can be multiplexed onto this.
+ The prototype design uses a 12 key keypad, so this leaves another 4 inputs,
+ one of which was used for a door bell.
+ A fifth input serves as a status line, signalling to the 68230 that a key
+ has been pressed.
+ This arrangement allow the status of the keypad to be monitored by checking
+ the state of a single input.
+\layout Standard
+
+One line has been allocated as a bidirectional line for connection to the
+ iButton interrogation device.
+ In practice, this output is always low, due to the design of the interface
+ protocol to the iButton hardware.
+\layout Subsection
+
+Data flow within the interface board 
+\layout Standard
+
+The central component in the interface board is the 68230 device, through
+ which all the data is passed.
+ The 68230 consists of a set of 32 registers, 3 of which are mapped to the
+ 24 pins of the bidirectional parallel lines.
+ Another 3 registers control the direction of the data flow in these lines;
+ by writing to and reading from these registers, the direction of data movement
+ can be controlled and the movement of data can be achieved.
+ The 68230 is attached to the first 8 bits of the IDP bus 32-bit data channel,
+ and the registers are indexed by connection to address lines A2 to A6.
+ In practice, this means that the 68230 registers are addressed in steps
+ of 4; this has been done to maintain consistency with the existing 68230
+ device on the IDP board.
+\layout Standard
+
+The bus from the IDP interface to the 68230 is bidirectional, and the data
+ flow is controlled by the following handshaking signals: 
+\layout Itemize
+
+Address Strobe 
+\layout Itemize
+
+Slot Address 
+\layout Itemize
+
+Read/Write 
+\layout Itemize
+
+Reset 
+\layout Itemize
+
+Transfer Acknowledge 
+\layout Itemize
+
+Cache Inhibit 
+\layout Standard
+
+These signals are managed by the EPLD state machine, which generates the
+ necessary signals for the IDP bus and the 68230 device at the correct times
+ in relation to the bus clock frequency.
+\layout Standard
+
+\begin_float fig 
+\layout Caption
+
+Circuit diagram
+\layout Standard
+\align center 
+
+\begin_inset Figure size 297 213
+file cctdiag.eps
+width 4 100
+angle 270
+flags 9
+
+\end_inset 
+
+
+\end_float 
+\layout Standard
+\pagebreak_bottom 
+From the 68230 the data flow takes a variety of forms.
+ There is an 8-bit bus which connects to the ADC and DAC components, and
+ which is bidirectional to allow reading from and writing to these devices.
+ There is a read-only 4-bit bus which allows reading of the status of the
+ keypad, and there is a 1-bit bidirectional bus which allows the interrogation
+ of the iButton device.
+\layout Subsection
+
+Components used
+\layout Standard
+
+Descriptions of the components and suppliers used are detailed below.
+\layout Standard
+
+
+\protected_separator 
+
+\layout Standard
+
+
+\protected_separator 
+
+\layout Standard
+\align center 
+Farnell
+\layout Standard
+\added_space_top 0.3cm \added_space_bottom 0.3cm \align center \LyXTable
+multicol4
+8 4 0 0 -1 -1 -1 -1
+1 1 0 0
+1 1 0 0
+1 1 0 0
+1 1 0 0
+1 1 0 0
+1 1 0 0
+1 1 0 0
+1 1 0 0
+8 1 0 
+8 1 0 
+8 1 0 
+8 1 1 
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+
+Part No
+\newline 
+Description
+\newline 
+No
+\newline 
+Cost
+\newline 
+927-259
+\newline 
+Piezo Alarm
+\newline 
+1
+\newline 
+1.41
+\newline 
+427-200
+\newline 
+12-way keypad
+\newline 
+1
+\newline 
+4.00
+\newline 
+790-473
+\newline 
+DS9092 Touch Probe
+\newline 
+1
+\newline 
+4.52
+\newline 
+790-461
+\newline 
+DS1990 Serial iButton
+\newline 
+8
+\newline 
+2.59
+\newline 
+378-161
+\newline 
+74C922 keypad encoder
+\newline 
+1
+\newline 
+6.50
+\newline 
+625-929
+\newline 
+DPNO G5z-2A Relay
+\newline 
+1
+\newline 
+2.82
+\newline 
+101-790
+\newline 
+Surface reed switch
+\newline 
+1
+\newline 
+1.26
+\layout Standard
+\align center 
+RS
+\layout Standard
+\added_space_top 0.3cm \added_space_bottom 0.3cm \align center \LyXTable
+multicol4
+6 4 0 0 -1 -1 -1 -1
+1 1 0 0
+1 0 0 0
+1 0 0 0
+1 0 0 0
+1 0 0 0
+1 1 0 0
+8 1 0 
+8 1 0 
+8 1 0 
+8 1 1 
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+
+Part No
+\newline 
+Description
+\newline 
+No
+\newline 
+Cost
+\newline 
+262-9120
+\newline 
+DS9093AB Blue Fob
+\newline 
+1
+\newline 
+1.01
+\newline 
+262-9136
+\newline 
+DS9093AG Green Fob
+\newline 
+1
+\newline 
+1.01
+\newline 
+262-9142
+\newline 
+DS9093AR Red Fob
+\newline 
+1
+\newline 
+1.01
+\newline 
+262-9142
+\newline 
+DS9093AR Yellow Fob
+\newline 
+1
+\newline 
+1.01
+\newline 
+262-9142
+\newline 
+DS9093AR Black Fob
+\newline 
+2
+\newline 
+1.01
+\layout Standard
+\align center 
+Maplin
+\layout Standard
+\added_space_top 0.3cm \added_space_bottom 0.3cm \align center \LyXTable
+multicol4
+2 4 0 0 -1 -1 -1 -1
+1 1 0 0
+1 1 0 0
+8 1 0 
+8 1 0 
+8 1 0 
+8 1 1 
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+
+Part No
+\newline 
+Description
+\newline 
+No
+\newline 
+Cost
+\newline 
+YU89W
+\newline 
+Electric Door Lock
+\newline 
+1
+\newline 
+14.459
+\layout Standard
+\align center 
+From Stock
+\layout Standard
+\added_space_top 0.3cm \added_space_bottom 0.3cm \align center \LyXTable
+multicol4
+10 3 0 0 -1 -1 -1 -1
+1 1 0 0
+1 0 0 0
+1 0 0 0
+1 0 0 0
+1 0 0 0
+1 0 0 0
+1 0 0 0
+1 0 0 0
+1 0 0 0
+1 1 0 0
+8 1 0 
+8 1 0 
+8 1 1 
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+0 8 1 0 0 0 0
+
+Part No
+\newline 
+Description
+\newline 
+No
+\newline 
+EPLD610
+\newline 
+Programmable chip
+\newline 
+1
+\newline 
+-
+\newline 
+Green LED
+\newline 
+1
+\newline 
+-
+\newline 
+Red LED
+\newline 
+1
+\newline 
+68230
+\newline 
+I/O chip
+\newline 
+1
+\newline 
+74LS138
+\newline 
+3 to 8 decoder
+\newline 
+1
+\newline 
+74LS04
+\newline 
+not gate (8 off)
+\newline 
+1
+\newline 
+74LS574
+\newline 
+tri-state buffer
+\newline 
+1
+\newline 
+TDA8702
+\newline 
+DAC
+\newline 
+1
+\newline 
+TDA8703
+\newline 
+ADC
+\newline 
+1
+\layout Standard
+
+
+\protected_separator 
+
+\layout Section
+
+Timing Diagrams
+\layout Standard
+\added_space_bottom 0.3cm 
+The state diagram for the EPLD 610 was derived from the timing diagrams
+ we produced for a read and write procedures.
+\layout Standard
+\pagebreak_bottom 
+\begin_float fig 
+\layout Caption
+
+Timing diagram for a read operation
+\layout Standard
+\align center 
+
+\begin_inset Figure size 297 168
+file time-read.eps
+width 4 100
+angle 270
+flags 9
+
+\end_inset 
+
+
+\end_float 
+\begin_float fig 
+\layout Caption
+
+Timing diagram for a write operation
+\layout Standard
+\align center 
+
+\begin_inset Figure size 327 174
+file time-write.eps
+width 4 110
+angle 270
+flags 9
+
+\end_inset 
+
+
+\end_float 
+\layout Section
+
+State Diagram
+\layout Standard
+
+The following state diagram was derived from the above timing diagrams.
+\layout Standard
+\pagebreak_bottom 
+\begin_float fig 
+\layout Caption
+
+State diagram
+\layout Standard
+\align center 
+
+\begin_inset Figure size 148 310
+file status.eps
+width 4 50
+flags 9
+
+\end_inset 
+
+
+\end_float 
+\layout Section
+
+APlus EPLD Program
+\layout Standard
+
+The above state diagram corresponds to the following EPLD program.
+\layout Standard
+
+
+\protected_separator 
+
+\layout Standard
+
+% Code for implementing the EP610 for use in interfacing between the IPD
+ and %
+\layout Standard
+
+% the 68230 IO integrated circuit %
+\layout Standard
+
+
+\protected_separator 
+
+\layout Standard
+
+% An EP610 is used for this purpose %
+\layout Standard
+
+@(#) SMV Version 1.4
+\protected_separator 
+ 12/2/88 19:52:13 47.1
+\layout Standard
+
+Input files : inter.adf 
+\layout Standard
+
+ADP Options: Minimization = Yes,
+\protected_separator 
+ Inversion Control = No,
+\protected_separator 
+ LEF Analysis = Yes
+\layout Standard
+
+
+\protected_separator 
+
+\layout Standard
+
+@(#) ANALYZER Version 7.0
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ 6/26/90 23:35:50 39.4
+\layout Standard
+
+
+\protected_separator 
+
+\layout Standard
+
+OPTIONS: TURBO = ON, SECURITY = OFF
+\layout Standard
+
+PART:
+\layout Standard
+
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+EP610
+\layout Standard
+
+INPUTS:
+\layout Standard
+
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+CLK@1, SLOT@2, AS@3, DTAK@4, RST@5
+\layout Standard
+
+OUTPUTS:
+\layout Standard
+
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+CS@22, CINH@21, TACK@20, OUTEN@19, SB2, SB1, SB0
+\layout Standard
+
+NETWORK:
+\layout Standard
+
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+CLK = INP(CLK)
+\layout Standard
+
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+SLOT = INP(SLOT)
+\layout Standard
+
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+AS = INP(AS)
+\layout Standard
+
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+DTAK = INP(DTAK)
+\layout Standard
+
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+RST = INP(RST)
+\layout Standard
+
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+CS = CONF(CSINT, VCC)
+\layout Standard
+
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+CINH = CONF(CINHINT, VCC)
+\layout Standard
+
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+TACK = CONF(TACKINT, VCC)
+\layout Standard
+
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+OUTEN = CONF(OUTENINT, VCC)
+\layout Standard
+
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+SB2, SB2 = RORF(SB2.d, CLK, GND, GND, VCC)
+\layout Standard
+
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+SB1, SB1 = RORF(SB1.d, CLK, GND, GND, VCC)
+\layout Standard
+
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+SB0, SB0 = RORF(SB0.d, CLK, GND, GND, VCC)
+\layout Standard
+
+EQUATIONS:
+\layout Standard
+
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+SB0.d' = SB2 * SB1' * SB0 * RST
+\layout Standard
+
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ + SB1' * SB0 * AS' * SLOT' * RST
+\layout Standard
+
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ + SB2 * SB1 * SB0' * SLOT' * RST
+\layout Standard
+
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ + SB2 * SB1 * SB0' * AS' * RST
+\layout Standard
+
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ + SB2' * SB1 * SB0 * RST * DTAK';
+\layout Standard
+
+
+\protected_separator 
+
+\layout Standard
+
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+SB1.d = SB1 * SB0' * AS' * RST
+\layout Standard
+
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ + SB1 * SB0' * SLOT' * RST
+\layout Standard
+
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ + SB2' * SB1 * SB0' * RST
+\layout Standard
+
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ + SB2' * SB1 * RST * DTAK
+\layout Standard
+
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ + SB2 * SB1' * SB0 * RST
+\layout Standard
+
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ + SB1' * SB0 * AS' * SLOT' * RST;
+\layout Standard
+
+
+\protected_separator 
+
+\layout Standard
+
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+SB2.d = SB2 * SB1' * RST
+\layout Standard
+
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ + SB2 * SB0' * RST * AS'
+\layout Standard
+
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ + SB2 * SB0' * RST * SLOT'
+\layout Standard
+
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ + SB2' * SB1 * SB0 * DTAK' * RST;
+\layout Standard
+
+
+\protected_separator 
+
+\layout Standard
+
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+OUTENINT' = SB2 * SB1';
+\layout Standard
+
+
+\protected_separator 
+
+\layout Standard
+
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+TACKINT' = SB2 * SB1' * SB0';
+\layout Standard
+
+
+\protected_separator 
+
+\layout Standard
+
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+CINHINT' = SB2 * SB1' * SB0';
+\layout Standard
+
+
+\protected_separator 
+
+\layout Standard
+
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+CSINT' = SB2 * SB1'
+\layout Standard
+
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ + SB2' * SB1 * SB0;
+\layout Standard
+
+
+\protected_separator 
+
+\layout Standard
+
+END$
+\layout Section
+
+Construction
+\layout Standard
+
+Each chip was individually tested on a bread-board to ensure that it was
+ functioning correctly and no poor design decisions had been made.
+ The chips were then integrated onto the board using wire rap technology.
+ The wire rap allows quick and easy construction with the possibility of
+ re-work if design or implementation errors are made.
+\layout Section
+
+Further Development and Improvement 
+\layout Standard
+
+Possible developments for the future include a pre-amp for the microphone
+ and a low pass filter to remove high frequency noise.
+ Compression chips could also be included to improve the efficiency and
+ speed of the compression and decompression.
+ 
+\layout Standard
+
+Future developments that do not adhere to the design specification could
+ include the use of an intercom system that does not digitize the sound.
+ This would decrease the complexity of the hardware and software components
+ of the system considerably.
+\the_end

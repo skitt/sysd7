@@ -1,0 +1,25 @@
+System Design Group 7
+Software Design Specification (Motorola board)
+(for inclusion in Design document)
+
+-- State --
+
+State Number/Title: 8 - Open door
+
+Username: skk
+
+Functional description of State:
+
+This state opens the door.
+
+-- Transitions --
+
+Move to state: 2
+Conditions on transition: none.
+
+-- Communications to Client -- 
+
+Message destination: Control
+Message tag: CONTROL
+Description: Indicates the door was opened.
+

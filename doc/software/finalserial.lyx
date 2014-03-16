@@ -1,0 +1,189 @@
+#This file was created by <skk> Tue May 12 12:43:23 1998
+#LyX 0.12 (C) 1995-1998 Matthias Ettrich and the LyX Team
+\lyxformat 2.15
+\textclass article
+\language default
+\inputencoding default
+\fontscheme default
+\graphics default
+\paperfontsize default
+\spacing single 
+\papersize Default
+\paperpackage a4
+\use_geometry 0
+\use_amsmath 0
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation skip
+\defskip medskip
+\quotes_language english
+\quotes_times 2
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+
+\layout Section
+
+Serial
+\layout Subsection
+
+Evolution
+\layout Standard
+
+The original design of the serial sub-system was event-driven both on the
+ Motorola and the PC; thus, the serial code was only active when the UART
+ was ready for data, and the rest of the program could continue functioning
+ while data transfers or receives were in progress.
+\layout Standard
+
+In the end though it was more effective to use polled serial for the Motorola
+ side.
+ The three portions of the system which exert the serial code most are the
+ database download, the video transfers and the audio transfers.
+ The database download can't proceed until the data has been fully received,
+ so events are useless here.
+ In theory, events would be very useful; for example, video transfers could
+ then occur while the next frame is being grabbed from the camera.
+ Unfortunately the design of the supplied Quickcam drivers would seem to
+ prevent us from doing so, which makes it necessary to shut down an event-driver
+ serial driver before using the camera; this results in a great loss of
+ speed, since reinitialising the camera every time a frame is grabbed is
+ very time consuming.
+\layout Standard
+
+The PC uses a mixture of polled and event-driven serial; writes from the
+ PC to the Motorola are polled (
+\emph on 
+i.e.
+\emph default 
+, the PC waits until each byte has been sent, or at least buffered by the
+ operating system), and reads are event-driven (
+\emph on 
+i.e.
+
+\emph default 
+ the operating system informs the program whenever data is available).
+\layout Subsection
+
+Programmer interface
+\layout Standard
+
+Unless specified, all functions return an 
+\family typewriter 
+int
+\family default 
+ which will be 0 for success and 
+\begin_inset Formula \( -1 \)
+\end_inset 
+
+ for failure.
+\layout Subsubsection
+
+Initialisation
+\layout Standard
+
+The 
+\family typewriter 
+int serialinit (void)
+\family default 
+ function is provided to initialise the serial subsystem.
+ On the Motorola, it sets up the IDP's DUART (MC68681) for no parity, eight
+ bits per character, one stop bit, 38400bps communications.
+ On the PC, it initialises the input buffer, registers a 
+\family typewriter 
+SIGIO
+\family default 
+ handler, opens and sets up the second serial line (
+\family typewriter 
+/dev/ttyS1
+\family default 
+) with the same settings as used on the Motorola, and clears the packet
+ handlers.
+\layout Subsubsection
+
+Shutdown
+\layout Standard
+
+The 
+\family typewriter 
+int serialclose (void)
+\family default 
+ function shuts the serial subsystem down.
+ On the Motorola, it doesn't do anything; on the PC, it waits for reception
+ to cease, and closes the serial line.
+\layout Subsubsection
+
+Transmission
+\layout Standard
+
+Two functions allow programs to transmit data.
+\layout Standard
+
+The simplest is 
+\family typewriter 
+int serialtransmit (unsigned char)
+\family default 
+; this transmits the character passed as argument, and waits for it to go.
+ It will return 0 on success, 
+\begin_inset Formula \( -1 \)
+\end_inset 
+
+ on failure, and a state number if a state-change request occurred during
+ the transmission.
+\layout Standard
+
+The other is 
+\family typewriter 
+int senddata (packet *)
+\family default 
+.
+ This transmits a full packet, defined as follows:
+\layout LyX-Code
+
+typedef struct
+\layout LyX-Code
+
+{
+\layout LyX-Code
+
+
+\protected_separator 
+ unsigned char datatype;
+\layout LyX-Code
+
+
+\protected_separator 
+ unsigned int length;
+\layout LyX-Code
+
+
+\protected_separator 
+ unsigned char * data;
+\layout LyX-Code
+
+} packet;
+\layout Standard
+
+The full packet is transmitted (or at least, buffered by the operating system)
+ before 
+\family typewriter 
+senddata
+\family default 
+ returns.
+ Again, senddata will return 0 on success, 
+\begin_inset Formula \( -1 \)
+\end_inset 
+
+ on failure, and a state number if a state-change request occurred during
+ the transmission.
+\layout Subsubsection
+
+Reception
+\layout Standard
+
+Again, there are two distinct ways of receiving data.
+\layout Standard
+
+unsigned char serialreceive (void)
+\the_end

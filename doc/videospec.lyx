@@ -1,0 +1,217 @@
+#This file was created by <iic> Wed May 13 11:51:38 1998
+#LyX 0.12 (C) 1995-1998 Matthias Ettrich and the LyX Team
+\lyxformat 2.15
+\textclass article
+\language default
+\inputencoding default
+\fontscheme palatino
+\graphics default
+\paperfontsize default
+\spacing single 
+\papersize Default
+\paperpackage widemarginsa4
+\use_geometry 0
+\use_amsmath 0
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation skip
+\defskip medskip
+\quotes_language english
+\quotes_times 2
+\papercolumns 1
+\papersides 1
+\paperpagestyle headings
+
+\layout Section
+
+Video 
+\layout Standard
+
+The video software is responsible for capturing a frame from the video camera
+ on the Motorola board, compressing it, transmitting it to the Linux machine
+ via the serial module, decompressing it on the Linux box, and passing it
+ on to the Graphical User Interface.
+\layout Subsection
+
+Evolution
+\layout Standard
+
+It was immediately recognized at the outset of this project that as each
+ frame of video would be 19.2k in raw format, this would require over 4 seconds
+ to transmit across the serial link to the Linux machine in addition to
+ the time required to capture the frame.
+ We decided that this would not be satisfactory and an image compression
+ algorithm should be employed.
+\layout Standard
+
+We decided that a Run Length Encoding
+\begin_float footnote 
+\layout Standard
+
+Run Length Encoding is an algorithm for compressing data which consists
+ of strings of the same character repeated several times.
+ For example, rather than transmitting the string 
+\begin_inset Quotes eld
+\end_inset 
+
+aaaaaaabbbbbbb
+\begin_inset Quotes erd
+\end_inset 
+
+ which would require 14 bytes, an instruction to repeat `a' 7 times followed
+ by `b' 7 times would only require about 4 bytes.
+\end_float 
+ algorithm would be most appropriate.
+ We also decided to employ frame difference to further reduce the size of
+ the compressed images.
+ We would also be able to make use of the fact that pixel values were restricted
+ to being between 0 and 15 inclusive.
+\layout Standard
+
+Our initial run length encoding algorithm operated at the byte level.
+ The 4 most significant bits of each byte would specify how many times the
+ pixel represented by 4 least significant bits of that byte was to be repeated.
+ This proved unsatisfactory as individual pixels which were surrounded by
+ pixels of different lengths required one byte to encode.
+ We therefore decided upon the 5 bit block encoding method described below.
+\layout Subsection
+
+Interfaces
+\layout Subsubsection
+
+Video Camera on Motorola Platform
+\layout Standard
+
+Functions provided on the Motorola board for accessing the camera:
+\layout LyX-Code
+
+int QC_init (void);
+\layout Standard
+
+This function initialises the camera and must be called before 
+\series bold 
+QC_grabframe
+\series default 
+, it returns 0 if successful, 
+\series bold 
+QC_TIMEOUT
+\series default 
+ if the camera fails to respond, or 
+\series bold 
+QC_BAD_RESPONSE
+\series default 
+ if the camera does not respond correctly.
+\layout LyX-Code
+
+int QC_grabdata (char *buffer, int amt);
+\layout Standard
+
+This function grabs 
+\series bold 
+amt
+\series default 
+ bytes from the camera into the buffer pointed to by 
+\series bold 
+buffer
+\series default 
+.
+ A complete frame is 19200 bytes in length.
+ Each pixel is encoded as an unsigned char of value 0 to 15 inclusive representi
+ng the colour of the pixel where 0 represents black, and 1 - 15 represent
+ white to near-black
+\begin_float footnote 
+\layout Standard
+
+Note that we later change this mapping of number to colours so that the
+ numbers 0 to 15 represent the colours black through to grey, to white.
+\end_float 
+.
+\layout Subsubsection
+
+Graphical User Interface on Linux Platform
+\layout Standard
+
+The following function is provided on the Linux platform for the video code:
+\layout LyX-Code
+
+void display_image(unsigned char *b);
+\layout Standard
+
+This function displays the image pointed to by 
+\series bold 
+b
+\series default 
+ which should be an array of size 19200 representing the image to be displayed.
+ The image should be in the same format as received from the camera on the
+ Motorola board but after the colours have been re-mapped so that 0 represents
+ black, 15 represents white, and values in between 0 and 15 represent various
+ grays increasing in brightness.
+\layout Subsection
+
+Image Compression Algorithm
+\layout Standard
+
+As previously described, the image compression obtains the difference between
+ the current frame and the previous frame and then uses run length encoding
+ to compress the resulting image.
+\layout Subsubsection
+
+Frame Difference
+\layout Standard
+
+To obtain the difference between a frame and the previous frame, the bitwise
+ exclusive-or function is used.
+ This has the advantage that Motorola 68040 CPU can rapidly perform this
+ operation.
+ If the frame being compressed is the first frame then it is 
+\begin_inset Quotes eld
+\end_inset 
+
+exclusive-or'd
+\begin_inset Quotes erd
+\end_inset 
+
+ with a frame consisting of 0's, which will result in it being unchanged.
+ There is the additional advantage that the Motorola 68040 can perform this
+ operation on 4 bytes at a time.
+\layout Standard
+
+To obtain the original frame given the difference between it and the previous
+ frame, the exclusive-or function is used to combine the difference with
+ the previous image.
+\layout Subsubsection
+
+Run Length Encoding
+\layout Standard
+
+The run length encoding algorithm treats the encoded data as a stream of
+ 5 bit segments.
+ The first bit of the next segment indicates whether it encodes an individual
+ pixel, or whether it encodes several pixels.
+ If the value of the first bit is 0 then the subsequent 4 bits represent
+ the value of an individual pixel
+\begin_float footnote 
+\layout Standard
+
+4 bits is sufficient to store a value between 0 and 15 inclusive, and thus
+ sufficient to store the colour of a pixel.
+\end_float 
+.
+ If the value of the first bit is 1 then the subsequent 4 bits represent
+ the value of a pixel, and the subsequent 5 bit block represents (in binary)
+ the number of adjacent pixels with that value.
+ The decoding algorithm will terminate when an expected number of bytes
+ have been decoded (this has the advantage that if the compressed data is
+ corrupted the decompression will never overrun the output buffer).
+\layout Subsection
+
+Transmission Format
+\layout Standard
+
+The compressed image is transmitted as a single byte with value 0 or 1,
+ followed by the compressed data.
+ If the value of the first byte is 1 then the receiving software will assume
+ that this is a new frame in a sequence and will treat it as such (rather
+ than combining it with the previous frame).
+\the_end

@@ -1,0 +1,35 @@
+head	1.1;
+access;
+symbols;
+locks; strict;
+comment	@ * @;
+
+
+1.1
+date	98.04.28.10.27.27;	author skk;	state Exp;
+branches;
+next	;
+
+
+desc
+@Motorola puts function.
+@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@#include <support.h>
+#include <m68kboard.h>
+
+void puts (char * string)
+{
+  while (*string)
+    {
+      mon_putc (*string);
+      string++;
+    }
+}
+@

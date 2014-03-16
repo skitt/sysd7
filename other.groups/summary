@@ -1,0 +1,57 @@
+Summary of other groups' designs
+================================
+
+(feel free to add info as it emerges)
+
+Sysd1
+-----
+* Mag swipe?
+* residential stairwell market?
+
+Sysd2
+-----
+* Mag swipe and keypad
+* Card & PIN combo
+* Doorbell Button
+* Exit button
+* LED or Buzzer to indicate door is unlocked
+*  
+
+Sysd3
+-----
+* Barcode (via camera)
+
+Sysd4
+-----
+* No 230 on hardware
+* IR proximity detector?
+* face recognition. (if they get it working)
+* Making a presentation video based on Scream
+
+
+Sysd5
+-----
+
+
+Sysd6
+-----
+* Mag swipe
+
+Sysd8
+-----
+* Keypad
+* 'Button'
+* 'Lights' - tri-colour LED
+* Entirely analogue audio (!)
+* Latch and buzzer
+* Java-based interface? 
+
+
+Sysd9
+-----
+* Exit switch (drives latch)
+* Latch
+* 7-seg display?
+* Keypad
+* 3 leds
+

@@ -1,0 +1,52 @@
+head	1.1;
+access;
+symbols;
+locks
+	skk:1.1; strict;
+comment	@ * @;
+
+
+1.1
+date	98.05.13.22.58.30;	author skk;	state Exp;
+branches;
+next	;
+
+
+desc
+@State 7 - refuse entry
+@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@/* State 7 */
+
+/* Refuse door entry */
+
+#include <board.h>
+
+int state7 (void)
+{
+  int i;
+  for (i = 0; i < 5; i++)
+    {
+      buzzerled (LEDRED);
+      starttimer (210000);
+      while (gettimer () > 110000);
+      buzzerled (ALLOFF);
+      while (gettimer () > 10000);
+      stoptimer ();
+    }
+  return 2;
+}
+
+#ifdef DEBUG
+void main (void)
+{
+  putn (state7 (), 16, 2);
+}
+#endif
+@

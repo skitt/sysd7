@@ -1,0 +1,73 @@
+Net lets mums watch children in playschool
+
+Sunday, 11 May 1997     Mark Prigg
+
+ 
+
+PARENTS could soon use the Internet to keep an eye on their children while they 
+are at nursery school, thanks to an American invention , writes Mark Prigg .
+
+The system, called Kindercam, sends a colour image, twice a second, from a 
+video camera in the nursery school to the Kindercam web site, where parents can 
+see live pictures of their children at play wherever they are in the nursery.
+
+Parents can switch between rooms in the school by clicking on thumbnail images 
+of the room. Once they have located their child, a large colour picture is 
+transmitted and updated twice a second, giving the appearance of a slow-moving 
+video image.
+
+According to Christian Steinberg, who founded Parent Net, the company behind 
+the project, parents involved in a trial of the system checked their children 
+several times a day.
+
+"Any time the parents were worried about their child, or had some free time, 
+they could log on to our site and see exactly what was going on," she says.
+
+Kindercams have so far been installed in two American nurseries to test the 
+system. Each nursery is expected to pay to lease or buy the cameras and for the 
+installation of a high-speed ISDN telephone line allowing the pictures to be 
+sent quickly to Kindercam's site.
+
+
+Steinberg estimates that an average system containing six cameras would cost 
+about œ6,000. However, she believes that concerned parents would be willing to 
+offset the nursery school's cost.
+
+In American trials, parents pay a monthly fee of about $20 (œ13) for access to 
+the Kindercam web site. A portion of that is handed back to the nursery, which 
+Kindercam hopes will help fund the high initial price of the system.
+
+"A lot of nurseries are also looking at installing a closed-circuit television 
+(CCTV) sys tem, and we are able to work as a CCTV system as well," says 
+Steiner.
+
+She believes this security will make nurseries more willing to install the 
+system.
+
+Each Kindercam camera contains its own web server, which automatically sends 
+pictures to the main nursery web server.
+
+According to Steinberg, this server is needed to ensure the system's security.
+
+"With children involved, we needed to make sure that not just anyone can look 
+at these pictures. So we set up a secure server within the nursery, which stops 
+hackers from getting in. We also encrypt all the pictures before sending them 
+out over the Web."
+
+Each parent on the system is given a password and user name, which they can 
+also tell other relatives.
+
+"As the Net is global, if you have a granny in Australia, they can see these 
+
+pictures just as easily as you can from your office next door to the nursery," 
+says Steiner.
+
+Although the system has been installed in only two test nurseries so far, 
+Kindercam is about to install the product in about 50 American nursery schools, 
+and claims several British playschools have also expressed an interest.
+
+The company is currently working on an improved version of the camera, with a 
+zoom-lens facility allowing parents to see exactly what their children are 
+doing.
+
+Copyright (c) 1997 The Times Newspaper Ltd. All Rights Reserved

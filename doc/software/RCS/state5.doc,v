@@ -1,0 +1,56 @@
+head	1.1;
+access;
+symbols;
+locks; strict;
+comment	@# @;
+
+
+1.1
+date	98.04.30.09.48.56;	author skk;	state Exp;
+branches;
+next	;
+
+
+desc
+@State description for state 5.
+@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@System Design Group 7
+Software Design Specification (Motorola board)
+(for inclusion in Design document)
+
+-- State --
+
+State Number/Title: 5 - Read Dallas ring
+
+Username: skk
+
+Functional description of State:
+
+This state is entered when a Dallas ring is present in the reader; it
+reads the 64 bits of information off the ring and stores them in a
+buffer for later use.
+
+-- Transitions --
+
+Move to state: 6
+Conditions on transition: the information was successfully read.
+
+Move to state: 2
+Conditions on transition: an error occurred during the read.
+
+-- Communications to Client -- 
+
+Message destination: auto alert window
+Message tag: CONTROL
+Description: this message informs the client that a user has placed
+their DR in the reader, so that info about them (from the database)
+may be displayed and/or logged.
+
+@

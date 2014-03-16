@@ -1,0 +1,146 @@
+#This file was created by <skk> Thu May 14 23:16:32 1998
+#LyX 0.12 (C) 1995-1998 Matthias Ettrich and the LyX Team
+\lyxformat 2.15
+\textclass article
+\language default
+\inputencoding default
+\fontscheme palatino
+\graphics default
+\paperfontsize default
+\spacing single 
+\papersize Default
+\paperpackage widemarginsa4
+\use_geometry 0
+\use_amsmath 0
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation skip
+\defskip medskip
+\quotes_language english
+\quotes_times 2
+\papercolumns 1
+\papersides 1
+\paperpagestyle empty
+
+\layout Standard
+\noindent \align center 
+
+\begin_inset Figure size 535 401
+file duncan.eps
+width 3 90
+flags 9
+
+\end_inset 
+
+
+\newline 
+
+\size large 
+Duncan Irvine
+\layout Standard
+\pagebreak_bottom \noindent \align center 
+
+\begin_inset Figure size 535 401
+file iain.eps
+width 3 90
+flags 9
+
+\end_inset 
+
+
+\size large 
+
+\newline 
+Iain Todd
+\layout Standard
+\noindent \align center 
+
+\begin_inset Figure size 535 401
+file stuart.eps
+width 3 90
+flags 10
+
+\end_inset 
+
+
+\newline 
+
+\size large 
+Stuart Cox
+\layout Standard
+\pagebreak_bottom \noindent \align center 
+
+\begin_inset Figure size 535 401
+file james.eps
+width 3 90
+flags 9
+
+\end_inset 
+
+
+\newline 
+
+\size large 
+James Northrop
+\layout Standard
+\align center 
+
+\begin_inset Figure size 535 401
+file edward.eps
+width 3 90
+flags 9
+
+\end_inset 
+
+
+\newline 
+
+\size large 
+Edward Knowelden
+\layout Standard
+\pagebreak_bottom \align center 
+
+\begin_inset Figure size 535 401
+file stephenk.eps
+width 3 90
+flags 9
+
+\end_inset 
+
+
+\newline 
+
+\size large 
+Stephen Kitt
+\layout Standard
+\align center 
+
+\begin_inset Figure size 535 401
+file stephenc.eps
+width 3 90
+flags 9
+
+\end_inset 
+
+
+\newline 
+
+\size large 
+Stephen Cook
+\layout Standard
+\align center 
+
+\begin_inset Figure size 535 346
+file ianc.eps
+width 3 90
+flags 9
+
+\end_inset 
+
+
+\newline 
+
+\size large 
+Ian Clarke (away in a field...)
+\the_end

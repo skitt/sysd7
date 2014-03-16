@@ -1,0 +1,50 @@
+head	1.1;
+access;
+symbols;
+locks
+	skk:1.1; strict;
+comment	@ * @;
+
+
+1.1
+date	98.05.13.22.58.36;	author skk;	state Exp;
+branches;
+next	;
+
+
+desc
+@State 8 - allow entry
+@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@/* State 8 */
+
+/* Open the door */
+
+#include <board.h>
+
+int state8 (void)
+{
+  starttimer (3010000);
+  buzzerled (LEDGREEN);
+#if 0
+  while (gettimer () > 2010000);
+#endif
+  while (gettimer () > 10000 && getdoorstatus ());
+  stoptimer ();
+  buzzerled (ALLOFF);
+  return 2;
+}
+
+#ifdef DEBUG
+void main (void)
+{
+  putn (state8 (), 16, 2);
+}
+#endif
+@

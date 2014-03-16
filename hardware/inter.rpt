@@ -1,0 +1,106 @@
+A+PLUS Design Processor Utilization Report                            inter.rpt 
+@(#) FIT Version 7.0    6/26/90 23:37:17 47.1
+ ***** Design implemented successfully 
+ 
+% Code for implementing the EP610 for use in interfacing between the IPD and %
+% the 68230 IO integrated circuit %
+
+% An EP610 is used for this purpose %
+@(#) SMV Version 1.4  12/2/88 19:52:13 47.1
+Input files : inter.adf 
+ADP Options: Minimization = Yes,  Inversion Control = No,  LEF Analysis = Yes
+
+OPTIONS: TURBO = ON, SECURITY = OFF
+
+               EP610 
+             - - - - -
+       CLK -|1      24|- Vcc 
+      SLOT -|2      23|- Gnd 
+        AS -|3      22|- CS 
+      DTAK -|4      21|- CINH 
+       RST -|5      20|- TACK 
+       SB2 -|6      19|- OUTEN 
+       SB1 -|7      18|- Gnd 
+       SB0 -|8      17|- Gnd 
+       Gnd -|9      16|- Gnd 
+       Gnd -|10     15|- Gnd 
+       Gnd -|11     14|- Gnd 
+       GND -|12     13|- Gnd 
+             - - - - -
+                                                                     inter.rpt 
+**OUTPUTS** 
+
+      Name  Pin  Resource  MCell  PTerms  | Sync Clock
+ 
+      CINH   21      CONF      2    1/ 8  |     -     
+        CS   22      CONF      1    2/ 8  |     -     
+     OUTEN   19      CONF      4    1/ 8  |     -     
+       SB0    8      RORF     14    5/ 8  | CLK       
+       SB1    7      RORF     13    6/ 8  | CLK       
+       SB2    6      RORF     12    4/ 8  | CLK       
+      TACK   20      CONF      3    1/ 8  |     -     
+
+ 
+**INPUTS** 
+
+      Name  Pin  Resource  MCell  PTerms  | Sync Clock
+ 
+        AS    3       INP      9    0/ 8  |     -     
+       CLK    1       CKR      -     -    |     -     
+      DTAK    4       INP     10    0/ 8  |     -     
+       RST    5       INP     11    0/ 8  |     -     
+      SLOT    2       INP      -     -    |     -     
+
+ 
+**UNUSED RESOURCES** 
+
+      Name  Pin  Resource  MCell  PTerms  | Sync Clock
+ 
+         -    9     MCELL     15     8    | CLK       
+         -   10     MCELL     16     8    | CLK       
+         -   11     INPUT      -     -    |     -     
+         -   14     INPUT      -     -    |     -     
+         -   15     MCELL      8     8    |     -     
+         -   16     MCELL      7     8    |     -     
+         -   17     MCELL      6     8    |     -     
+         -   18     MCELL      5     8    |     -     
+         -   23     INPUT      -     -    |     -     
+
+ 
+**PART UTILIZATION**
+ 
+ 7/13  MacroCells (53%)
+ 4/ 7  Input Pins (57%)
+       PTerms Used 35%
+Macrocell Interconnection Cross Reference                            inter.rpt 
+
+FEEDBACKS:                       M M M 
+                       M M M M   1 1 1 
+                       1 2 3 4   2 3 4 
+CS ....... CONF @M1 -> . . . .   . . . @22
+CINH ..... CONF @M2 -> . . . .   . . . @21
+TACK ..... CONF @M3 -> . . . .   . . . @20
+OUTEN .... CONF @M4 -> . . . .   . . . @19
+
+SB2 ...... RORF @M12-> * * * *   * * * @6
+SB1 ...... RORF @M13-> * * * *   * * * @7
+SB0 ...... RORF @M14-> * * * .   * * * @8
+
+
+INPUTS:
+ 
+SLOT ..... INP  @2  -> . . . .   * * *
+AS ....... INP  @3  -> . . . .   * * * M9 
+DTAK ..... INP  @4  -> . . . .   * * * M10
+RST ...... INP  @5  -> . . . .   * * * M11
+                       C C T O   S S S 
+                       S I A U   B B B 
+                         N C T   2 1 0 
+                         H K E         
+                             N         
+                                       
+                                       
+                                       
+                                       
+                                       
+

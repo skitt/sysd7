@@ -1,0 +1,43 @@
+			    Source system
+
+Direct queries to Stephen Kitt (skk)
+
+The directory structure for software is as follows:
+
+/software
+  /states       - State transition glue code
+    /linux
+    /motorola
+  /audio	- Audio codec
+    /linux
+    /motorola
+  /video	- Video codec
+    /linux
+    /motorola
+  /control	- Control software
+    /linux
+    /motorola
+  /lib		- Code libraries
+    /linux
+    /motorola
+  /transport	- Data transport between Linux and Motorola
+    /linux
+    /motorola
+  /low.level	- Any low level code
+    /linux
+    /motolola
+  /design       - Design Documents
+  /testing	- General testing code
+  /support      - Support Routines
+
+Portable code should go into the base directory, with Linux- or
+Motorola-specific code in the appropriate subdirectory.
+
+To generate the appropriate Makefile, copy either
+/software/Makefile.motorola or ...linux to Makefile and edit it to
+suit. There should be no Makefiles in the base directories, only in
+the target-specific directories; the latter should refer to any files
+in their parent directories.
+
+You can check for the definition of SDPLinux or SDPMotorola in your
+source files to determine the target.

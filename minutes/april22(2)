@@ -1,0 +1,48 @@
+MINUTES: April 22
+TIME: 4pm - 5pm
+LOCATION: 2509
+PRESENT: Ian Clarke, Stephen Cook, Duncan Irvine, Stephen Kitt, 
+         Edward Knowelden, James Northrop, Iain Todd, Stuart Cox
+APOLOGIES: No-one
+ABSENT: No-one
+
+REPORTS
+SC- Investigated Dallas rings, smart cards and swipe cards. Dallas rings 
+cost £2 each, cheaper when bought in bulk. The reader is £5. The smart 
+card is not a good option as there is no supplier of blank cards, finding
+information on the cards also proved difficult. Swipe cards only cost £25 
+for the reader but do wipe themselves after a short while. He has sent away 
+for more data about the rings and the swipe cards.
+
+The principal problem with the rings are that the readers are not vandal proof.
+The problem with the swipe cards are that the programmer is too expensive.
+
+IC- Looked at the bar-codes, the pros are it would be impressive, 
+conviniant and  cheap. The downside is that we would be unable to test it
+until near the end of the project.
+
+SK- Tried to get the quick-cam up and running. Has also come to the conclusion
+a packet approach for data would be our best option.
+
+SCX,JN- Have read the manuals for the hardware, looked at the chips and have
+booked consultation time to go over their work. Hardware is harder than
+first thought.
+
+EK- Has checked on the sound, everything will work fine with linux.
+
+IT- Has continued with the documentation.
+
+DI- Has investigated the video, estimates we might only get 1 frame per second
+from the cameras.
+
+DECISIONS
+We will use Dallas Rings
+Our Target market is public property requiring a level of security eg schools.
+
+PLAN
+IT- Work on the requirement spec for 12pm April 23.
+Hardware- Speak to Tim Hopkins
+IC- i/o programming
+SK- video compression and write tests for camera and serial connections.
+Software- meeting at 10am.
+EK,SC- Time sheets

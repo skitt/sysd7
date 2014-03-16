@@ -1,0 +1,36 @@
+System Design Group 7
+Software Design Specification (Motorola board)
+(for inclusion in Design document)
+
+-- State --
+
+State Number/Title: 3
+
+Username: iic
+
+Functional description of State:
+This state informs the client that the buzzer has been pressed.  It then
+continue to transmit video until it times out (according to a preset
+timeout value) or the client acknowledges the buzzer.
+
+-- Transitions --
+
+Move to state: 2
+Conditions on transition:
+Client fails to respond to BUZZER control signal..
+
+Move to state: 4
+Conditions on transition:
+BUZZER_ACK control signal received (ie. client has responded to buzzer).
+
+-- Communications to Client -- 
+
+Message destination: GUI
+Message tag: BUZZER
+Description: Informs client that buzzer has been pressed
+
+-- Communications from Client --
+
+Message source: GUI
+Message tag: BUZZER_ACK
+Description: Acknowledges receipt of BUZZER signal.

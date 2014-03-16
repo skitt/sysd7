@@ -1,0 +1,49 @@
+head	1.1;
+access;
+symbols;
+locks; strict;
+comment	@# @;
+
+
+1.1
+date	98.04.30.09.49.15;	author skk;	state Exp;
+branches;
+next	;
+
+
+desc
+@State description for state 8.
+@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@System Design Group 7
+Software Design Specification (Motorola board)
+(for inclusion in Design document)
+
+-- State --
+
+State Number/Title: 8 - Open door
+
+Username: skk
+
+Functional description of State:
+
+This state opens the door.
+
+-- Transitions --
+
+Move to state: 2
+Conditions on transition: none.
+
+-- Communications to Client -- 
+
+Message destination: Control
+Message tag: CONTROL
+Description: Indicates the door was opened.
+
+@

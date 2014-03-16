@@ -1,0 +1,31 @@
+System Design Group 7
+Software Design Specification (Motorola board)
+(for inclusion in Design document)
+
+-- State --
+
+State Number/Title: 1 -- Initialisation
+
+Username: ejk
+
+Functional description of State: 
+
+* Initialise serial transport software.  
+
+* Sends a request (using the serial software) to the client machine to
+  download the user database.  Waits for this to be sent and stores it
+  in RAM.
+
+* Initialises audio and video by calling init. functions in their
+  respective modules (clear buffers etc).
+
+-- Transitions --
+
+Move to state: 2
+Conditions on transition: Finished database download and initialisation
+
+-- Communications to Client -- 
+
+Message destination: CONTROL_LNX
+Message tag: REQUEST_DB
+Description: Request download of user database.

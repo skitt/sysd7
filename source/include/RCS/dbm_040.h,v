@@ -1,0 +1,57 @@
+head	1.1;
+access;
+symbols;
+locks; strict;
+comment	@ * @;
+
+
+1.1
+date	98.04.27.14.50.22;	author ejk;	state Exp;
+branches;
+next	;
+
+
+desc
+@Motorola board Database Management module - external interface specification.
+@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@/* System Design Group 7
+ * dbm_040.h -- Database management for motorola board
+ * EXTERNAL INTERFACE SPECIFICATION
+ * Edward Knowelden (ejk)
+ */
+
+#ifndef __DBM_040
+#define __DBM_040
+
+enum valid_t {ok,no_user,no_pin};
+
+valid_t validate_user(int uid, int pin);
+/* Called by CONTROL_RT_040. Checks whether UID and PIN match or exist
+ * at all. Could simply return a BOOL but enum gives exta info (for
+ * logging purposes or otherwise) NB. If UID is too large for an int,
+ * some other representation will have to be used, eg. an array.  */
+
+/* Functions to change user database. 
+ * Level 2 feature. Use an editable text file otherwise 
+ */
+
+BOOL add_user(int uid, int pin, char *picfile);
+/* Add a user to the database. picfile is string containing UNIX
+ * filename of XPM picture of user. (level 3 feature)
+ * Returns FALSE on file/misc error, TRUE otherwise.
+ */
+
+BOOL delete_user(int uid);
+/* Delete user and related data from database. Returns FALSE if UID
+ * does not exist, or file error. TRUE otherwise.
+ */
+
+#endif
+@

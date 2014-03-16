@@ -1,0 +1,29 @@
+Database and GUI Software
+-------------------------
+
+Final deadlines for software completion
+---------------------------------------
+
+(Start time: Sunday morning, 10/5/98)
+
+Database:
+  * User validation routine - small bug fixes needed
+    -> SKK to sort out the iButton CRC issues
+  * Database downloading to Motorola board - written, not tested on Motorola
+  * Documentation
+Gui:
+  * Add button functionality (sending messages to the Motorola board)
+  * Database configuration and editing routines
+  * Logging control
+  * Documentation
+
+Tasks for Sunday 10/5/98:
+  1. Complete GUI button functionality
+  2. Bug fixes on user validation routine
+
+Tasks for Monday 11/5/98:
+  1. Database downloading & testing
+
+Tasks for Tuesday ono:
+  1. Documentation, small bug fixing
+

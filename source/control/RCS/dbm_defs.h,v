@@ -1,0 +1,93 @@
+head	1.1;
+access;
+symbols;
+locks
+	ejk:1.1; strict;
+comment	@ * @;
+
+
+1.1
+date	98.05.04.11.15.34;	author ejk;	state Exp;
+branches;
+next	;
+
+
+desc
+@Definitions and globals for database module
+@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@/* database.h 
+ * Definitions for database module (used with both platforms at
+ * present).
+ * Edward Knowelden 
+ */
+
+#include <serial.h>
+/*#include <data.h>*/
+
+#define DB_FILENAME "/home/sysd7/source/control/users"
+#define UID_SIZE 12
+#define PIN_SIZE 4
+#define NAME_SIZE 30
+#define MAX_USERS 10
+#define ENTRY_ATTEMPTS 3
+#define TRUE 1
+#define FALSE 0
+
+/* CONTROL message identifiers */
+#define REQUEST_DBDL  111  /* request database download */
+
+typedef enum {CONTROL, DATABASE} data_t;
+
+/* a database item definition */
+typedef struct {
+  char uid[UID_SIZE+1];
+  char pin[PIN_SIZE+1];
+} db_item;
+
+/* Control message structure:
+   [XXX][\0][DDDDD.....D]
+   where: XXX is message identifier (see below), \0 is null char
+          DDD is unspecified data
+	  */
+
+/* Global variables for getting pin/uid*/
+static char uid_no[UID_SIZE+1];
+static int got_uid;
+static char pin[PIN_SIZE+1], pin_pos, attempts;
+
+/* Database storage
+   A bit inefficient to allocate mem for all possible users, but
+   alternative is malloc, which would have to be written from scratch */
+/* a global array to store database in */
+db_item db_local_store[MAX_USERS];
+
+/* motorola function prototypes */
+
+int request_db();
+void handle_db_data(packet p);
+void send_DR_value(char *string);
+void send_keypad_digit(int digit);
+int validate_user(char *uid, char *pin);
+
+/* linux function prototypes */
+int db_download();
+int load_database();
+int handle_control_data(packet p);
+
+/* support functions */
+int itos(int,char *,int);
+int strcomp(char *string1,char *string2);
+void strcopy(char *to, char *from);
+
+/* test functions */
+void mtr_senddata(packet p);
+int lnx_senddata(packet p);
+void unlock_door();
+@

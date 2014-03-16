@@ -1,0 +1,479 @@
+head	1.1;
+access;
+symbols;
+locks; strict;
+comment	@# @;
+
+
+1.1
+date	98.05.14.21.08.26;	author dwi;	state Exp;
+branches;
+next	;
+
+
+desc
+@The first draft of the audio software documentation.
+@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@#This file was created by <dwi> Thu May 14 22:06:56 1998
+#LyX 0.12 (C) 1995-1998 Matthias Ettrich and the LyX Team
+\lyxformat 2.15
+\textclass article
+\language default
+\inputencoding default
+\fontscheme palatino
+\graphics default
+\paperfontsize default
+\spacing single 
+\papersize Default
+\paperpackage a4
+\use_geometry 0
+\use_amsmath 0
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation skip
+\defskip medskip
+\quotes_language english
+\quotes_times 2
+\papercolumns 1
+\papersides 1
+\paperpagestyle headings
+
+\layout Subsection
+
+Audio
+\layout Standard
+
+The audio system is responsible for sampling, compressing, decompressing
+ and reproduction of sound data from both PC and IDP board.
+ Due to the fact that only speech data actually needs to be sent, the data
+ rate can be reduced immediately by not bothering to sample frequencies
+ above 4 KHz since the human voice only ranges from approximately 200Hz
+ to 3.5KHz.
+ I order to sample this accurately we require a sampling rate of double
+ the highest frequency we wish to capture i.e.
+ 8 KHz.
+ To keep the data to a minimum, 8-bit data shall be used and there is obviously
+ very little point in using stereo.
+ This basic requirement of 8 KHz, 8-bit, mono sound gives us a data-rate
+ of (8000 x 8 x 1 =) 64,000 bits per second.
+ Clearly, in order to squeeze this into the 38.4 Kbps serial line, we must
+ use some form of compression.
+\layout Subsubsection
+
+Evolution
+\layout Standard
+
+The original concept was to use ADPCM compression to give high-quality,
+ low data-rate, speech.
+ This system would have got the audio down to 16kbps which would have allowed
+ a bit of bandwidth for video as well.
+ It was found that, with the code we were using, the compression took approximat
+ely 20% of the CPU time of an intel Pentium MMX running at 200MHz; as did
+ the decompression thus it was decided to drop the ADPCM compression in
+ favour of a less complicated method, that achieves less compression with
+ slightly lower quality, although this is offset by the fact that it can
+ actually be performed extremely quickly - using just two array lookups
+ for compression, and just one for decompression.
+ I still believe that ADPCM could be made to work on the system we have
+ been given and consider that it would be a better solution than the one
+ we are using at present.
+ This is primarily due to the fact that it gives somewhat better reproduction
+ that our own method which just approximates the sound.
+ ADPCM uses signal processing techniques to achieve this, which have been
+ honed through years of research and, I suspect, large amounts of cash.
+ If there had been the time available to spend on trying different things
+ out, then perhaps the code could have been optimised enough to be used
+ on the M68040.
+ Given that it was discovered that the algorithm was more complex than it,
+ at first, appeared, and given the time constraints; a decision had to be
+ made - that decision was to go with a solution that was known to be efficient
+ enough to run on the system as is.
+\layout Standard
+
+Originally we had intended to implement a full-duplex solution since it
+ posed few real extra problems, and actually simplified the sound system's
+ integration.
+ However, it was found that the soundcard we were given, whilst the card
+ itself does support full-duplex operation, we do not have the drivers for
+ it.
+ Consequently, we must use a standard 'sound blaster' compatible sound driver
+ which does not support full duplex.
+ Thus we are limited to half duplex audio.
+\layout Subsubsection
+
+Interfaces
+\layout Paragraph
+
+LINUX interfaces.
+\layout Standard
+
+On the Linux side, we need an interface to the Linux Open Sound System (OSS).
+ This is an API which allows simple access to the sound hardware via the
+ operating system and comes built-in as part of the Linux kernel.
+ It provides a layer of abstraction between the hardware and the software
+ which uses it.
+ It is slightly beyond the remit of this document to describe it fully here
+ as there is adequate documentation elsewhere.
+ The world wide web URL which I have used to find information about the
+ system is :
+\layout Standard
+
+http://www.4front-tech.com/pguide/audio.html
+\layout Standard
+
+Essentially, the soundcard is simply opened, via the open() function which
+ takes as its arguments : 
+\layout Itemize
+
+the device you wish to open
+\layout Itemize
+
+the mode you would like it to open in 
+\layout Itemize
+
+an integer 
+\layout Standard
+
+For the purposes of opening the soundcard, the integer is set to zero.
+ open() then returns an integer which is the file descriptor for the soundcard
+ stream.
+\layout Standard
+
+You can sample sound using read() which takes 
+\layout Itemize
+
+the integer file descriptor returned by open() 
+\layout Itemize
+
+a pointer to a buffer in which to put the sample 
+\layout Itemize
+
+an integer which defines the length of the sample.
+ 
+\layout Standard
+
+Similarly, you send a sample to the soundcard using write().
+\layout Paragraph
+
+Motorola
+\layout Standard
+
+The motorola side of the audio system is a little more complex in it's programmi
+ng but much simpler to use.
+ It needs the mc68230 structure defined in m68kboard.h which allows the 68230
+ PIT chip to be accessed via the memory-mapped bus of the 68040.
+\layout Subparagraph
+
+Communicating with the hardware.
+\layout Standard
+
+Firstly, we need to :
+\layout Standard
+
+#include <m68kboard.h>
+\layout Standard
+
+then we need to make the 68230 structure point to the memory-mapped bus
+ :
+\layout Standard
+
+volatile struct mc68230fm * pit = (void *)0x05000000;
+\layout Standard
+
+Now, in order to read/set a register on the PIT, we just need to dereference
+ the pit pointer thus : VALUE = pit->REGISTER_NAME
+\layout Standard
+
+or pit->REGISTER_NAME=VALUE;
+\layout Subparagraph
+
+Setting up the audio hardware.
+\layout Standard
+
+The audio system should be initialised thus :
+\layout Standard
+
+Set pit->ddra to 11100000 (binary).
+ Set pit->dra = 11100000 (binary).
+\layout Subparagraph
+
+Playing a sample.
+\layout Standard
+
+The DAC, is the more complex of the two, as it needs to be latched in order
+ to get it to start to convert a new sample.
+ This is acheived in 4 & 5 below.
+\layout Enumerate
+
+Set dra=11100000 (binary).
+\layout Enumerate
+
+Set ddrb to 0xFF (output).
+ 
+\layout Enumerate
+
+Output sample on drb.
+ 
+\layout Enumerate
+
+Set dra bit 6 to 0, dra=10100000 (binary).
+\layout Enumerate
+
+Then set it back to 1.
+ ie dra = 11100000 (binary).
+\layout Subparagraph
+
+Sampling the sound.
+\layout Standard
+
+The ADC is slightly easier than this, you just need to set the direction
+ of the bus channel to output, and put the sample out on it.
+\layout Enumerate
+
+Set dra=11100000
+\layout Enumerate
+
+Set ddrb=0x00 (Input) 
+\layout Enumerate
+
+Set dra = 01100000
+\layout Enumerate
+
+Read arb to get sample.
+ 
+\layout Enumerate
+
+Set dra back to 11100000
+\layout Subsubsection
+
+Audio codec.
+\layout Paragraph
+
+Compression.
+\layout Standard
+
+The audio compression is now as follows.
+ When a sample is received, the delta between it and the previous sample
+ is calculated.
+ This delta is then encoded as a 4-bit nybble with the values from 0 - 15
+ representing -128,-64,-32,-16,-8 ,-4 ,-2 ,-1, 1 , 2 , 4 , 8 ,16 ,32 ,64
+ ,127 respectively.
+ The value taken by the compression is the 4-bit representation that is
+ closest to the actual delta.
+ e.g.
+ if the difference between samples was -20, the nearest coding for this
+ is -16, which is represented as 3 or 0011.
+ In order that the codec keeps in step, the compressor then adds the coded
+ value of the delta to the previous sample value and proceeds with this
+ modified estimation of the current sample.
+ A table called nib_lookup[] has been created to give fast computation of
+ the closest-fit encoding, To find the necessary encoding, all that needs
+ to be done is to calculate the delta and then reference the array in the
+ appropriate position.
+\layout Standard
+
+Similarly there is a table called unnib_lookup[] which gives the inverse
+ mapping.
+ That is, when given an encoding, it will return the required estimate of
+ the delta.
+\layout Standard
+
+There is a function : 
+\series bold 
+initCompr()
+\series default 
+; which initialises the algorithm so that the 
+\begin_inset Quotes eld
+\end_inset 
+
+previous
+\begin_inset Quotes erd
+\end_inset 
+
+ sample's value is in the middle of the range.
+ Similarly, there is a function
+\series bold 
+ initDecompr();
+\series default 
+ which performs the same function but for the decompression side.
+\layout Standard
+
+The functions : 
+\layout Standard
+
+
+\series bold 
+unsigned char compressI(unsigned char)
+\series default 
+ 
+\layout Standard
+
+and 
+\series bold 
+unsigned char decompressI(unsigned char)
+\series default 
+ 
+\layout Standard
+
+perform the respective mappings : compressI taking an 8-bit unsigned sample
+ and returning the encoding for it in the lower 4 bits of an unsigned char.
+ decompressI taking the 4-bit encoding as given by compressI and returning
+ the estimated sample.
+\layout Standard
+
+There are two further functions :
+\layout Standard
+
+unsigned char compress(unsigned char, unsigned char)
+\layout Standard
+
+and void decompress (unsigned char, unsigned char*)
+\layout Standard
+
+which, respectively, take two samples and returns an 8-bit word containing
+ the two encodings, the encoding of the first sample in the high part, and
+ the second in the low part; and decompress takes an 8-bit word of this
+ form and returns the two estimates of the samples in an array, a pointer
+ to which is passed as argument 2
+\layout Paragraph
+
+Linux codec.
+\layout Standard
+
+The linux side is forked from the main gui and is run as a separate process,
+ the gui and the audio codec communicate using signals SIGUSR1 and SIGUSR2.
+ SIGUSR1 indicates that the codec should move to l_state4() which is the
+ transmission of audio to the motorola board or if it is already in this
+ state it means that the codec should stop.
+ Similarly SIGUSR2 is used to signal l_state10() to start receiving audio
+ from the motorola or to stop receiving if it already is.
+\layout Standard
+
+If the codec receives a signal, it causes the current state to cease, and
+ this process sets the motorola board to listen for a state number to move
+ into.
+ This is acheived in state 4 by sending a byte of hex FF to the board and
+ then quitting, and in state 10 by simulating a ping which causes the serial
+ code on the motorola to wait until a byte is received and then return the
+ value of that byte to the calling function which will then, in turn return
+ that value to main() the system will then assume that state.
+\layout Standard
+
+
+\series bold 
+l_state4()
+\series default 
+ uses functions : 
+\series bold 
+init_audio(int)
+\series default 
+; and 
+\series bold 
+sendSample()
+\series default 
+;
+\layout Standard
+
+
+\series bold 
+init_audio(int)
+\series default 
+ takes an open mode for the soundcard and then opens the device in that
+ mode and sets it up for 8KHz, 8-bit mono operation.
+ Modes include 
+\series bold 
+O_RDONLY
+\series default 
+ for reading, and 
+\series bold 
+O_WRONLY
+\series default 
+ for writing.
+\layout Standard
+
+
+\series bold 
+sendSample()
+\series default 
+ calls 
+\series bold 
+getsample(char*)
+\series default 
+ which grabs 
+\series bold 
+SAMPLE_BUF_SIZE
+\series default 
+ samples into the buffer pointed to by the argument.
+ It then runs 
+\series bold 
+compress_sample(char *In, char *Out)
+\series default 
+ which takes this data and compresses it into the buffer pointed to by Out.
+ sendSample() then goes through the compressed data and sends it a byte
+ at a time using serialtransmit() to the motorola board.
+\layout Standard
+
+
+\series bold 
+l_state10() 
+\series default 
+again initialises the audio and then receives 
+\series bold 
+PLAY_BUF_SIZE
+\series default 
+ bytes of compressed audio data from the serial port, but then runs 
+\series bold 
+receiveSample()
+\series default 
+ which takes that data runs 
+\series bold 
+decompress_sample()
+\series default 
+ on it (giving a bufferful of uncompressed audio data) and then outputs
+ this to the soundcard using 
+\series bold 
+setsample()
+\series default 
+.
+\layout Paragraph
+
+Motorola codec.
+\layout Standard
+
+This is the corresponding codec for the motorola board it forms part of
+ the state machine that runs on the IDP board and comprises :
+\layout Standard
+
+int state4() : it grabs a byte from the serial port then loops - decompresses
+ a byte into two samples and plays the first sample; grabs a byte from the
+ serial port, plays the second decompressed sample; decompresses the next
+ byte, plays the first sample and so on.
+ Thus it utilises the time between playing samples quite effectively, giving
+ an even spread of processor time rather than having to grab, decompress
+ and play then wait whilst doing nothing for a while, play another sample
+ then loop.
+\layout Standard
+
+If the state ever receives a hex FF, then it will expect to receive on e
+ of two things : either another FF indicating that it should play that as
+ a sample, or a number indicating a state change.
+ If it is the latter, the function stops looping and returns the second
+ byte as its return value.
+\layout Standard
+
+int state10() : grabs a sample, then loops - grabbing a sample, compressing
+ two samples, grabbing a sample, sending the compressed data, grabbing a
+ sample, compressing, grabbing, sending, grabbing compressing etc.
+ If the serialtransmit() function that is called to send the sample to the
+ motorola ever returns a non-zero value, then the function ends, returning
+ this value thereby causing a state change.
+\the_end
+@

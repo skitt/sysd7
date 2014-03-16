@@ -1,0 +1,93 @@
+head	1.1;
+access;
+symbols;
+locks
+	ejk:1.1; strict;
+comment	@ * @;
+
+
+1.1
+date	98.05.04.11.12.38;	author ejk;	state Exp;
+branches;
+next	;
+
+
+desc
+@Functions for validating a user on motorola
+@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@/* Database User Validation functions 
+ * Edward Knowelden
+ */
+
+#include <stdlib.h>
+#include <stdio.h>
+#include "../dbm_defs.h"
+
+/* Part of state 5 - Read Dallas Ring */
+void send_DR_value(char *string)
+{
+  if(attempts < ENTRY_ATTEMPTS){
+    strcopy(uid_no,string);
+    attempts++;
+    got_uid = TRUE;
+    pin_pos = 0;
+  } else {
+    printf("You have had %i tries. Lockout engaged\n",attempts);
+    exit(1);
+  }
+}
+
+/* Part of state 6 (Poll keypad). Called by skk's low level code */
+void send_keypad_digit(int digit)
+{
+  int pin_int, result;
+
+  if(got_uid){
+    pin[pin_pos] = digit+'0';
+    pin_pos++;
+    if(pin_pos == PIN_SIZE){
+      pin[PIN_SIZE+1] = '\0';
+      if(validate_user(uid_no,pin)){
+	unlock_door();
+      }
+      else {
+	printf("You have %i tries left\n",ENTRY_ATTEMPTS-attempts);
+	pin_pos = 0;
+      }
+    }
+  }
+}
+
+/* validate user */
+
+int validate_user(char *uid, char *pin)
+{
+  int count = 0,i;
+
+  /* simple search for uid */
+  while(strcomp(uid,db_local_store[count].uid) != 0) {
+     if(db_local_store[count].uid[0] == 'X') break;
+     else count++;
+  }
+  if(db_local_store[count].uid[0] == 'X') {
+    printf("uid not found\n");
+    return FALSE;
+  } else
+    /* if found, compare pin */
+    if(strcomp(pin,db_local_store[count].pin) == 0){
+      printf("USER VALIDATED\n");
+      return TRUE;
+    }
+    else {
+      printf("USER NOT VALIDATED\n");
+      return FALSE;
+    }
+}
+@

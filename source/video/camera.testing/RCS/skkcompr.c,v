@@ -1,0 +1,330 @@
+head	1.2;
+access;
+symbols;
+locks
+	skk:1.2; strict;
+comment	@ * @;
+
+
+1.2
+date	98.04.25.14.57.17;	author skk;	state Exp;
+branches;
+next	1.1;
+
+1.1
+date	98.04.25.14.11.10;	author skk;	state Exp;
+branches;
+next	;
+
+
+desc
+@RLE compression demo
+@
+
+
+1.2
+log
+@Improved setval so it doesn't use setbit; approx twice as fast now.
+@
+text
+@/* Quickcam RLE compression demo */
+
+/* $Id: skkcompr.c,v 1.1 1998/04/25 14:11:10 skk Exp skk $ */
+
+#include <m68kboard.h>
+#include <quickcam.h>
+
+void puts (char *);
+
+unsigned char buffer [19200];
+unsigned char compressed [19200];
+unsigned char result [19200];
+
+void realhex (unsigned char value)
+{
+  if (value < 10)
+    mon_putc (value + '0');
+  else
+    mon_putc (value + 'A' - 10);
+}
+
+void hex (unsigned char value)
+{
+  realhex ((value & 0xF0) >> 4);
+  realhex (value & 0x0F);
+}
+
+void binary (unsigned char value, int bits)
+{
+  int i;
+  for (i = bits - 1; i >= 0; i--)
+    mon_putc ('0' + ((value & (1 << i)) >> i));
+}
+
+void number (int value, int max)
+{
+  int i;
+  for (i = max; i > 0; i /= 10)
+    {
+      mon_putc (value / i + '0');
+      value %= i;
+    }
+}
+
+void setbit (unsigned char * ptr, unsigned long off, int val)
+{
+  unsigned int idx, bit;
+  idx = (unsigned int) (off / 8);
+  bit = 7 - ((unsigned int) (off % 8));
+  if (val)
+    ptr [idx] |= 1 << bit;
+  else
+    ptr [idx] &= ~(1 << bit);
+}
+
+unsigned char bitset[] = { 0x00, 0x01, 0x03, 0x07, 0x0F, 0x1F, 0x3F,
+			   0x7F, 0xFF };
+
+/* Maximum bits set: 8 */
+/* This works by splitting the changes over at most two bytes, zeroing
+   out the changed sections, and OR'ing the changes.
+   For example, say we have the following two bytes:
+           01100000 00000000
+   and we want to store the value 011111 at offset 3; this splits into
+   two bytes, 00001111 and 1000000. We zero out the changed area
+   (nothing changes) and OR to get:
+           01101111 10000000
+   which is the desired result. */
+void setval (unsigned char * ptr, unsigned long off, int val, int
+	     bits)
+{
+  int i, bit;
+  unsigned char * realptr;
+  int coff;
+  realptr = ptr + (off / 8);
+  bit = off % 8;
+  coff = bits + bit - 8;
+  if (coff > 0)
+    {
+      realptr [0] &= ~(bitset [bits] >> coff);
+      realptr [1] &= ~(bitset [bits] << (8 - coff));
+      realptr [0] |= val >> coff;
+      realptr [1] |= val << (8 - coff);
+    }
+  else
+    {
+      coff = -coff;
+      *realptr &= ~(bitset [bits] << coff);
+      *realptr |= val << coff;
+    }
+}
+
+int getbit (unsigned char * ptr, unsigned long off)
+{
+  unsigned int idx, bit;
+  idx = (unsigned int) (off / 8);
+  bit = 7 - ((unsigned int) (off % 8));
+  return (ptr [idx] & (1 << bit)) >> bit;
+}
+
+int getval (unsigned char * ptr, unsigned long off, int bits)
+{
+  int result, i;
+  result = 0;
+  for (i = 0; i < bits; i++)
+    result |= getbit (ptr, off + i) << (bits - i - 1);
+  return result;
+}
+
+unsigned long compress (unsigned char * src, unsigned long slen,
+			unsigned char * dest, unsigned long dlen)
+{
+  unsigned long soff, doff;
+  unsigned char last, count;
+  last = src [0];
+  count = 0;
+  doff = 0;
+  for (soff = 1; soff <= slen && doff < 8 * dlen; soff++)
+    {
+      if (src [soff] == last && count < 31 && soff < slen)
+	count++;
+      else
+	{
+	  if (count)
+	    {
+	      setbit (dest, doff, 1);
+	      setval (dest, doff + 1, last, 4);
+	      setval (dest, doff + 5, count + 1, 5);
+	      doff += 10;
+	      last = src [soff];
+	      count = 0;
+	    }
+	  else
+	    {
+	      setbit (dest, doff, 0);
+	      setval (dest, doff + 1, last, 4);
+	      doff += 5;
+	      last = src [soff];
+	    }
+	}
+    }
+  return doff;
+}
+
+void decompress (unsigned char * src, unsigned long slen, unsigned
+		 char * dest, unsigned long dlen)
+{
+  unsigned long soff, doff;
+  unsigned char count, value;
+  int i;
+  doff = 0;
+  soff = 0;
+  while (soff < slen)
+    {
+      if (getbit (src, soff))
+	{
+	  value = getval (src, soff + 1, 4);
+	  count = getval (src, soff + 5, 5);
+	  if (!count)
+	    count = 32;
+	  for (i = 0; i < count; i++)
+	    {
+	      dest [doff] = value;
+	      doff++;
+	    }
+	  soff += 10;
+	}
+      else
+	{
+	  dest [doff] = getval (src, soff + 1, 4);
+	  doff++;
+	  soff += 5;
+	}
+    };
+}
+
+void main (void)
+{
+  int i, j, errno, error;
+  unsigned char c;
+  unsigned long len;
+  unsigned char test [2];
+
+  test [0] = test [1] = 0;
+  binary (test [0], 8);
+  binary (test [1], 8);
+  puts ("\n\r");
+  setbit (test, 6, 1);
+  binary (test [0], 8);
+  binary (test [1], 8);
+  puts ("\n\r");
+  setval (test, 3, 0x3F, 6);
+  binary (test [0], 8);
+  binary (test [1], 8);
+  puts ("\n\r");
+
+  puts ("Initialising camera\n\r");
+  if ((errno = QC_init ()) == QC_SUCCESS)
+    {
+      puts ("Grabbing frame\n\r");
+      if ((errno = QC_grabframe (buffer)) == QC_SUCCESS)
+	{
+	  puts ("Compressing\n\r");
+	  len = compress (buffer, 19200L, compressed, 19200L);
+	  puts ("Compressed to ");
+	  number (len / 8, 10000L);
+	  puts (" bytes\n\r");
+	  for (j = 0; j < 20; j++)
+	    binary (compressed [j], 8);
+	  puts ("\n\r");
+	  puts ("Decompressing\n\r");
+	  decompress (compressed, len, result, 19200L);
+	  error = 0;
+	  for (i = 0; i < 19200; i++)
+	    if (buffer [i] != result [i])
+	      {
+		error = 1;
+		break;
+	      }
+	  if (error)
+	    puts ("Error during compression/decompression\n\r");
+	  else
+	    puts ("Image compressed and decompressed OK\n\r");
+	}
+    }
+  if (errno != QC_SUCCESS)
+    {
+      switch (errno)
+	{
+	case QC_BAD_RESPONSE:
+	  puts ("Bad response from camera\n\r");
+	  break;
+	case QC_TIMEOUT:
+	  puts ("Camera timed out\n\r");
+	  break;
+	}
+    }
+}
+
+void puts (char * string)
+{
+  while (*string)
+    {
+      mon_putc (*string);
+      string++;
+    }
+}
+@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@d1 1
+a1 1
+/* Quickcam test program  - outputs an XPM to the terminal */
+d3 1
+a3 1
+/* $Id: test.c,v 1.4 1998/04/23 13:31:28 skk Exp skk $ */
+d56 13
+d72 19
+a90 3
+  int i;
+  for (i = 0; i < bits; i++)
+    setbit (ptr, off + i, val & (1 << (bits - i - 1)));
+d179 1
+a179 2
+  int errno;
+  int i, j;
+d182 1
+d184 3
+a186 3
+  c = 0;
+  setbit (&c, 6, 1);
+  hex (c);
+d188 3
+a190 2
+  setval (&c, 2, 0x0F, 4);
+  hex (c);
+d192 5
+a196 1
+  
+d213 11
+a223 14
+	  puts ("Original picture:\n\r");
+	  for (i = 0; i < 120; i++)
+	    {
+	      for (j = 0; j < 160; j++)
+		realhex (buffer [160 * i + j]);
+	      puts ("\n\r");
+	    }
+	  puts ("Resulting picture:\n\r");
+	  for (i = 0; i < 120; i++)
+	    {
+	      for (j = 0; j < 160; j++)
+		realhex (result [160 * i + j]);
+	      puts ("\n\r");
+	    }
+@

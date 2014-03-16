@@ -1,0 +1,104 @@
+head	1.1;
+access;
+symbols;
+locks
+	iic:1.1; strict;
+comment	@# @;
+
+
+1.1
+date	98.05.01.09.03.59;	author iic;	state Exp;
+branches;
+next	;
+
+
+desc
+@Video Specification
+@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@#This file was created by <iic> Thu Apr 30 17:11:36 1998
+#LyX 0.12 (C) 1995-1998 Matthias Ettrich and the LyX Team
+\lyxformat 2.15
+\textclass article
+\language default
+\inputencoding default
+\fontscheme default
+\graphics default
+\paperfontsize default
+\spacing single 
+\papersize Default
+\paperpackage a4
+\use_geometry 0
+\use_amsmath 0
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\defskip medskip
+\quotes_language english
+\quotes_times 2
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+
+\layout Subsection
+
+Specification of Video Compression and Decompression
+\layout Subsubsection
+
+Format of image as received from video camera
+\layout Standard
+
+The image returned from the camera is an array of 19200 unsigned chars.
+ Each of these characters is a value between 0 and 15 (therefore only the
+ lower 4 bits of each unsigned char are used).
+ Each unsigned char represents one pixel of the image.
+ 0 represents black and 15 represents white, intermediate values represent
+ grey values increasing in lightness as their value increases.
+ The first 160 unsigned chars represent the first horizontal line of the
+ image, and subsequent sub-arrays of 160 bytes represent subsequent lines
+ of the image.
+\layout Subsubsection
+
+Compression algorithm
+\layout Standard
+
+With the exception of the first frame a logical XOR is performed between
+ the current frame and the previous frame.
+ The result of this is that pixels of the image which remain constant between
+ the two frames become black.
+\layout Standard
+
+The resulting frame difference image is then scanned using a Run Length
+ Encoding (RLE) algorithm prior to transmission.
+\layout Subsubsection
+
+Format of Run Length Encoded data
+\layout Standard
+\noindent 
+The Run Length Encoded file is treated as a stream of bits.
+ Let the first bit be represented by V(0).
+ Let our present position in the file be represented by `N', which will
+ initially be 0.
+\layout Standard
+\noindent 
+If V(N) is 0 then the subsequent 4 bits are taken to be the literal colour
+ of the next pixel.
+ Increment N by 5.
+\layout Standard
+\noindent 
+If V(N) is 1 then the subsequent 4 bits are taken to be the literal colour
+ of a pixel, and the subsequent 5 bits are taken to be the number of those
+ pixels - 2.
+ Increment N by 10.
+\layout Standard
+\noindent 
+Repeat until the required number of pixels have been decoded.
+\the_end
+@

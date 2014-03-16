@@ -1,0 +1,59 @@
+% Code for implementing the EP610 for use in interfacing between the IPD and %
+% the 68230 IO integrated circuit %
+
+% An EP610 is used for this purpose %
+@(#) SMV Version 1.4  12/2/88 19:52:13 47.1
+Input files : inter.adf 
+ADP Options: Minimization = Yes,  Inversion Control = No,  LEF Analysis = Yes
+
+@(#) ANALYZER Version 7.0    6/26/90 23:35:50 39.4
+
+OPTIONS: TURBO = ON, SECURITY = OFF
+PART:
+	EP610
+INPUTS:
+	CLK@1, SLOT@2, AS@3, DTAK@4, RST@5
+OUTPUTS:
+	CS@22, CINH@21, TACK@20, OUTEN@19, SB2, SB1, SB0
+NETWORK:
+	CLK = INP(CLK)
+	SLOT = INP(SLOT)
+	AS = INP(AS)
+	DTAK = INP(DTAK)
+	RST = INP(RST)
+	CS = CONF(CSINT, VCC)
+	CINH = CONF(CINHINT, VCC)
+	TACK = CONF(TACKINT, VCC)
+	OUTEN = CONF(OUTENINT, VCC)
+	SB2, SB2 = RORF(SB2.d, CLK, GND, GND, VCC)
+	SB1, SB1 = RORF(SB1.d, CLK, GND, GND, VCC)
+	SB0, SB0 = RORF(SB0.d, CLK, GND, GND, VCC)
+EQUATIONS:
+	SB0.d' = SB2 * SB1' * SB0 * RST
+	       + SB1' * SB0 * AS' * SLOT' * RST
+	       + SB2 * SB1 * SB0' * SLOT' * RST
+	       + SB2 * SB1 * SB0' * AS' * RST
+	       + SB2' * SB1 * SB0 * RST * DTAK';
+
+	SB1.d = SB1 * SB0' * AS' * RST
+	      + SB1 * SB0' * SLOT' * RST
+	      + SB2' * SB1 * SB0' * RST
+	      + SB2' * SB1 * RST * DTAK
+	      + SB2 * SB1' * SB0 * RST
+	      + SB1' * SB0 * AS' * SLOT' * RST;
+
+	SB2.d = SB2 * SB1' * RST
+	      + SB2 * SB0' * RST * AS'
+	      + SB2 * SB0' * RST * SLOT'
+	      + SB2' * SB1 * SB0 * DTAK' * RST;
+
+	OUTENINT' = SB2 * SB1';
+
+	TACKINT' = SB2 * SB1' * SB0';
+
+	CINHINT' = SB2 * SB1' * SB0';
+
+	CSINT' = SB2 * SB1'
+	       + SB2' * SB1 * SB0;
+
+END$

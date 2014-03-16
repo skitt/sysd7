@@ -1,0 +1,5 @@
+state4.c contains all the coding for the audio on the motorola.
+compile it with :
+gcc68s -o state4 state4.c ../audio.c ~/source/transport/motorola/polling.c ~/source/low.level/motorola/board.c
+
+state10 is a working binary to deomnstrate M-> PC sound transmission.

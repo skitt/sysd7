@@ -1,0 +1,70 @@
+#This file was created by <skk> Wed May 20 11:29:56 1998
+#LyX 0.12 (C) 1995-1998 Matthias Ettrich and the LyX Team
+\lyxformat 2.15
+\textclass article
+\language default
+\inputencoding default
+\fontscheme palatino
+\graphics default
+\paperfontsize default
+\spacing single 
+\papersize Default
+\paperpackage widemarginsa4
+\use_geometry 0
+\use_amsmath 0
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation skip
+\defskip medskip
+\quotes_language english
+\quotes_times 2
+\papercolumns 1
+\papersides 1
+\paperpagestyle fancy
+
+\layout Title
+
+System Design Project
+\newline 
+Missing features
+\layout Author
+
+Group 7
+\layout Standard
+
+The following features mentioned in the detailed specification are missing
+ in the prototype as demonstrated:
+\layout Itemize
+
+audio from the PC to the Motorola, 
+\emph on 
+i.e.
+
+\emph default 
+ from the PC to the door;
+\layout Itemize
+
+database download --- the database is hard-coded into the Motorola and PC
+ programs;
+\layout Itemize
+
+configuration --- apart from the file-based configuration (for the sound
+ played and the picture displayed when the doorbell is rung), no user-level
+ configuration is available, either in the GUI software or the Motorola
+ software.
+\layout Itemize
+
+logging and access time control.
+\layout Standard
+
+These features were not included due primarily to time constraints.
+ The audio and database download features are very nearly implemented, but
+ aren't enabled; activating them should be relatively straightforward.
+ The configuration information, logging and access time control haven't
+ been implemented at all.
+\layout Standard
+
+There are no known bugs, at least in the parts exercised during our tests
+ and the demonstration.
+\the_end

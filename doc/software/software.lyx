@@ -1,0 +1,1302 @@
+#This file was created by <skk> Fri May  1 16:15:19 1998
+#LyX 0.12 (C) 1995-1998 Matthias Ettrich and the LyX Team
+\lyxformat 2.15
+\textclass article
+\language default
+\inputencoding default
+\fontscheme default
+\graphics default
+\paperfontsize default
+\spacing single 
+\papersize Default
+\paperpackage widemarginsa4
+\use_geometry 0
+\use_amsmath 0
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation skip
+\defskip medskip
+\quotes_language english
+\quotes_times 2
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+
+\layout Section
+
+The software
+\layout Standard
+
+The software is composed of four components running on two platforms: a
+ daemon and GUI running on the client (Linux for the prototype), and a program
+ loader and general control software running on the board (the Motorola
+ IDP).
+ Many support routines are used, some common to both platforms; these are
+ divided into modules:
+\layout Itemize
+
+serial --- provides the communication subsystem; this operates in parallel
+ with the rest of the software, using interrupts or signals;
+\layout Itemize
+
+low-level --- provides functions to access the hardware on the Motorola
+ IDP board and the secondary board;
+\layout Itemize
+
+video --- grabs, compresses and decompresses frames;
+\layout Itemize
+
+audio --- samples, compresses, decompresses and plays back audio;
+\layout Itemize
+
+control --- handles the database and configuration information, and sends
+ orders to various sections.
+\layout Subsection
+
+The Linux software
+\layout Subsubsection
+
+The daemon
+\layout Standard
+
+The daemon runs continuously as long as the PC is switched on.
+ It acts as an intermediary between the Motorola board and the user interface;
+ it also provides vital functions to the Motorola board to allow the latter
+ to download its software and the user interface for automatic operation
+ without the user interface being loaded.
+\layout Standard
+
+Communication with the Motorola board uses the serial subsystem; data transfers
+ with the user interface go through the System V IPC shared memory mechanism
+\begin_float footnote 
+\layout Standard
+
+Note that System V IPC must therefore be compiled in the Linux kernel.
+\end_float 
+.
+ A user signal (
+\family typewriter 
+SIGUSR1
+\family default 
+) can be sent by either the daemon or the GUI to indicate that data needs
+ to be transferred.
+\layout Standard
+
+During normal operation, the daemon stores the last frame taken at any given
+ time; audio is never transferred without the GUI.
+ When the board indicates the doorbell has been rung, the daemon activates
+ the GUI, starting it up if necessary, unless the user has indicated they
+ wish to use the PC without being bothered by the door-entry software.
+\layout Subsubsection
+
+The user interface
+\layout Standard
+
+The user interface runs on a Linux PC running the X Windows user interface,
+ and had been predominently constructed using the GTK+ toolkit in the C
+ programming language.
+ It is contained in a binary file together with all other non-continuous
+ modules such as video and audio.
+ The UI is launched by the deamon on receiving a message from the Motorola
+ board.
+\layout Standard
+
+\begin_float fig 
+\layout Standard
+\align center 
+
+\begin_inset Figure size 297 230
+file gui_grab.ps
+width 3 50
+flags 9
+
+\end_inset 
+
+
+\layout Caption
+
+
+\begin_inset LatexCommand \label{screenshot1}
+
+\end_inset 
+
+Screenshot of prototype GUI
+\end_float 
+\layout Standard
+
+The main window is shown in fig 
+\begin_inset LatexCommand \ref{screenshot1}
+
+\end_inset 
+
+, page 
+\begin_inset LatexCommand \pageref{screenshot1}
+
+\end_inset 
+
+.
+ If this window is minimised it will be activated whenever someone comes
+ to the door.
+ Normally the video frames will be updated approximately once every second
+ and there will be no audio.
+ When someone presses the buzzer and the PC user reacts, two way sound transmiss
+ion will begin and continue until a (long) timeout expires, or the person
+ is accepted or rejected.
+ The functions of the various buttons are as follows:
+\layout Itemize
+
+recapture --- pressing this button transmits a request to the Motorola board
+ to recapture a frame of video;
+\layout Itemize
+
+unlock --- this causes the door to unlock;
+\layout Itemize
+
+refuse --- this denies entry;
+\layout Itemize
+
+audio --- this loads an audio configuration program (mixer);
+\layout Itemize
+
+config --- this opens the system configuration panel;
+\layout Itemize
+
+close --- this closes the interface window;
+\layout Itemize
+
+do not disturb (not present in the screenshot) --- this minimises the interface
+ window and tells the daemon no to pop it up.
+\layout Subsection
+
+The Motorola software
+\layout Subsubsection
+
+The initial program loader
+\layout Standard
+
+This piece of software sits in a tight polling loop waiting for the client
+ to activate; it then proceeds to download the board software into memory
+ and transfer control to it.
+ It is burnt into a PROM and automatically loaded when the board is switched
+ on.
+\layout Subsubsection
+
+The board control software
+\layout Standard
+
+This implements the board-side of the door-entry system in software.
+ It interacts with the hardware on the boards, and communicates with the
+ client.
+\layout Standard
+
+\begin_float fig 
+\layout Standard
+\align center 
+
+\begin_inset Figure size 595 537
+file board_flowchart.eps
+width 3 100
+angle 270
+flags 9
+
+\end_inset 
+
+
+\layout Caption
+
+
+\begin_inset LatexCommand \label{Motorola state diagram}
+
+\end_inset 
+
+The Motorola software state diagram
+\end_float 
+The Motorola software state diagram (figure 
+\begin_inset LatexCommand \ref{Motorola state diagram}
+
+\end_inset 
+
+, page 
+\begin_inset LatexCommand \pageref{Motorola state diagram}
+
+\end_inset 
+
+) gives an overview of the operation of this software.
+ The program can be in one of eight states at any given time, and certain
+ well defined circumstances cause it to move from one state to another.
+ In the diagram, rounded boxes represent states, and arrows represent transition
+s; the text on the arrows gives an indication of the condition which provokes
+ the transition.
+ Communication between states is achieved through global flags.
+\layout Paragraph
+
+State 1 --- Initialisation
+\layout Subparagraph
+
+Functional description
+\layout Standard
+
+This state will:
+\layout Itemize
+
+initialise the serial transport subsytem;
+\layout Itemize
+
+retrieve configuration information from the client;
+\layout Itemize
+
+retrieve the user database from the client;
+\layout Itemize
+
+initialise the hardware subsystems using their initialisation functions.
+\layout Subparagraph
+
+Transitions
+\layout Standard
+
+State 2 will be entered upon completion of the above.
+\layout Subparagraph
+
+Communications to the client
+\layout Standard
+
+Configuration information and the database are requested from the client's
+ control module using the 
+\family typewriter 
+CONTROL
+\family default 
+ tag (more specifically with the 
+\family typewriter 
+REQUEST_CFG
+\family default 
+ and 
+\family typewriter 
+REQUEST_DB
+\family default 
+ sub-tags).
+\layout Subparagraph
+
+Communications from the client
+\layout Standard
+
+The above information is transferred using 
+\family typewriter 
+CONTROL
+\family default 
+ tags (
+\family typewriter 
+DATA_CFG
+\family default 
+ and 
+\family typewriter 
+DATA_DB
+\family default 
+).
+\layout Subparagraph
+
+Support used
+\layout Standard
+
+This states makes use of all the support modules --- it needs serial to
+ communicate, control to store the configuration and database, and it has
+ to initialise everything.
+\layout Paragraph
+
+State 2 --- Normal operation
+\layout Subparagraph
+
+Functional description
+\layout Standard
+
+This state performs four functions: 
+\layout Itemize
+
+it polls the video camera, it captures an image and uses a combination of
+ frame-difference and RLE encoding to compress the image before sending
+ it via serial to the Linux client machine;
+\layout Itemize
+
+it polls the Dallas Ring to detect whether a ring is present in the detector;
+\layout Itemize
+
+it checks for a signal from the client;
+\layout Itemize
+
+it polls the buzzer (linked to the keypad).
+\layout Subparagraph
+
+Transitions
+\layout Standard
+
+The following states can be entered from state 2:
+\layout Itemize
+
+state 1 --- a signal is received from the client instructing the board to
+ enter the initialisation state;
+\layout Itemize
+
+state 3 --- the buzzer is pressed;
+\layout Itemize
+
+state 5 --- a Dallas ring is detected.
+\layout Standard
+
+Otherwise state 2 will loop.
+\layout Subparagraph
+
+Communications to the client
+\layout Standard
+
+Compressed frames from the video camera are sent to the video module using
+ the 
+\family typewriter 
+VIDEO
+\family default 
+ tag.
+\layout Subparagraph
+
+Communications from the client
+\layout Standard
+
+The client can request a transition to state 1 using the 
+\family typewriter 
+CONTROL
+\family default 
+ tag (
+\family typewriter 
+RESET
+\family default 
+ sub-tag).
+\layout Subparagraph
+
+Support
+\layout Standard
+
+This state uses the control, low-level and video modules.
+\layout Paragraph
+
+State 3 --- Wait for PC user to respond
+\layout Subparagraph
+
+Functional description
+\layout Standard
+
+This state informs the client that the buzzer has been pressed.
+ It then continues to transmit video until it times out (according to a
+ preset timeout value) or the client acknowledges the buzzer.
+ 
+\layout Subparagraph
+
+Transitions
+\layout Standard
+
+The following states can be entered from state 3:
+\layout Itemize
+
+state 2 --- the timeout expires (
+\emph on 
+i.e.
+
+\emph default 
+ the client fails to respond);
+\layout Itemize
+
+state 4 --- the client responds to the buzzer signal.
+\layout Standard
+
+Otherwise state 3 will loop.
+\layout Subparagraph
+
+Communications to the client
+\layout Standard
+
+A 
+\family typewriter 
+CONTROL
+\family default 
+ message (
+\family typewriter 
+BUZZER
+\family default 
+ sub-tag) informs the client that the buzzer has been pressed.
+\layout Subparagraph
+
+Communications from the client
+\layout Standard
+
+A 
+\family typewriter 
+CONTROL
+\family default 
+ message (
+\family typewriter 
+BUZZER_ACK
+\family default 
+ sub-tag) acknowledges receipt of the 
+\family typewriter 
+BUZZER
+\family default 
+ signal.
+\layout Subparagraph
+
+Support
+\layout Standard
+
+This state makes use of the control and video modules.
+\layout Paragraph
+
+State 4 --- Conversation with the visitor
+\layout Subparagraph
+
+Functional description
+\layout Standard
+
+State 4 is the state which handles the audio when there is someone at the
+ door.
+ It samples from the microphone at the door, compresses the data and sends
+ it to the PC.
+ It also takes compressed samples from the PC and plays them via the speaker
+ at the door.
+ Additionally, the system must check for input from the PC user, so that
+ they can choose to grab some more video, open the door, or refuse entry.
+\layout Subparagraph
+
+Transitions
+\layout Standard
+
+The following states can be entered from state 4:
+\layout Itemize
+
+state 2 --- the client refuses entry, or the timeout expires;
+\layout Itemize
+
+state 8 --- the client authorises entry.
+\layout Standard
+
+Otherwise state 4 will loop.
+\layout Subparagraph
+
+Communications to the client
+\layout Standard
+
+
+\family typewriter 
+AUDIO
+\family default 
+ messages transmit audio to the audio module; 
+\family typewriter 
+VIDEO
+\family default 
+ messages can also be used to transmit video.
+\layout Subparagraph
+
+Communications from the client
+\layout Standard
+
+
+\family typewriter 
+AUDIO
+\family default 
+ messages transmit audio; 
+\family typewriter 
+CONTROL
+\family default 
+ messages indicate the user's response (
+\family typewriter 
+AUTHORISE
+\family default 
+ or 
+\family typewriter 
+REJECT
+\family default 
+) or a request for more video (
+\family typewriter 
+GRABFRAME
+\family default 
+).
+\layout Subparagraph
+
+Support
+\layout Standard
+
+This state uses the control, low-level and audio modules.
+\layout Paragraph
+
+State 5 --- Read the Dallas ring
+\layout Subparagraph
+
+Functional description
+\layout Standard
+
+This state is entered when a Dallas ring is present in the reader; it reads
+ the 64 bits of information off the ring and stores them in a buffer for
+ later use.
+\layout Subparagraph
+
+Transitions
+\layout Standard
+
+The following states can be entered from state 5:
+\layout Itemize
+
+state 6 --- the information was successfully read;
+\layout Itemize
+
+state 2 --- an error occurred during the read.
+\layout Subparagraph
+
+Communications to the client
+\layout Standard
+
+A 
+\family typewriter 
+CONTROL
+\family default 
+ message (
+\family typewriter 
+USERID
+\family default 
+) will be sent to allow the auto alert window to display information about
+ the visitor.
+\layout Subparagraph
+
+Support
+\layout Standard
+
+This state uses the control and low-level modules.
+\layout Paragraph
+
+State 6 --- Retrieve PIN
+\layout Subparagraph
+
+Functional description
+\layout Standard
+
+This state attempts to read a PIN from the keypad, by repeatedly polling
+ it until either a full PIN is read, or the timeout expires.
+\layout Subparagraph
+
+Transitions
+\layout Standard
+
+The following states can be entered from state 6:
+\layout Itemize
+
+state 7 --- a PIN is successfully read;
+\layout Itemize
+
+state 2 --- the timeout expires.
+\layout Subparagraph
+
+Support
+\layout Standard
+
+This state uses the low-level module only (it doesn't even use the serial
+ module).
+\layout Paragraph
+
+State 7 --- Verify user ID and PIN
+\layout Subparagraph
+
+Functional description
+\layout Standard
+
+This state verifies the authenticity of the user wishing to gain entry.
+ It looks at UID and PIN read by previous states and stored in memory, compares
+ these with entries in the database, stored in RAM, and decides whether
+ to authorise or reject the visitor.
+ The outcome is sent to the client for logging.
+\layout Subparagraph
+
+Transitions
+\layout Standard
+
+The following states can be entered from state 7:
+\layout Itemize
+
+state 8 --- the user ID is in the database and the PIN is correct;
+\layout Itemize
+
+state 2 --- the user ID isn't in the database, or the PIN is incorrect.
+\layout Subparagraph
+
+Communications to the client
+\layout Standard
+
+A 
+\family typewriter 
+CONTROL
+\family default 
+ message (
+\family typewriter 
+LOG_ENTRY
+\family default 
+) informs the client of the outcome of the verification.
+\layout Subparagraph
+
+Support
+\layout Standard
+
+This state uses the control module.
+\layout Paragraph
+
+State 8 --- Open door
+\layout Subparagraph
+
+Functional description
+\layout Standard
+
+This state opens the door.
+\layout Subparagraph
+
+Transitions
+\layout Standard
+
+State 2 will be entered once the door is opened.
+\layout Subparagraph
+
+Communications to the client
+\layout Standard
+
+A 
+\family typewriter 
+CONTROL
+\family default 
+ message (
+\family typewriter 
+DOOR_OPEN
+\family default 
+) indicates the door was opened.
+\layout Subparagraph
+
+Support
+\layout Standard
+
+This state uses the control and low-level modules.
+\layout Subsection
+
+The secondary board support software (
+\begin_inset Quotes eld
+\end_inset 
+
+low-level
+\begin_inset Quotes erd
+\end_inset 
+
+ module)
+\layout Standard
+
+These functions provide the interface to the secondary board, and to some
+ features of the IDP board.
+\layout Subsubsection
+
+The Dallas ring reader
+\layout Standard
+
+The Dallas ring reader is accessed through the MC68230 on the secondary
+ board, using the bus.
+ A signal can be sent to it to determine whether a ring is present; if one
+ is, the ring can be told to transmit its contents using a well-defined
+ protocol.
+\layout Standard
+
+Two functions and a structure are provided to access information on the
+ ring.
+ The structure is defined as follows:
+\layout LyX-Code
+
+typedef struct
+\layout LyX-Code
+
+{
+\layout LyX-Code
+
+
+\protected_separator 
+ unsigned char product;
+\layout LyX-Code
+
+
+\protected_separator 
+ unsigned char id [6];
+\layout LyX-Code
+
+
+\protected_separator 
+ unsigned char crc;
+\layout LyX-Code
+
+} ringinfo;
+\layout Standard
+
+The functions are:
+\layout Itemize
+
+
+\family typewriter 
+int checkring (void)
+\family default 
+ --- returns 1 if a ring is present, 0 otherwise;
+\layout Itemize
+
+
+\family typewriter 
+ringinfo * getringinfo (void)
+\family default 
+ --- retrieves the ring's information and places it in a structure.
+\layout Subsubsection
+
+The keypad
+\layout Standard
+
+The keypad is accessed through the MC68230 controller.
+ The doorbell is wired through the keypad, as well as the standard keys.
+ Again, a signal can be sent to determine whether a key is currently being
+ pressed; then its value can be read.
+ Obviously when polling the keypad it is necessary to ensure that the key
+ has been released before waiting for a new keypress.
+\layout Standard
+
+Two functions are provided:
+\layout Itemize
+
+
+\family typewriter 
+int checkkeypad (void)
+\family default 
+ --- returns 1 if a key is being pressed, 0 otherwise;
+\layout Itemize
+
+
+\family typewriter 
+unsigned char getkeypad (void)
+\family default 
+ --- returns the value of the key being pressed; this is an integer between
+ 0 and 12, 0--9 corresponding to the digits 0--9, 
+\family typewriter 
+KP_STAR
+\family default 
+ to the star symbol, 
+\family typewriter 
+KP_HASH
+\family default 
+ to the hash symbol, and 
+\family typewriter 
+KP_DOORBELL
+\family default 
+ to the doorbell.
+\layout Standard
+
+Note that initially one of the auxiliary keys (star or hash) may be used
+ instead of an actual doorbell.
+\layout Subsubsection
+
+The ADC and DAC
+\layout Standard
+
+The ADC and DAC are accessed through the MC68230 controller.
+ The ADC samples its input every time its clock signal fires, and stores
+ the result in an on-board register which can be queried; the DAC generates
+ the sound corresponding to any input it receives using a special trigger
+ signal.
+\layout Standard
+
+Two functions are provided:
+\layout Itemize
+
+
+\family typewriter 
+unsigned char getsample (void)
+\family default 
+ --- returns the current sample from the ADC;
+\layout Itemize
+
+
+\family typewriter 
+void setsample (unsigned char)
+\family default 
+ --- sends a sample to the DAC.
+\layout Subsubsection
+
+The NVRAM and RTC
+\layout Standard
+
+The NVRAM (non-volatile memory) and RTC (real-time clock) are stored on
+ a memory-mapped chip on the Motorola board.
+\layout Standard
+
+The following structure stores time information:
+\layout LyX-Code
+
+typedef struct
+\layout LyX-Code
+
+{
+\layout LyX-Code
+
+
+\protected_separator 
+ unsigned char seconds;
+\layout LyX-Code
+
+
+\protected_separator 
+ unsigned char minutes;
+\layout LyX-Code
+
+
+\protected_separator 
+ unsigned char hours;
+\layout LyX-Code
+
+
+\protected_separator 
+ unsigned char day;
+\layout LyX-Code
+
+
+\protected_separator 
+ unsigned char date;
+\layout LyX-Code
+
+
+\protected_separator 
+ unsigned char month;
+\layout LyX-Code
+
+
+\protected_separator 
+ unsigned char year;
+\layout LyX-Code
+
+} rtctime;
+\layout Standard
+
+Their precise meaning (with regard for example to the 
+\family typewriter 
+year
+\family default 
+ field) is up to the programmer, but the values stored in the RTC will be
+ updated automatically.
+\layout Standard
+
+The following functions access the RTC:
+\layout Itemize
+
+
+\family typewriter 
+rtctime getrtctime (void)
+\family default 
+ --- retrieves the current time from the RTC;
+\layout Itemize
+
+
+\family typewriter 
+void setrtctime (rtctime)
+\family default 
+ --- stores new data in the RTC.
+\layout Standard
+
+The programmer can use 760 bytes in NVRAM, and these are accessed using
+ the following functions:
+\layout Itemize
+
+
+\family typewriter 
+unsigned char * getnvram (int, int)
+\family default 
+ --- returns the data stored in the given range;
+\layout Itemize
+
+
+\family typewriter 
+void setnvram (unsigned char *, int, int)
+\family default 
+ --- stores the data in the given range.
+\layout Standard
+
+The range is specified as going from the first integer argument to the second,
+ inclusive; so for example 
+\family typewriter 
+setnvram (&data, 0, 759)
+\family default 
+ would fill the whole NVRAM.
+\layout Subsubsection
+
+The LED display
+\layout Standard
+
+The memory-mapped, 7-segment LED display on the IDP can be accessed using
+ the 
+\family typewriter 
+void leddisplay (int)
+\family default 
+ function, which display the given hexadecimal digit or blanks the LED if
+ -1 is given as an argument.
+\layout Subsubsection
+
+The door
+\layout Standard
+
+The door lock's status can be verified and changed using:
+\layout Itemize
+
+
+\family typewriter 
+int getdoorstatus (void)
+\family default 
+ --- returns 0 if the door is closed, 1 if it's open;
+\layout Itemize
+
+
+\family typewriter 
+int opendoor (void)
+\family default 
+ --- opens the door, returning 0 in case of success, -1 in case of failure.
+\layout Subsubsection
+
+The jiffies counter
+\layout Standard
+
+A global variable, defined as
+\layout LyX-Code
+
+unsigned int jiffies
+\layout Standard
+
+is updated regularly (the exact interval to be used hasn't yet been determined),
+ using the UART's counter.
+ This can be used as a precise measure of elapsed time.
+\layout Subsection
+
+The serial subsystem
+\layout Subsubsection
+
+External interface
+\layout Standard
+
+The serial interface is designed to be the same on both the Linux and Motorola
+ sides of the system.
+ The subsystem transmits packets of data between the two platforms; these
+ can be of any length.
+\layout Standard
+
+A data packet, as supplied to and by the serial functions, has the following
+ structure:
+\layout LyX-Code
+
+typedef struct
+\layout LyX-Code
+
+{
+\layout LyX-Code
+
+
+\protected_separator 
+ unsigned char datatype;
+\layout LyX-Code
+
+
+\protected_separator 
+ unsigned int length;
+\layout LyX-Code
+
+
+\protected_separator 
+ unsigned char * data;
+\layout LyX-Code
+
+} packet;
+\layout Standard
+
+The datatype is used by handler functions at the receiving end; the serial
+ subsystem maintains a programmer-controlled list of handlers, and upon
+ receiving a complete packet, calls the relevant handler.
+ Two datatypes are predefined by the serial subsystem though: 0 corresponds
+ to the default handler, used when no handler is defined for the datatype
+ of a packet, and 1 is the PING packet, used to check whether the system
+ is alive.
+ The first of these can be redefined by the programmer.
+\layout Standard
+
+The data pointed to is copied immediately, so that the supplying function
+ needn't keep a copy.
+ Likewise, receiving functions should copy the data immediately...
+\layout Standard
+
+The functions defined are as follows:
+\layout Itemize
+
+
+\family typewriter 
+int serialinit (void)
+\family default 
+ --- initialises the serial subsystem;
+\layout Itemize
+
+
+\family typewriter 
+int serialclose (void)
+\family default 
+ --- closes the serial subsystem;
+\layout Itemize
+
+
+\family typewriter 
+int senddata (packet *)
+\family default 
+ --- queues a packet (pointed to by the argument);
+\layout Itemize
+
+
+\family typewriter 
+int registerhandler (unsigned char, packethandler)
+\family default 
+ --- registers a function which will be called with any incoming packet
+ containing data of the type given in the first argument;
+\layout Itemize
+
+
+\family typewriter 
+int unregisterhandler (unsigned char)
+\family default 
+ --- removes any handler previously defined for the given data type; if
+ the default data handler is removed, the system reverts to the supplied
+ default handler which discards any incoming packets apart from the PING
+ packet;
+\layout Itemize
+
+
+\family typewriter 
+int ping (void)
+\family default 
+ --- checks to see whether the opposite member of the link is still responding.
+\layout Subsubsection
+
+Implementation
+\layout Standard
+
+The implementation of the serial subsystem on both platforms is event-based.
+ Queues of incoming and outgoing data are maintained, and whenever the UARTs
+ are ready to send or receive data is fed to (if there is any outgoing data)
+ or read from them.
+ The queues are big enough for data overflow never to be a problem, at least
+ with essential data; if there's no room for a video frame for example it
+ can just be dropped, but control packets must be transmitted at all costs.
+\layout Paragraph
+
+Common sections
+\layout Standard
+
+The event-handling function is 
+\family typewriter 
+void serialevent (void)
+\family default 
+, which is called whenever the UART signals it's ready to transmit or receive;
+ it then determines which direction data is needed for, and transfers it
+ to and from the queues.
+\layout Standard
+
+A 32768-byte buffer stores the incoming data until a complete packet is
+ received, as determined by the length descriptor.
+ Whenever a complete packet is formed, the corresponding handler is called,
+ and the buffer can then be re-used.
+\layout Standard
+
+Output data is stored in a circular, 65536-byte buffer as a stream of raw
+ bytes which need sent out.
+ When a packet is received, its contents are simply added to the buffer.
+\layout Paragraph
+
+Linux specifics
+\layout Standard
+
+The Linux code communicates with the serial port by using the 
+\family typewriter 
+ttyS0
+\family default 
+ terminal device.
+ Events are provided using the 
+\family typewriter 
+IO
+\family default 
+ signal; a call to 
+\family typewriter 
+select(2)
+\family default 
+ is then used to determine whether the UART is ready to transmit or receive.
+ 
+\family typewriter 
+serialevent
+\family default 
+ is called by 
+\family typewriter 
+void iosighandler (int)
+\family default 
+, which is registered as the 
+\family typewriter 
+SIGIO
+\family default 
+ handler.
+ 
+\family typewriter 
+termios
+\family default 
+ functions are used to set the communications port up.
+\layout Paragraph
+
+Motorola specifics
+\layout Standard
+
+On the Motorola, access to the UART is done directly since the MC68681 is
+ memory-mapped and there is no operating system.
+ The PIT (MC68230) is also used since the UART's IRQ line goes through it.
+ The assembler function 
+\family typewriter 
+serialirq
+\family default 
+ is set up to handle the UART IRQ exception; it simply calls 
+\family typewriter 
+serialevent
+\family default 
+.
+\layout Subsection
+
+The audio module
+\layout Standard
+
+The audio module provides functions to retrieve a compressed sample and
+ to play back a compressed sample.
+ All the audio functionality is internal to state 4.
+\layout Subsubsection
+
+Compression
+\layout Standard
+
+The audio compression system is based around ADPCM compression, and takes
+ the audio down from 8 bits per sample to 2 bits per sample.
+ With an 8kHz sampling rates this reduces the bandwidth requirements from
+ 64kbps to 16kbps.
+\layout Standard
+
+The ADPCM compression standard is defined in the CCITT G.726 16kpbs audio
+ compression standard.
+ G.726 specifications are available from the ITU Web site (www.itu.ch).
+ The code is taken from Sun Microsystem's implementation, which has been
+ released into the public domain.
+\layout Subsubsection
+
+Format of the data from the hardware
+\layout Standard
+
+On the client, the system uses the Open Sound System (OSS) which is part
+ of the Linux kernel.
+ On the board, sound is taken directly from the 8-bit ADC, or fed into an
+ 8-bit DAC.
+ In all cases data is an unsigned, 8-bit sample (0 to 255) at 8kHz.
+ 
+\layout Subsubsection
+
+Communications
+\layout Standard
+
+For the data to be compressed, it first has to be converted to a signed
+ 8-bit sample (
+\begin_inset Formula \( -128 \)
+\end_inset 
+
+ to 127), then bit-shifted into a 14-bit word for the ADPCM encoder to work
+ on.
+ Decompression feeds the 2-bit code into the ADPCM decoder and transforms
+ the resulting 14-bit word into an 8-bit sample.
+\layout Standard
+
+The 2-bit codes are transported as compactly as possible, 
+\emph on 
+i.e.
+
+\emph default 
+ four per byte, in quarter-second packets of approximately 500 bytes.
+\layout Subsection
+
+The video module
+\layout Standard
+
+This provides functions to retrieve, compress and decompress a frame.
+\layout Subsubsection
+
+Format of image as received from video camera
+\layout Standard
+
+The image returned from the camera is an array of 19200 bytes.
+ Each of these has a value between 0 and 15 (therefore only the lower 4
+ bits of each byte are used).
+ Each byte represents one pixel of the image.
+ After translation
+\begin_float footnote 
+\layout Standard
+
+The original data represents black as 0, white as 1, and gray-scales from
+ white to black respectively as values from 2 to 15.
+\end_float 
+, 0 represents black and 15 represents white, intermediate values represent
+ grey values increasing in lightness as their value increases.
+ The first 160 bytes represent the first horizontal line of the image, and
+ subsequent sub-arrays of 160 bytes represent subsequent lines of the image.
+\layout Subsubsection
+
+Compression algorithm
+\layout Standard
+
+The last frame grabbed is always stored locally, so that a logical exclusive
+ or can be preformed between it and the new frame; the default last frame
+ is all zero (black).
+ The result of this is that pixels of the image which remain constant between
+ the two frames become black.
+\layout Standard
+
+The resulting frame difference image is then scanned using a Run Length
+ Encoding (RLE) algorithm prior to transmission.
+\layout Subsubsection
+
+Format of Run Length Encoded data
+\layout Standard
+\noindent 
+The Run Length Encoded file should be treated as a stream of 5 bit blocks.
+ 
+\layout Standard
+
+The first bit of the block determines it's nature.
+ If the first bit is 0 then the subsequent 4 bits represent the colour of
+ an individual pixel.
+ If the first bit is 1 then the subsequent 4 pixels represent the colour
+ of a pixel, and the subsequent block represents the number of pixels of
+ that colour (minus two, since we never encode a run of zero or one pixel).
+\layout Subsection
+
+The control module
+\layout Standard
+
+The control functions handle user authentication and database storage.
+ Functions are provided to access and modify the user database on the PC,
+ and to transfer the database to the Motorola board --- it's stored in RAM
+ on the board whenever the Motorola is switched on, and only downloaded
+ again when it changes.
+ A single function takes a user ID and PIN and validates it against the
+ database.
+\layout Standard
+
+The control module also has a 
+\family typewriter 
+CONTROL
+\family default 
+ handler for the communications subsystem, but this can be replaced by individua
+l states' own handler, for instance to allow a change of state to be requested.
+ Various control tokens are defined and refine the 
+\family typewriter 
+CONTROL
+\family default 
+ packet; the states are well enough constrained for it to be possible for
+ handlers to ignore tokens they don't know.
+\the_end

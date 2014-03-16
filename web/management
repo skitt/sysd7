@@ -1,0 +1,474 @@
+
+ The Minutes 
+
+
+ April 21
+
+
+
+ MINUTES: April 21
+ TIME: 11am - 11.30am
+ LOCATION: CS canteen
+ PRESENT: Ian Clarke, Stephen Cook, Duncan Irvine, Stephen Kitt, 
+         Edward Knowelden, James Northrop, Iain Todd, Stuart Cox
+APOLOGIES: No-one
+ABSENT: No-one
+
+GENERAL POINTS
+
+IC- Stated that he was more confident that Bar-codes would be successful.
+
+ The only snag was that the camera was not directly connected up as we could not get permission to change the access rights.
+
+ General- On the subject of costs it is agreed that the cheapest option is the bar-code.
+
+ Swipe cards could be made from BT phone cards but this is a bit of a vague
+area, and could be difficult to implement.
+
+ It would be preferable if the system could be scalable
+
+ HARDWARE
+
+ The group is looking into the programming chips on the board and the connection methods.
+
+ PROBLEMS
+
+ Gordon Brebner wants us to have more focus on general faults eg the power
+switching off, the machine been dropped and  the PC not been switched on.
+We were also advised to concentrate more on the market for our product at 
+this stage.
+
+DEADLINES
+
+The design specification will be started today by IainT.
+Other tasks remain the same as on April21st
+
+FINAL SYSTEM DECISION TODAY
+
+
+
+  
+
+
+
+
+
+ The Minutes 
+
+
+ April 22
+
+
+ MINUTES: April 22
+ TIME: 4pm - 5pm
+ LOCATION: 2509
+ PRESENT: Ian Clarke, Stephen Cook, Duncan Irvine, Stephen Kitt, 
+         Edward Knowelden, James Northrop, Iain Todd, Stuart Cox
+APOLOGIES: No-one
+ABSENT: No-one
+
+REPORTS
+SC- Investigated Dallas rings, smart cards and swipe cards. Dallas rings 
+cost £2 each, cheaper when bought in bulk. The reader is £5. The smart 
+card is not a good option as there is no supplier of blank cards, finding
+information on the cards also proved difficult. Swipe cards only cost £25 
+for the reader but do wipe themselves after a short while. He has sent away 
+for more data about the rings and the swipe cards.
+
+The principal problem with the rings are that the readers are not vandal proof.
+The problem with the swipe cards are that the programmer is too expensive.
+
+IC- Looked at the bar-codes, the pros are it would be impressive, 
+conviniant and  cheap. The downside is that we would be unable to test it
+until near the end of the project.
+
+SK- Tried to get the quick-cam up and running. Has also come to the conclusiona packet approach for data would be our best option.
+
+SCX,JN- Have read the manuals for the hardware, looked at the chips and havebooked consultation time to go over their work. Hardware is harder than
+first thought.
+
+EK- Has checked on the sound, everything will work fine with linux.
+
+IT- Has continued with the documentation.
+
+DI- Has investigated the video, estimates we might only get 1 frame per secondfrom the cameras.
+
+DECISIONS
+We will use Dallas Rings
+Our Target market is public property requiring a level of security eg schools.
+
+PLAN
+IT- Work on the requirement spec for 12pm April 23.
+Hardware- Speak to Tim Hopkins
+IC- i/o programming
+SK- video compression and write tests for camera and serial connections.
+Software- meeting at 10am.
+EK,SC- Time sheets
+
+
+  
+
+
+
+
+
+ The Minutes 
+
+
+ April 22
+
+Department of computer science
+
+
+
+
+ MINUTES: April 22
+ TIME: 4pm - 5pm
+ LOCATION: 2509
+ PRESENT: Ian Clarke, Stephen Cook, Duncan Irvine, Stephen Kitt, 
+         Edward Knowelden, James Northrop, Iain Todd, Stuart Cox
+APOLOGIES: No-one
+ABSENT: No-one
+
+REPORTS
+SC- Investigated Dallas rings, smart cards and swipe cards. Dallas rings 
+cost £2 each, cheaper when bought in bulk. The reader is £5. The smart 
+card is not a good option as there is no supplier of blank cards, finding
+information on the cards also proved difficult. Swipe cards only cost £25 
+for the reader but do wipe themselves after a short while. He has sent away 
+for more data about the rings and the swipe cards.
+
+The principal problem with the rings are that the readers are not vandal proof.
+The problem with the swipe cards are that the programmer is too expensive.
+
+IC- Looked at the bar-codes, the pros are it would be impressive, 
+conviniant and  cheap. The downside is that we would be unable to test it
+until near the end of the project.
+
+SK- Tried to get the quick-cam up and running. Has also come to the conclusiona packet approach for data would be our best option.
+
+SCX,JN- Have read the manuals for the hardware, looked at the chips and havebooked consultation time to go over their work. Hardware is harder than
+first thought.
+
+EK- Has checked on the sound, everything will work fine with linux.
+
+IT- Has continued with the documentation.
+
+DI- Has investigated the video, estimates we might only get 1 frame per secondfrom the cameras.
+
+DECISIONS
+We will use Dallas Rings
+Our Target market is public property requiring a level of security eg schools.
+
+PLAN
+IT- Work on the requirement spec for 12pm April 23.
+Hardware- Speak to Tim Hopkins
+IC- i/o programming
+SK- video compression and write tests for camera and serial connections.
+Software- meeting at 10am.
+EK,SC- Time sheets
+
+
+  
+
+
+
+
+ The Minutes 
+
+
+ April 24 
+
+
+ MINUTES: April 24
+ TIME: 10.30am - 11am
+ LOCATION:2509
+
+PRESENT: Ian Clarke, Stephen Cook, Duncan Irvine, Stephen Kitt, 
+         Edward Knowelden, James Northrop, Iain Todd, Stuart Cox,  
+         Gordon Brebner
+APOLOGIES: No-one
+ABSENT: No-one
+
+REPORTS
+
+MARKET - Our market research suggests that schools should be our target market. In light of the Cullen inquiry the security should be should be good enough to allay parents worries but not be to restrictive to an environment that should be welcoming. 
+
+The system  will be tailored towards their needs and will be configurable. Different schools will have competing needs.
+
+Our research also indicates a market with the NHS; especially maternity wards which increasingly need a low level of security and identification. The advantage of the Dallas ring over swipe cards is that they will not be wiped in a highly magnetized environment.
+
+ SOFTWARE - They are  considering the software requirements. The  software will be split into modules and consideration will have to be given about how the two main areas will connect. The software team split up to investigate separate issues but they hope to have something by Tuesday.
+
+ They have also considered the features they wish to include (see Design Spec of April 23rd)
+
+ HARDWARE - Have looked at the capabilities of the chips and have started
+timing diagrams. Generally their opinion is that once they have the design 
+they should have no problem with the construction.
+
+ They aim is to have the hardware up and running by the start of the third week and should consider ordering some of the chips immediately.
+
+ DOCUMENTATION - To have the design spec ready for 4.30 on April 23. Also to have the document checked by Stuart Anderson as soon as possible. 
+
+ DECISIONS
+ Need to have a deadline for the hardware group. They should  investigate buying the design.
+
+ PLAN
+ See Time Diagram for an approximate plan for the next four weeks
+
+
+
+
+  
+
+
+
+
+
+ The Minutes 
+
+
+ April 27 
+
+
+ MINUTES: April 27
+ TIME: 10.30am - 11am
+ LOCATION:2511
+ PRESENT: Ian Clarke, Stephen Cook, Duncan Irvine, Stephen Kitt, 
+         Edward Knowelden, James Northrop, Iain Todd, Stuart Cox, Gordon Brebner
+APOLOGIES: No-one
+ABSENT: No-one
+
+MINUTES 
+Passed and accepted as a true record of the previous meeting. 
+
+HARDWARE
+They looked into buying the hardware design. This is not possible; but you can 
+get a good idea on how to go about it by using up consultation time. They 
+hope to start construction by the end of the week and have something working 
+for Monday.
+ 
+They will order some of the hardware today.
+
+SOFTWARE
+The video is almost complete but it needs to run faster. They consider 
+progress to be good. The Audio specs have now being decided and they are 
+investigating the interface to see how it will multi-task. THere is an of using 
+the SSCOP code for the serial link but GB thinks we can do it more simply 
+than this.
+
+DOCUMENTATION
+Needs to be proof read an d should be written in a style that will assume no
+prior knowledge.
+
+PLAN
+SK - To work on the serial cable and book consultation time.
+IC - Continue with the video
+HARDWARE - will see Tim Hopkins and order parts
+SOFTWARE MEETING to decide other tasks
+IT - start on feasability study and  correct the document spec.
+
+  
+
+
+
+
+ The Minutes 
+
+
+ April 29 
+
+
+ MINUTES: April 29
+ TIME: 9am - 10am
+ LOCATION:2511
+ PRESENT: Ian Clarke, Stephen Cook, Duncan Irvine, Stephen Kitt, 
+         Edward Knowelden, James Northrop, Iain Todd, Stuart Cox, Gordon Brebner
+APOLOGIES: No-one
+ABSENT: No-one
+
+MINUTES 
+Passed and accepted as a true record of the previous meeting. 
+
+HARDWARE
+They have ordered and received some of the parts, but they will need to get a 
+few others. They are nearly ready to start construction; Tim Hopkins has 
+checked their design and seems to have no problem with it. They have 
+started some rudimentary testing. For the Feasibility study it should be noted that two of the chips we are using are obsolete.  
+
+SOFTWARE
+There is a snag with the interface, we may not be able to get audio + video 
+together. The camera will record pictures until the buzzer sounds and then 
+only audio will be active. The user could then check the previous video frames for a clear picture.
+
+We should aim to have the simpler design running before we expand it. It is noted that this design does not meet our minimum spec.
+
+The video compression could run at one frame per second. Once all the hardware is finished we we will be able to test the client side software. The audio has has a choice of two different standards one of which is to hardware intensive
+to proceed  with.
+  
+
+
+DOCUMENTATION
+Has made contacted with our target groups to gauge a response to our system.
+Continues to work on the Feasibility study. Should contact the Royal 
+Infirmary or the Scottish Schools Research Center. A phone can be obtained 
+from Bill Orakks office.
+
+PLAN
+See Minutes Of meeeting later today.
+
+
+  
+
+
+
+
+
+
+ The Minutes 
+
+
+ April 30 
+
+
+ MINUTES: April 30
+ TIME: 3am - 4am
+ LOCATION:2509
+ PRESENT: Ian Clarke, Stephen Cook, Duncan Irvine, Stephen Kitt, 
+         Edward Knowelden, James Northrop, Iain Todd, Stuart Cox
+APOLOGIES: No-one
+ABSENT: No-one
+
+HARDWARE
+They have completed most of the design. The audio section is proving 
+problematic; it is likely that the hand-in  tommorow will contain a faulty 
+design. They hope to have finished construction by Sunday. 
+
+Some Other Groups are just handing in block diagrams; but we will be handing documents containing as much detail as is possible.
+The Hand In will comprise of a technical description, flow of data, timing 
+diagrams etc.
+
+SOFTWARE
+They have designed a state diagram, and have each been allocated specific
+parts to write up and implement. They will write up a description, flow of 
+data and the transitions for each state.
+
+GUI-Designed but they need to work out how the client side operates.
+AUDIO-Will have something up and running by Tuesday.
+
+Integration of the states can only take place once all the individual 
+states have been finalized.
+
+DOCUMENTATION
+The Feasibility study is still on going.
+
+PLAN
+The individual parts of the hardware and software documentation have to 
+be written by 9am 1st May.
+IT + EK will then put the documentation together for 10.30am
+The document will be proof read until approx 12am To have it completed by 1pm
+
+
+
+  
+
+
+
+
+
+ The Minutes 
+
+
+ May 4th 
+
+
+ MINUTES: May 1th
+ TIME: 3am - 4am
+ LOCATION: 2511
+ PRESENT: Ian Clarke, Stephen Cook, Duncan Irvine, Stephen Kitt, 
+          James Northrop, Iain Todd, Stuart Cox, Gordon Brebner, Edward Knowelden 
+APOLOGIES: Edward Knowelden
+ABSENT: No-one
+
+HARDWARE
+The hardware is theoretically correct. They have checked it with Tim and now 
+hope to start building it. The construction will take place in stages and they
+will need to test some chips.
+
+
+SOFTWARE
+See the state diagram and the previous minutes.(their report is the same)
+They have allocated 2-3 days next week for integration.  Each state has now 
+been documented by each individual, and the document is been produced. 
+GB wants us to write about the functionality rather documenting all the code.
+
+Their only worries are with the Audio implementation. It is not known how the 
+motorola will cope with the code. Last years groups had a lot of trouble 
+porting their code over. 
+
+DOCUMENTATION
+The Feasibility study is still on going.
+
+PLAN
+see time chat
+  
+
+
+
+
+
+ The Minutes 
+
+
+ May 4th 
+
+
+ MINUTES: May 4th
+ TIME: 3am - 4am
+ LOCATION: 2511
+ PRESENT: Ian Clarke, Stephen Cook, Duncan Irvine, Stephen Kitt, 
+          James Northrop, Iain Todd, Stuart Cox, Gordon Brebner, Edward Knowelden 
+APOLOGIES: No-one
+ABSENT: No-one
+
+HARDWARE
+Is looking good.  Everything has been tested and it is just a matter of 
+putting it all together. They have built everything apart from the audio 
+compression.
+
+
+SOFTWARE
+Video is as far on as it can get without the serial being implemented. The 
+video may take up to a day to test once the serial is complete.
+
+The serial is continuing. Work is nearly complete on the Linux side, and it
+is theoretically correct on the Motorola side.
+
+They are integrating the video with the GUI.
+
+They have an audio compression program, that is being read through and
+optimized.
+
+DOCUMENTS
+Surprised at the level of detail. But praised the hand in and stated that he 
+had confidence in our design. Minor points were that figures did not always
+relate to diagrams; and detail was sketchier in some place than others. It 
+should be made clearer that the mechanical lock is a feature of the door and
+not the unit. State more clearly, how refuse entry works.
+
+DOCUMENTATION
+The Feasibility study is still on going. It is now at a point were it
+should be handed over to somebody else to gain  a different outlook.
+Progress should know be made on the presentation and the market research.
+
+PLAN
+IC will help SK
+IT to start on presentation.
+Towards the end of the week the hardware team will split up into software and
+documentation.
+see time chart.
+  
+
+
+
+

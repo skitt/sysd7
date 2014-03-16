@@ -1,0 +1,183 @@
+head	1.1;
+access;
+symbols;
+locks
+	iic:1.1; strict;
+comment	@ * @;
+
+
+1.1
+date	98.05.12.09.10.36;	author iic;	state Exp;
+branches;
+next	;
+
+
+desc
+@State 3 initial revision.
+@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@/* State 3 - iic
+   $Id$
+   $Log$
+*/
+
+#include <motorola.video.h>
+#include <serial.h>
+#include <m68kboard.h>
+#include <quickcam.h>
+#include <support.h>
+#include <control.h>
+#include <board.h>
+#include <data.h>
+
+#define frameBufferSz 19200
+#define DEBUG
+
+/* Refer to buffers defined in video/motorola/video.c */
+
+extern unsigned char in[2][frameBufferSz];
+extern unsigned char diff[frameBufferSz];
+extern unsigned char compressed[frameBufferSz+1];
+
+void main (void)
+{
+  serialinit();
+  state3 ();
+}
+
+int state3 (void)
+{
+  packet pkt;
+  int errno, current=0, last=1, csz, x, y, *a, *b, *c,doorbell=0, ns;
+  char buzzer_pressed=BUZZER_PRESSED;
+  /* Set retransmit flag to 1 for first transmission */
+  int retransmitFlag=1, changeState=0;
+
+  /* Inform client that buzzer has been pressed */
+  
+  pkt.datatype=CONTROL;
+  pkt.data=&(buzzer_pressed);
+  pkt.length=1;
+  senddata(&pkt);
+
+  while(changeState==0)
+    {
+
+      /* Test for retransmit flag */
+      if(retransmitFlag==1)
+	{
+#ifdef DEBUG
+	  puts("Retransmit flag is set - resetting last frame\r\n");
+#endif
+	  /* Reset last frame so that when it is XORd a full picture is
+	     transmitted */
+	      for(x=0;x<frameBufferSz;x++)
+		{
+		  in[last][x]=0;
+		}
+	      retransmitFlag=0;
+	}
+
+      /* Attempt to grab a frame */
+#ifdef DEBUG
+      puts ("State 3: Grabbing a frame\n\r");
+#endif
+      if ((errno = QC_grabframe (in[current])) == QC_SUCCESS)
+	{
+#ifdef DEBUG
+	  puts ("State 3: Correcting colour map\n\r");
+#endif
+	  /* Correction and smoothing */
+	  for(x=0;x<frameBufferSz;x++)
+	    {
+	      if (in[current][x] != 0)
+		in[current][x]=16-in[current][x];
+#ifdef SMOOTHING
+#ifdef DEBUG
+	  puts ("State 3: Smoothing image\n\r");
+#endif
+	      if(in[current][x-1]==in[current][x+1])
+		in[current][x]=in[current][x-1];
+#endif
+	    }
+
+	  /* XOR frame with previous to obtain difference
+	     Here I exploit the fact that the 68040 is 32 bit
+	     so by treating the bytes as ints I can XOR
+	     4 bytes at a time.... clever huh?
+	  */
+#ifdef DEBUG
+	  puts ("State 3: XORing frame with previous\n\r");
+#endif
+	  a=(int *) in[current];
+	  b=(int *) in[last];
+	  c=(int *) diff;
+	  for (x = 0; x < (frameBufferSz / 4); x++)
+	    c[x] = a[x] ^ b[x];
+
+	  /* Use RLE to compress the difference 
+	     (We increment compressed by 1 to make room for
+	     a control byte) */
+#ifdef DEBUG
+	  puts ("State 3: Compressing ");
+#endif
+	  csz=RLEencode(diff,frameBufferSz,compressed+1);
+#ifdef DEBUG
+	  puts("Size: ");
+	  putn(csz/8,10,5);
+	  puts(" bytes\r\n");
+#endif
+	  /* Tell the receiver whether this is the first frame in
+	     a sequence (compressed[0]=1) or not (compressed[0]=0) */
+	  compressed[0]=retransmitFlag;
+
+	  /* Construct Packet */
+
+	  pkt.datatype=VIDEO;
+	  pkt.length=csz/8+2;
+	  pkt.data=compressed;
+	  
+	  /* Place it in serial Queue and check for change of state
+	     instruction from client */
+
+	  puts ("State 3: Sending...\n\r");
+	  ns=senddata(&pkt);
+	  if(ns > 0)
+	    {
+	      changeState=ns;
+#ifdef DEBUG
+	      puts("Client instruction to change to state ");
+	      putn(ns,10,1);
+	      puts("\r\n");
+#endif
+	    }
+#ifdef DEBUG
+	  puts("\r\n");
+#endif
+	  /* Reverse what is current and what is previous */
+	  current=1-current;
+	  last=1-last;
+	}
+      else
+	{
+	  /* Handle Failed Framegrab */
+	  switch (errno)
+	    {
+	    case QC_BAD_RESPONSE:
+	      puts ("Framegrab: Bad response from camera\n\r");
+	      break;
+	    case QC_TIMEOUT:
+	      puts ("Framegrab: Camera timed out\n\r");
+	      break;
+	    }
+	}
+    };
+  return changeState;
+}
+@

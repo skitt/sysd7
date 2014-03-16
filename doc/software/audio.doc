@@ -1,0 +1,17 @@
+Audio Compression
+The Audio compression system will be based around ADPCM compression which will
+take the audio down to a 2bits/sample, 8kHz sampling rate which gives a data rate of 16,000bps.  This is reduced from the 8,000x8=64,000bps rate of the raw sample data.
+
+Format of data from PC.
+On the Linux(client) side, the system will be implemented via the Open Sound System(OSS) which is part of the linux kernel.  This will produce an unsigned, 8-bit sample (0-255) at 8kHz.  This will be converted to a signed 8-bit sample (-128-127), and then bit-shifted into the 14-bit word for the ADPCM encoder to work on.
+
+Compression standard.
+The ADPCM system is as defined in the CCITT G.726 16kbps audio compression standard.
+G.726 specs are available from ITU's gopher and www site : http://www.itu.ch
+The code is taken from SUN's implementation which has been released into the public domain.
+
+Compression format.
+The ADPCM encoder will then take the 14-bit word and produce a 2-bit code that will be buffered into a byte with 3 other codes before being transmitted as part of a 510-byte packet representing roughly 1/4 of a second of sound.
+The client will also take 510-byte packets, decode them then convert the resultant 14-bit sample back to unsigned 8-bit, and then play it.
+
+

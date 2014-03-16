@@ -1,0 +1,163 @@
+#This file was created by <imt> Fri Apr 24 17:00:28 1998
+#LyX 0.12 (C) 1995-1998 Matthias Ettrich and the LyX Team
+\lyxformat 2.15
+\textclass article
+\language default
+\inputencoding default
+\fontscheme default
+\graphics default
+\paperfontsize default
+\spacing single 
+\papersize Default
+\paperpackage widemarginsa4
+\use_geometry 0
+\use_amsmath 0
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\defskip medskip
+\quotes_language english
+\quotes_times 2
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+
+\layout List
+\labelwidthstring 00.00.0000
+
+
+\series bold 
+Consequences: 
+\series default 
+Entry will only take place manually
+\layout List
+\labelwidthstring 00.00.0000
+
+
+\series bold 
+Response to failure:
+\layout Standard
+
+The door will open with a manual key and an alarm will go off.
+ If the person entering is genuine, they will know how to override the alarm.
+ If it is a break-in then the alarm will act as a signal for help.
+\layout List
+\labelwidthstring 00.00.0000
+
+
+\series bold 
+Fault:
+\series default 
+ The unit is physicaly cut off from the PC
+\layout Standard
+
+
+\series bold 
+Reported by:
+\layout List
+\labelwidthstring 00.00.0000
+
+
+\series bold 
+Likelihood: 
+\series default 
+low
+\layout List
+\labelwidthstring 00.00.0000
+
+
+\series bold 
+Consequences: 
+\series default 
+The system would not be able to work as an automated entrance.
+\layout List
+\labelwidthstring 00.00.0000
+
+
+\series bold 
+Response to failure:
+\layout Standard
+
+Make the connection phisically secure so that this situation could not arise.
+\layout List
+\labelwidthstring 00.00.0000
+
+
+\series bold 
+Threat:
+\series default 
+ A secondary computer connected to the door
+\layout Standard
+
+
+\series bold 
+Reported by:
+\layout List
+\labelwidthstring 00.00.0000
+
+
+\series bold 
+Likelihood: 
+\series default 
+low
+\layout List
+\labelwidthstring 00.00.0000
+
+
+\series bold 
+Consequences: 
+\series default 
+The new user may allow anautherized access
+\layout List
+\labelwidthstring 00.00.0000
+
+
+\series bold 
+Response to failure:
+\layout Standard
+
+Either make the connection between the Computer and the door physically
+ tamper proof or allow the commputer to unit to contain a password only
+ th host computer would know.
+\layout List
+\labelwidthstring 00.00.0000
+
+
+\series bold 
+Threat:
+\series default 
+ Someone finding a Dallas key
+\layout Standard
+
+
+\series bold 
+Reported by:
+\layout List
+\labelwidthstring 00.00.0000
+
+
+\series bold 
+Likelihood: 
+\series default 
+moderate, if the system is running in am enviroment where a lot of people
+ require keys.
+\layout List
+\labelwidthstring 00.00.0000
+
+
+\series bold 
+Consequences: 
+\series default 
+Should not cause any harm to the system
+\layout List
+\labelwidthstring 00.00.0000
+
+
+\series bold 
+Response to failure:
+\layout Standard
+
+The backup system of also requiring a pin number should prevent people from
+ accessing the site.
+\the_end

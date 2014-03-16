@@ -1,0 +1,1 @@
+gcc -DDEBUG -o dl_test load_db.c db_test.c db_download.c ~/source/transport/linux/interrupt.c -I ~/source/include/ ../support.c

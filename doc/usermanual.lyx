@@ -1,0 +1,292 @@
+#This file was created by <skk> Fri May 15 09:19:52 1998
+#LyX 0.12 (C) 1995-1998 Matthias Ettrich and the LyX Team
+\lyxformat 2.15
+\textclass article
+\language default
+\inputencoding default
+\fontscheme palatino
+\graphics default
+\paperfontsize default
+\spacing single 
+\papersize Default
+\paperpackage a4
+\use_geometry 0
+\use_amsmath 0
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation skip
+\defskip medskip
+\quotes_language english
+\quotes_times 2
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+
+\layout Title
+
+System Design Project
+\newline 
+iDoor User Manual
+\layout Author
+
+Group Seven
+\layout Standard
+\added_space_top 0.3cm \added_space_bottom 0.3cm \align center 
+
+\begin_inset Figure size 128 125
+file ../web/images/EUcrest-official-noborder.ps
+flags 9
+
+\end_inset 
+
+
+\layout Standard
+\pagebreak_top \pagebreak_bottom 
+
+\begin_inset LatexCommand \tableofcontents
+
+\end_inset 
+
+
+\layout Section
+
+Installation
+\layout Standard
+
+The iDoor door unit will have been installed by our engineers.
+ Should it cease to function, please contact us rather than try anything
+ yourself.
+\layout Standard
+
+The software is available as two binaries: 
+\family typewriter 
+midoor
+\family default 
+, which is the door unit control software, and 
+\family typewriter 
+lidoor
+\family default 
+, which is the user software, currently avaialble only for Linux.
+\layout Section
+
+The door unit control software
+\layout Standard
+
+In the prototype, this software has to be downloaded manually every time
+ the door unit is switched on.
+\layout Standard
+
+To set up the door unit control software, please use the supplied Minicom
+ terminal program, like so:
+\layout LyX-Code
+
+minicom ttyS0
+\layout Standard
+
+Ensure power is available to the door unit, and hit the Enter/Return key;
+ a prompt should appear:
+\layout LyX-Code
+
+ROM68K :->
+\layout Standard
+
+Now type in
+\layout LyX-Code
+
+dc
+\layout Standard
+
+then press Control-A, Control-G, C, enter 
+\family typewriter 
+midoor
+\family default 
+, and hit Enter again.
+ Minicom will proceed to download the program.
+ When the prompt reappears, type
+\layout LyX-Code
+
+go 40000
+\layout Standard
+
+to start the program running.
+\layout Section
+
+The user software
+\layout Subsection
+
+The main window
+\layout Standard
+
+To start the user software, make sure the door unit is up and running, and
+ type 
+\family typewriter 
+lidoor
+\family default 
+ at the command prompt.
+ This will bring up the main window, shown in figure 
+\begin_inset LatexCommand \ref{Main window}
+
+\end_inset 
+
+, page 
+\begin_inset LatexCommand \pageref{Main window}
+
+\end_inset 
+
+.
+\layout Standard
+
+\begin_float fig 
+\layout Standard
+\align center 
+
+\begin_inset Figure size 170 125
+file ../guigrab1.ps
+width 1 6
+flags 9
+
+\end_inset 
+
+
+\layout Caption
+
+
+\begin_inset LatexCommand \label{Main window}
+
+\end_inset 
+
+The main window
+\end_float 
+\layout Standard
+
+Four buttons are available:
+\layout Itemize
+
+Video --- this causes a frame to be completely recaptured; use it if the
+ image gets corrupted somehow.
+\layout Itemize
+
+Audio control --- this brings up an audio mixer; use it to adjust the volume
+ of the speaker and microphone attached to your PC.
+\layout Itemize
+
+Configuration -- this brings up a user configuration window, described in
+ section, page.
+\layout Itemize
+
+Close --- this will shut the program down.
+\layout Subsection
+
+The door control window
+\layout Standard
+
+When a visitor presses the doorbell, a notification window will pop up,
+ displaying the image contained in bell.xpm and playing the sound contained
+ in bell.wav.
+ The main window will change, as shown in figure 
+\begin_inset LatexCommand \ref{Door control}
+
+\end_inset 
+
+, page 
+\begin_inset LatexCommand \pageref{Door control}
+
+\end_inset 
+
+.
+\layout Standard
+
+\begin_float fig 
+\layout Standard
+\align center 
+
+\begin_inset Figure size 170 134
+file ../guigrab2.ps
+width 1 6
+flags 9
+
+\end_inset 
+
+
+\layout Caption
+
+
+\begin_inset LatexCommand \label{Door control}
+
+\end_inset 
+
+The door control window
+\end_float 
+\layout Standard
+
+Four further buttons have appeared:
+\layout Itemize
+
+Talk --- this allows you to talk to the visitor.
+\layout Itemize
+
+Listen --- this allows you to listen to the visitor.
+\layout Itemize
+
+Unlock --- this unlocks the door, and reverts to the main window.
+\layout Itemize
+
+Refuse --- this denies entry, and reverts to the main window.
+\layout Standard
+
+Note that while you're talking or listening to the visitor, the image won't
+ be updated.
+ Use the Video button to update the picture; you need to use Talk and Listen
+ again.
+ The status bar will indicate which mode the software is currently in.
+\layout Standard
+
+Also note that the notice window will disappear when you unlock the door
+ or refuse entry.
+\layout Subsection
+
+The user configuration window
+\layout Standard
+
+When you click on the Configure button, the user configuration window pops
+ up (figure 
+\begin_inset LatexCommand \ref{User configuration}
+
+\end_inset 
+
+, page 
+\begin_inset LatexCommand \pageref{User configuration}
+
+\end_inset 
+
+).
+\layout Standard
+
+\begin_float fig 
+\layout Standard
+\align center 
+
+\begin_inset Figure size 283 192
+file ../db_grab.ps
+width 1 10
+flags 9
+
+\end_inset 
+
+
+\layout Caption
+
+
+\begin_inset LatexCommand \label{User configuration}
+
+\end_inset 
+
+User configuration window
+\end_float 
+\layout Standard
+
+Click on a user to view their information.
+ To add a user, use the Add button; Delete deletes a user; Change PIN changes
+ a user's PIN; Close closes the window.
+\the_end

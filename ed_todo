@@ -1,0 +1,9 @@
+GUI software manual
+Database software manual
+User manual
+Make GUI change board to state 2 on exit.
+Centre Doorbell popup window.
+Put launch-once flags on config, xmixer and doorbell window
+Try database download
+Fix segv error in config.
+Tidy and print out source code.

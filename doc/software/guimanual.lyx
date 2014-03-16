@@ -1,0 +1,346 @@
+#This file was created by <ejk> Fri May 15 01:26:31 1998
+#LyX 0.12 (C) 1995-1998 Matthias Ettrich and the LyX Team
+\lyxformat 2.15
+\textclass article
+\language default
+\inputencoding default
+\fontscheme palatino
+\graphics default
+\paperfontsize default
+\spacing single 
+\papersize Default
+\paperpackage a4
+\use_geometry 0
+\use_amsmath 0
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\defskip medskip
+\quotes_language english
+\quotes_times 2
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+
+\layout Subsection
+
+The User Interface
+\layout Standard
+
+The user interface runs on the Linux PC under X.
+ Its primary functions are the display of images from the camera at the
+ door, and to let the user allow or refuse entry to callers based on the
+ camera image.
+ It also allows configuring of the user database, and changing of various
+ settings such as audio volumes.
+ The interface was built using GTK, an X toolkit which eases development,
+ and provides good-looking GUI components.
+\layout Subsubsection
+
+Evolution
+\layout Standard
+
+The interface started off as a simple window which contained a picture so
+ the image transfer from the camera could be tested.
+ Buttons were added later to perform various functions, including user communica
+tion to various other modules.
+ 
+\layout Subsubsection
+
+User Interface Design
+\layout Standard
+
+The user interface can be in one of two visual states.
+ The default is shown below.
+ This corresponds to state 2 in the Motorola state model, described elsewhere
+ in this document.
+ 
+\layout Paragraph
+
+Idle mode
+\layout Standard
+
+The window in this state comprises of an image area, four buttons and a
+ status bar.
+ The 
+\shape italic 
+video
+\shape default 
+ button is only really used in the second of the visual states.
+ It is included here to provide a factility for recapturing video frames
+ if they become corrupted for some reason.
+ 
+\shape italic 
+Audio
+\series bold 
+\shape default 
+ 
+\series default 
+\shape italic 
+control
+\shape default 
+ launches an audio mixer program for adjusting speaker and microphone volumes.
+ This is completely independent of the user interface, but is included for
+ convenience.
+ 
+\shape italic 
+Configure
+\shape default 
+ launches the configuration program.
+ Its main function is to edit the user database (see section ??), but in
+ future will be used to change other configuration options.
+ As before, it is completely independent of the main user interface program.
+ 
+\shape italic 
+Close
+\shape default 
+ will quit the program completely after killing the audio process (see section
+ ??).
+ 
+\layout Standard
+\added_space_top 0.3cm \added_space_bottom 0.3cm \align center 
+
+\begin_inset Figure size 170 141
+file ../../guigrab1.ps
+width 1 6
+height 1 5
+flags 9
+
+\end_inset 
+
+
+\layout Paragraph
+
+Door Entry Mode
+\layout Standard
+
+This mode becomes active when a 
+\family typewriter 
+DOORBELL
+\family default 
+ control message is received from the board.
+ Control messages are documented in the serial transport section ??.
+ A number of buttons are added to those already present in the window.
+ In this state, the interface can be in one of three modes which govern
+ the operation of the audio/video components.
+ These are 
+\shape italic 
+Talk
+\shape default 
+, 
+\shape italic 
+Listen
+\shape default 
+ and 
+\shape italic 
+Video
+\shape default 
+, represented as standard pushbuttons.
+ The status bar at the bottom of the window indicates which of the three
+ modes is currently active.
+ Clicking these buttons send various messages which are documented in section
+ ??.
+ These modes are necessary because full-duplex audio is not possible because
+ of problems with the Linux end, and we do not try to implement simultaneous
+ audio and video feeds down a slow serial line.
+ Hence we need a switching mechanism between the three modes.
+\layout Standard
+
+The other two buttons added in this mode are 
+\shape italic 
+Unlock
+\shape default 
+ and 
+\shape italic 
+Refuse
+\shape default 
+.
+ Clicking these send the relevant message to the board, and sends the user
+ interface back to Idle mode, removing the buttons added, and moving back
+ to Video mode if talking or listening.
+\layout Standard
+
+Another feature of the door entry mode is user notification of the doorbell
+ press, which is both audible and visual.
+ A small window pops up, displaying an XPM picture, loaded directly off
+ disk, and a message.
+ We use a GTK function to load and display the picture, which saves programming
+ time.
+ Loading off disk also means that the picture is user configurable.
+ At the same time, a WAV audio sample is played.
+ We use a unix script to send a WAV file to the audio device.
+ Again, using a file makes the sample user configurable.
+\layout Standard
+\added_space_top 0.3cm \added_space_bottom 0.3cm \align center 
+
+\begin_inset Figure size 170 141
+file ../../guigrab2.ps
+width 1 6
+height 1 5
+flags 9
+
+\end_inset 
+
+
+\layout Subsubsection
+
+Startup
+\layout Standard
+
+The Linux binary contains code for user interface, video and serial transport.
+ The serial is handled by interrupts, so just needs to be initialised.
+ The audio is run in a separated process, and as such, needs to be 
+\family typewriter 
+fork
+\family default 
+ed off as a child process from the user interface.
+ This is done in 
+\family typewriter 
+main
+\family default 
+.
+ The audio process is killed when the GUI exits.
+ ie.
+ when 
+\shape italic 
+close
+\shape default 
+ is clicked.
+\layout Subsubsection
+
+External Interfaces
+\layout Standard
+
+The user interface module communicates with the following system components:
+\layout Paragraph
+
+PC Video module
+\layout Standard
+
+After the video module receives a frame from the board (via the serial transport
+ module), it calls 
+\family typewriter 
+display_image(char *image)
+\family default 
+ to give its image to the user interface.
+ This image is in a simple format where each byte value represents the 16-point
+ greyscale value of a pixel.
+ As the image dimensions are fixed, this can be interpreted as an image.
+ 
+\layout Standard
+
+The easiest way to use images in the GTK toolkit is to present them in the
+ XPM format.
+ We also decided to double the size of the source image, as it is too small
+ for screen display.
+ Hence, the internal function 
+\family typewriter 
+double_xpm(char *image)
+\family default 
+ is used to double the image size and convert to XPM format in one pass.
+ It is then simply passed to the GTK tookit, which displays it as an X widget.
+ As 
+\family typewriter 
+display_image()
+\family default 
+ is called whenever a video frame is received from the Motorola board the
+ image in the window is continually updated.
+\layout Standard
+
+An important point about the way frame update works is the following.
+ The user interface normally sits in a loop called 
+\family typewriter 
+gtk_main()
+\family default 
+ until an event occurs.
+ It does not need to know about the frame update because the serial transport
+ module calls an interrupt when it receives an image.
+ Hence, all the above happens as a result of an interrupt handler call.
+ After the interrupt exits, the program goes back to its event loop.
+\layout Paragraph
+
+PC Audio module
+\layout Standard
+
+The selection of the three different operation modes described previously
+ mean that the GUI needs to tell the audio process when to start and stop
+ the audio, and in which direction to channel it.
+ Since audio is a separate process, this is done using UNIX signals.
+ 
+\layout Standard
+
+There are two signals available for custom use; 
+\family typewriter 
+SIGUSR1
+\family default 
+ and 
+\family typewriter 
+SIGUSR2
+\family default 
+.
+ We set up signal handlers in the audio process, so the GUI can send signals
+ in the following fashion:
+\layout Itemize
+
+
+\family typewriter 
+SIGUSR1
+\family default 
+ : Start audio from Linux to Motorola (
+\shape italic 
+Talk
+\shape default 
+ button)
+\layout Itemize
+
+
+\family typewriter 
+SIGUSR2
+\family default 
+: Start audio from Motorola to Linuix (
+\shape italic 
+Listen
+\shape default 
+ button)
+\layout Itemize
+
+Either signal sent again while its corresponding direction is active will
+ stop the audio in this direction.
+\layout Paragraph
+
+Motorola state machine
+\layout Standard
+
+As well as telling the PC audio module to start or stop, we also need to
+ notify the motorola board to change into the correct state.
+ This is done using the serial transport function 
+\family typewriter 
+serialtransmit()
+\family default 
+ and 
+\family typewriter 
+changestate()
+\family default 
+, which are described elsewhere in this document.
+ 
+\layout Standard
+
+This approach is also used to facilitate the starting and stopping of the
+ video feed, which again is governed by which state the motorola is in.
+ In the same way, clicking the 
+\shape italic 
+unlock
+\shape default 
+ and 
+\shape italic 
+refuse
+\shape default 
+ buttons will send 
+\family typewriter 
+changestate()
+\family default 
+ packets to the motorola, moving it to either the unlock state or the refuse
+ state.
+ 
+\the_end
